@@ -6,12 +6,12 @@ import { getNonce, getUri } from './util';
  */
 export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     private static newFileId = 1;
-    private static readonly viewType = 'yaml-table-editor';
+    private static readonly viewType = 'yaml-variables-editor';
 
     constructor(private readonly context: vscode.ExtensionContext) {}
 
     public static register(context: vscode.ExtensionContext): vscode.Disposable {
-        vscode.commands.registerCommand('yaml-table-editor.new', () => {
+        vscode.commands.registerCommand('yaml-variables-editor.new', () => {
             const workspaceFolders = vscode.workspace.workspaceFolders;
             if (!workspaceFolders) {
                 vscode.window.showErrorMessage(
