@@ -1,10 +1,11 @@
 {
-  "name": "axonivy-yaml-table-editor",
-  "description": "A sample extension that showcases a sample VS Code extension for a custom YAML editor using the Webview UI Toolkit",
+  "name": "@axonivy/variables-editor",
+  "description": "A sample extension that showcases a sample VS Code extension for a variables editor using the Webview UI Toolkit",
   "version": "0.0.1",
-  "publisher": "AxonIvy",
+  "publisher": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
   "repository": {
-    "url": "https://github.com/axonivy/next-gen-inscription.git"
+    "url": "https://github.com/axonivy/yaml-editor.git"
   },
   "engines": {
     "vscode": "^1.75.0"
@@ -16,22 +17,19 @@
   "contributes": {
     "customEditors": [
       {
-        "viewType": "yaml-table-editor",
-        "displayName": "YAML Variable Editor",
+        "viewType": "yaml-variables-editor",
+        "displayName": "Variables Editor",
         "selector": [
           {
-            "filenamePattern": "*.yaml"
-          },
-          {
-            "filenamePattern": "*.yml"
+            "filenamePattern": "variables.yaml"
           }
         ]
       }
     ],
     "commands": [
       {
-        "command": "yaml-table-editor.new",
-        "title": "Create a new YAML file",
+        "command": "yaml-variables-editor.new",
+        "title": "Create a new Variables file",
         "category": "YAML",
         "icon": "$(add)"
       }
@@ -39,7 +37,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "yaml-table-editor.new",
+          "command": "yaml-variables-editor.new",
           "group": "navigation@1"
         }
       ]
@@ -62,12 +60,12 @@
     "@types/glob": "^8.1.0",
     "@types/node": "16.x",
     "@types/vscode": "^1.74.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "eslint": "^8.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
     "glob": "^8.0.3",
-    "prettier": "^2.8.1",
-    "typescript": "~4.9.4",
+    "prettier": "^2.8.8",
+    "typescript": "~5.1.3",
     "yaml": "^2.3.1"
   }
 }
