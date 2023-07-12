@@ -5,7 +5,7 @@
   "publisher": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
   "repository": {
-    "url": "https://github.com/axonivy/yaml-editor.git"
+    "url": "https://github.com/axonivy/config-editor-client.git"
   },
   "engines": {
     "vscode": "^1.75.0"
