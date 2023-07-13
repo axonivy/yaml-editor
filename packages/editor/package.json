@@ -1,0 +1,32 @@
+{
+  "name": "@axonivy/config-editor",
+  "version": "11.2.0",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc && yarn build:copyfiles",
+    "build:copyfiles": "copyfiles -u 1 src/*.css src/*.ttf lib",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "prepare": "yarn clean && yarn build",
+    "lint": "eslint --ext .ts,.tsx ./src"
+  },
+  "main": "lib/index",
+  "types": "src/index",
+  "module": "src/index",
+  "dependencies": {
+    "@vscode/webview-ui-toolkit": "^1.2.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.13",
+    "@types/react-dom": "^18.2.6",
+    "@types/vscode-webview": "^1.57.1",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.1",
+    "typescript": "~5.1.3",
+    "yaml": "^2.3.1"
+  }
+}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import YAMLVariablesTable from './yaml-table';
+import { YAMLVariablesTable } from '@axonivy/config-editor';
 
 const vscodeApi = acquireVsCodeApi();
 

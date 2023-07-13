@@ -5,11 +5,8 @@ This sample extension showcases a variables editor using the [Webview API](https
 ## Build the sample extension
 
 ```bash
-# Install dependencies for both the extension and webview UI source code
-yarn install:all
-
-# Build webview UI source code
-yarn build
+# Install dependencies for both the extension and editor source code and build it
+yarn
 ```
 
 Remark: The webview React UI is built with `vite`.
