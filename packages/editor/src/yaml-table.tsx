@@ -13,13 +13,24 @@ import './codicon.css';
 import './yaml-table.css';
 
 interface YAMLVariablesTableProps {
-    vscodeApi: WebviewApi<unknown>;
+    vscodeApi?: WebviewApi<unknown>;
 }
+
+const EMPTY_YAML_TEXT = '{"":""}';
 
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     const [yaml, setYaml] = useState({});
 
     useEffect(() => {
+        if (!props.vscodeApi) {
+            let parsedYaml = YAML.parse(EMPTY_YAML_TEXT);
+            const config = localStorage.getItem('config');
+            if (config && config !== '{}') {
+                parsedYaml = YAML.parse(config);
+            }
+            setYaml(parsedYaml);
+            return;
+        }
         window.addEventListener('message', (event) => {
             const message = event.data;
             let text = message.text;
@@ -28,7 +39,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 let parsedYaml;
                 try {
                     if (!text) {
-                        text = '{"":""}';
+                        text = EMPTY_YAML_TEXT;
                     }
                     parsedYaml = YAML.parse(text);
                     setYaml(parsedYaml);
@@ -135,7 +146,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             delete Object.assign(tmpYaml, { [e.target['value']]: tmpYaml[variableKey] })[
                 variableKey
             ];
-            props.vscodeApi.postMessage({ type: 'updateDocument', text: YAML.stringify(tmpYaml) });
+            props.vscodeApi?.postMessage({ type: 'updateDocument', text: YAML.stringify(tmpYaml) });
             setYaml(tmpYaml);
         }
     }
@@ -160,7 +171,6 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 // otherwise handle as string
                 newValue = changedValue;
             }
-            console.error('UPDATE VALUE ' + newValue + ' type: ' + typeof newValue);
             tmpYaml[variableKey] = newValue;
             updateYamlDocument(tmpYaml);
         }
@@ -197,10 +207,14 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     }
 
     function updateYamlDocument(newYamlDocument: object) {
-        props.vscodeApi.postMessage({
+        setYaml(newYamlDocument);
+        if (!props.vscodeApi) {
+            localStorage.setItem('config', JSON.stringify(newYamlDocument));
+            return;
+        }
+        props.vscodeApi?.postMessage({
             type: 'updateDocument',
             text: YAML.stringify(newYamlDocument)
         });
-        setYaml(newYamlDocument);
     }
 }
