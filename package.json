@@ -1,71 +1,31 @@
 {
-  "name": "@axonivy/variables-editor",
-  "description": "A sample extension that showcases a sample VS Code extension for a variables editor using the Webview UI Toolkit",
-  "version": "0.0.1",
-  "publisher": "Axon Ivy AG",
-  "homepage": "https://developer.axonivy.com/",
-  "repository": {
-    "url": "https://github.com/axonivy/config-editor-client.git"
-  },
+  "private": true,
+  "name": "parent",
   "engines": {
-    "vscode": "^1.75.0"
-  },
-  "activationEvents": [
-    "onLanguage:yaml"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "customEditors": [
-      {
-        "viewType": "yaml-variables-editor",
-        "displayName": "Variables Editor",
-        "selector": [
-          {
-            "filenamePattern": "variables.yaml"
-          }
-        ]
-      }
-    ],
-    "commands": [
-      {
-        "command": "yaml-variables-editor.new",
-        "title": "Create a new Variables file",
-        "category": "YAML",
-        "icon": "$(add)"
-      }
-    ],
-    "menus": {
-      "view/title": [
-        {
-          "command": "yaml-variables-editor.new",
-          "group": "navigation@1"
-        }
-      ]
-    }
+    "yarn": ">=1.7.0 <2.x.x",
+    "node": ">=16.15.1"
   },
   "scripts": {
-    "install:all": "yarn install && cd webview-react-ui && yarn install",
-    "compile": "tsc -p ./",
-    "build": "yarn compile && yarn build:webview",
-    "build:webview": "cd webview-react-ui && yarn build",
-    "watch": "tsc -watch -p ./",
-    "prepackage": "yarn build",
-    "package": "vsce package",
-    "lint": "eslint src --ext ts,tsx"
-  },
-  "dependencies": {
-    "@vscode/vsce": "^2.19.0"
+    "build": "lerna run build",
+    "clean": "lerna run clean",
+    "lint": "lerna run lint --",
+    "prepare": "lerna run prepare",
+    "watch": "lerna run --parallel watch"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/node": "16.x",
-    "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.60.0",
     "@typescript-eslint/parser": "^5.60.0",
     "eslint": "^8.43.0",
     "glob": "^8.0.3",
+    "lerna": "^6.6.2",
     "prettier": "^2.8.8",
     "typescript": "~5.1.3",
     "yaml": "^2.3.1"
-  }
+  },
+  "workspaces": [
+    "packages/*",
+    "integrations/vscode/*"
+  ]
 }

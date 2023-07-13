@@ -11,9 +11,9 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "${workspaceFolder}/yaml-workspace",
-        "--extensionDevelopmentPath=${workspaceFolder}"
+        "--extensionDevelopmentPath=${workspaceFolder}/integrations/vscode/extension"
       ],
-      "outFiles": ["${workspaceRoot}/out/**/*.js"],
+      "outFiles": ["${workspaceRoot}/integrations/vscode/extension/out/**/*.js"],
       "sourceMaps": true,
       "preLaunchTask": "yarn: build"
     }
