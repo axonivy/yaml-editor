@@ -33,6 +33,19 @@ pipeline {
         }
       }
     }
+
+    stage('Publish next') {
+      when {
+        expression { isReleaseOrMasterBranch() && currentBuild.changeSets.size() > 0 }
+      }
+      steps {
+        script {
+          withNPM(npmrcConfig:'npmjs-registry.ivyteam.io') {
+            sh 'yarn publish:next'
+          }
+        }
+      }
+    }
   }
 
   post {
