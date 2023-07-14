@@ -10,6 +10,7 @@
     "clean": "lerna run clean",
     "lint": "lerna run lint --",
     "prepare": "lerna run prepare",
+    "standalone": "yarn --cwd integrations/standalone",
     "watch": "lerna run --parallel watch"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
   },
   "workspaces": [
     "packages/*",
+    "integrations/*",
     "integrations/vscode/*"
   ]
 }
