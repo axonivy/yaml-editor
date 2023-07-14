@@ -1,5 +1,6 @@
 {
   "name": "vscode-config-editor-extension",
+  "private": "true",
   "description": "A sample extension that showcases a sample VS Code extension for a variables editor using the Webview UI Toolkit",
   "version": "11.2.0",
   "publisher": "AxonIvy",

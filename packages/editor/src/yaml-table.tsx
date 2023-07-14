@@ -48,7 +48,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 }
             }
         });
-    }, []);
+    }, [props]);
 
     if (Object.keys(yaml).length === 0) {
         return (

@@ -4,13 +4,13 @@
   "version": "11.2.0",
   "scripts": {
     "build": "tsc && vite build",
-    "clean": "rimraf ../extension/build",
+    "clean": "rimraf ../extension/dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "prepare": "yarn clean && yarn build"
   },
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.2.2",
-    "@axonivy/config-editor": "*",
+    "@axonivy/config-editor": "11.2.0-next",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

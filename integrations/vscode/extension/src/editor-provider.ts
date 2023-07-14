@@ -44,10 +44,9 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
         // Setup initial content for the webview
         webviewPanel.webview.options = {
             enableScripts: true,
-            // Restrict the webview to only load resources from the `out` and `webview-react-ui/build` directories
             localResourceRoots: [
                 vscode.Uri.joinPath(this.context.extensionUri, 'out'),
-                vscode.Uri.joinPath(this.context.extensionUri, 'build')
+                vscode.Uri.joinPath(this.context.extensionUri, 'dist')
             ]
         };
         webviewPanel.webview.html = this.getWebviewContent(
@@ -115,11 +114,11 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
      */
     private getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
         // The CSS file from the React build output
-        const stylesUri = getUri(webview, extensionUri, ['build', 'assets', 'index.css']);
+        const stylesUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.css']);
         // Codicon font file from the React build output
-        const codiconFontUri = getUri(webview, extensionUri, ['build', 'assets', 'codicon.ttf']);
+        const codiconFontUri = getUri(webview, extensionUri, ['dist', 'assets', 'codicon.ttf']);
         // The JS file from the React build output
-        const scriptUri = getUri(webview, extensionUri, ['build', 'assets', 'index.js']);
+        const scriptUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.js']);
 
         const nonce = getNonce();
 
