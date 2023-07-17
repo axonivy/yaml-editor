@@ -5,37 +5,18 @@ This sample extension showcases a variables editor using the [Webview API](https
 ## Build the sample extension
 
 ```bash
-# Install dependencies for both the extension and editor source code and build it
+# Install dependencies for both the standalone integration and editor source code and build it
 yarn
 ```
 
-Remark: The webview React UI is built with `vite`.
+Remark: The standalone editor is built with `vite`.
 
-## Run the sample extension
+## Run the standalone editor
 
-Run the extension by doing the following:
+Run the editor by doing the following:
 
-1. Press `F5` to open a new Extension Development Host window (this complies the code before starting)
-2. Open an existing variables.yaml file (e.g. from the provided `yaml-workspace`) or create a new empty one via the explorer toolbar (via the `+` icon).
-3. Edit variable keys and values, delete lines via the tail icon (🗑️) and add new lines via the tail icon (➕). The value fields try to guess the value type (i.e. string, float, integer or boolean).
-
-## Package the sample extension
-
-```bash
-yarn package
-```
-
-The output is a bundled `*.vsix` extension, which can be directly installed in VS Code or Theia:
-
-### Install bundled `*.vsix` extension in VS Code
-
--   Open the context menu via right click on the `*.vsix` file and select `Install Extension VSIX`.
-    <br/>or
--   Open the `Extensions` view via the `View` menu and choose `Install from VSIX...` in the view's toolbar menu (`...`).
-
-### Install bundled `*.vsix` extension in Theia
-
--   Open the `Extensions` view via the `View` menu and choose `Install from VSIX...` in the view's toolbar menu (`...`).
+1. Press `F5` to open the standalone editor in chrome
+2. Edit variable keys and values, delete lines via the tail icon (🗑️) and add new lines via the tail icon (➕). The value fields try to guess the value type (i.e. string, float, integer or boolean).
 
 ## Remarks and possible extensions
 

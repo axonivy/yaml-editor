@@ -10,19 +10,6 @@
       "request": "launch",
       "url": "http://localhost:3000",
       "preLaunchTask": "Start Dev Server"
-    },
-    {
-      "name": "Run VS Code Config Editor",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "${workspaceFolder}/yaml-workspace",
-        "--extensionDevelopmentPath=${workspaceFolder}/integrations/vscode/extension"
-      ],
-      "outFiles": ["${workspaceRoot}/integrations/vscode/extension/out/**/*.js"],
-      "sourceMaps": true,
-      "preLaunchTask": "yarn: build"
     }
   ]
 }
