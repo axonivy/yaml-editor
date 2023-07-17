@@ -16,7 +16,8 @@ interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
 
-const EMPTY_YAML = YAML.parse('{"":""}');
+const EMPTY_YAML_TEXT = '{"":""}';
+const EMPTY_YAML = YAML.parse(EMPTY_YAML_TEXT);
 
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     const [yaml, setYaml] = useState({});
@@ -212,13 +213,15 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
 
     function updateYamlDocument(newYamlDocument: object) {
         setYaml(newYamlDocument);
+        let document = JSON.stringify(newYamlDocument);
+        document = document === EMPTY_YAML_TEXT ? '' : document;
         if (!props.vscodeApi) {
-            localStorage.setItem('config', JSON.stringify(newYamlDocument));
+            localStorage.setItem('config', document);
             return;
         }
         props.vscodeApi?.postMessage({
             type: 'updateDocument',
-            text: YAML.stringify(newYamlDocument)
+            text: document
         });
     }
 }
