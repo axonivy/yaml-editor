@@ -1,9 +1,6 @@
 import * as vscode from 'vscode';
 import { getNonce, getUri } from './util';
 
-/**
- * Provider for Yaml table editors.
- */
 export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
     private static newFileId = 1;
     private static readonly viewType = 'yaml-variables-editor';
@@ -41,7 +38,6 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
         webviewPanel: vscode.WebviewPanel,
         _token: vscode.CancellationToken
     ): Promise<void> {
-        // Setup initial content for the webview
         webviewPanel.webview.options = {
             enableScripts: true,
             localResourceRoots: [
@@ -61,18 +57,16 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
             });
         }
 
-        const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument((e) => {
-            if (e.document.uri.toString() === document.uri.toString()) {
+        const changeViewStateSubscription = webviewPanel.onDidChangeViewState(() => {
+            if (webviewPanel.active) {
                 updateWebview();
             }
         });
 
-        // Make sure we dispose the listener when our editor is closed.
         webviewPanel.onDidDispose(() => {
-            changeDocumentSubscription.dispose();
+            changeViewStateSubscription.dispose();
         });
 
-        // Receive message from the webview.
         webviewPanel.webview.onDidReceiveMessage((e) => {
             switch (e.type) {
                 case 'updateDocument':
@@ -88,9 +82,6 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
         updateWebview();
     }
 
-    /**
-     * Write the updated Yaml content to the given text document.
-     */
     protected updateYamlDocument(document: vscode.TextDocument, yaml: any) {
         const edit = new vscode.WorkspaceEdit();
 
@@ -101,29 +92,13 @@ export class YamlEditorProvider implements vscode.CustomTextEditorProvider {
         return vscode.workspace.applyEdit(edit);
     }
 
-    /**
-     * Defines and returns the HTML that should be rendered within the webview panel.
-     *
-     * @remarks This is also the place where references to the React webview build files
-     * are created and inserted into the webview HTML.
-     *
-     * @param webview A reference to the extension webview
-     * @param extensionUri The URI of the directory containing the extension
-     * @returns A template string literal containing the HTML that should be
-     * rendered within the webview panel
-     */
     private getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-        // The CSS file from the React build output
         const stylesUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.css']);
-        // Codicon font file from the React build output
         const codiconFontUri = getUri(webview, extensionUri, ['dist', 'assets', 'codicon.ttf']);
-        // The JS file from the React build output
         const scriptUri = getUri(webview, extensionUri, ['dist', 'assets', 'index.js']);
-
         const nonce = getNonce();
 
-        // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
-        return /*html*/ `
+        return `
       <!DOCTYPE html>
       <html lang="en">
         <head>

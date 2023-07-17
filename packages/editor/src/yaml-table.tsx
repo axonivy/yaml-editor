@@ -16,14 +16,14 @@ interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
 
-const EMPTY_YAML_TEXT = '{"":""}';
+const EMPTY_YAML = YAML.parse('{"":""}');
 
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     const [yaml, setYaml] = useState({});
 
     useEffect(() => {
         if (!props.vscodeApi) {
-            let parsedYaml = YAML.parse(EMPTY_YAML_TEXT);
+            let parsedYaml = EMPTY_YAML;
             const config = localStorage.getItem('config');
             if (config && config !== '{}') {
                 parsedYaml = YAML.parse(config);
@@ -36,12 +36,12 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             let text = message.text;
             // if the text document was updated we update our yaml content as well
             if (message.type === 'update') {
-                let parsedYaml;
                 try {
                     if (!text) {
-                        text = EMPTY_YAML_TEXT;
+                        setYaml(EMPTY_YAML);
+                        return;
                     }
-                    parsedYaml = YAML.parse(text);
+                    const parsedYaml = YAML.parse(text);
                     setYaml(parsedYaml);
                 } catch {
                     setYaml({});
@@ -202,6 +202,10 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
             delete tmpYaml[variableKey];
+            if (Object.keys(tmpYaml).length === 0) {
+                updateYamlDocument(EMPTY_YAML);
+                return;
+            }
             updateYamlDocument(tmpYaml);
         }
     }
