@@ -1,11 +1,16 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
-  "version": "11.2.0",
+  "version": "11.2.0-next",
   "npmClient": "yarn",
   "command": {
     "run": {
       "stream": true
     }
+  },
+  "publish": {
+    "forcePublish": true,
+    "skipGit": true,
+    "registry": "https://npmjs-registry.ivyteam.io/"
   }
 }

@@ -1,0 +1,60 @@
+pipeline {
+  agent {
+    dockerfile {
+      filename 'build/Dockerfile'
+    }
+  }
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        script {
+          sh 'yarn'
+        }
+      }
+    }
+
+    stage('Codechecks (ESLint)') {
+     steps {
+      script {
+        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+          timeout(30) {
+            sh 'yarn lint -o eslint.xml -f checkstyle'
+            }
+          }
+        }
+      }
+    }
+
+    stage('Publish next') {
+      when {
+        expression { isReleaseOrMasterBranch() && currentBuild.changeSets.size() > 0 }
+      }
+      steps {
+        script {
+          withNPM(npmrcConfig:'npmjs-registry.ivyteam.io') {
+            sh 'yarn publish:next'
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
+}
+
+def isReleaseOrMasterBranch() {
+  return env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/') 
+}
