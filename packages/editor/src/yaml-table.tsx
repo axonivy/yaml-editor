@@ -15,7 +15,7 @@ import './yaml-table.css';
 interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
-// {"e":1,"e2": 2, "ee": {"x":1, "x2": 2, "x3": {"asdasda": 1}}, "asd": 10}
+
 const EMPTY_YAML_TEXT = '{"":""}';
 const EMPTY_YAML = YAML.parse(EMPTY_YAML_TEXT);
 
@@ -77,7 +77,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 {Object.entries(yaml).map(([key, value], index) =>
                     renderDataGrid(key, value, index, [])
                 )}
-                <section className='edit-button-container'>
+                <section style={{ justifyContent: 'flex-end' }} className='edit-button-container'>
                     {renderAddButton([])}
                     {renderAddParentNodeButton([])}
                 </section>
@@ -103,10 +103,12 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                         currentValue={key}
                         onChange={(e) => handleVariableKeyChange(e, key, parentKeys)}
                     />
-                    <section grid-column='4' className='edit-button-container'>
-                        {renderDeleteButton(key, parentKeys)}
+                    <section className='edit-button-container'>
                         {renderAddButton([...parentKeys, key])}
                         {renderAddParentNodeButton([...parentKeys, key])}
+                    </section>
+                    <section className='edit-button-container'>
+                        {renderDeleteButton(key, parentKeys)}
                     </section>
                 </VSCodeDataGridRow>
                 {Object.entries(value).map(([childKey, childValue], childIndex) =>
