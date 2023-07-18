@@ -108,7 +108,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     function renderVariableValueElement(value: any, key: string) {
         const valueType = typeof value;
 
-        if (valueType === 'string') {
+        if (valueType === 'string' || valueType === 'number') {
             return (
                 <VSCodeTextField
                     grid-column='2'
@@ -116,19 +116,8 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                     onChange={(e) => handleVariableValueChange(e, key)}
                 />
             );
-        } else if (valueType === 'number') {
-            return (
-                <VSCodeTextField
-                    grid-column='2'
-                    // The webview react toolkit does not support the textfield type 'number', hence we force set it
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    type='number'
-                    currentValue={value}
-                    onChange={(e) => handleVariableValueChange(e, key)}
-                />
-            );
-        } else if (valueType === 'boolean') {
+        }
+        if (valueType === 'boolean') {
             return (
                 <VSCodeCheckbox
                     grid-column='2'
