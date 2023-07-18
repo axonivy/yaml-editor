@@ -15,7 +15,7 @@ import './yaml-table.css';
 interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
-
+// {"e":1,"e2": 2, "ee": {"x":1, "x2": 2, "x3": {"asdasda": 1}}, "asd": 10}
 const EMPTY_YAML_TEXT = '{"":""}';
 const EMPTY_YAML = YAML.parse(EMPTY_YAML_TEXT);
 
@@ -35,7 +35,6 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         window.addEventListener('message', (event) => {
             const message = event.data;
             let text = message.text;
-            // if the text document was updated we update our yaml content as well
             if (message.type === 'update') {
                 try {
                     if (!text) {
@@ -75,37 +74,66 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                     </VSCodeDataGridCell>
                     <VSCodeDataGridCell cell-type='columnheader' grid-column='3' />
                 </VSCodeDataGridRow>
-                {Object.entries(yaml).map(([key, value], index) => (
-                    <VSCodeDataGridRow>
-                        <VSCodeTextField
-                            grid-column='1'
-                            currentValue={key}
-                            onChange={(e) => handleVariableKeyChange(e, key)}
-                        />
-                        {renderVariableValueElement(value, key)}
-                        <section grid-column='3' className='edit-button-container'>
-                            <VSCodeButton
-                                appearance='icon'
-                                aria-label='Delete'
-                                onClick={(e) => handleDeleteClick(e, key)}>
-                                <span className='codicon codicon-trash' />
-                            </VSCodeButton>
-                            {Object.entries(yaml).length - 1 === index && (
-                                <VSCodeButton
-                                    appearance='icon'
-                                    aria-label='Add'
-                                    onClick={(e) => handleAddClick(e)}>
-                                    <span className='codicon codicon-add' />
-                                </VSCodeButton>
-                            )}
-                        </section>
-                    </VSCodeDataGridRow>
-                ))}
+                {Object.entries(yaml).map(([key, value], index) =>
+                    renderDataGrid(key, value, index, [])
+                )}
+                <section className='edit-button-container'>
+                    {renderAddButton([])}
+                    {renderAddParentNodeButton([])}
+                </section>
             </VSCodeDataGrid>
         </main>
     );
 
-    function renderVariableValueElement(value: any, key: string) {
+    function renderDataGrid(key: string, value: any, index: number, parentKeys: string[]) {
+        const valueType = typeof value;
+        if (valueType === 'object') {
+            return renderParentNode(key, value, index, parentKeys);
+        }
+        return renderLeafNode(key, value, index, parentKeys);
+    }
+
+    function renderParentNode(key: string, value: any, index: number, parentKeys: string[]) {
+        return (
+            <VSCodeDataGrid grid-template-columns='48% 48% 4%' aria-label='Default'>
+                <VSCodeDataGridRow>
+                    <VSCodeTextField
+                        style={{ paddingLeft: 10 * parentKeys.length }}
+                        grid-column='1'
+                        currentValue={key}
+                        onChange={(e) => handleVariableKeyChange(e, key, parentKeys)}
+                    />
+                    <section grid-column='4' className='edit-button-container'>
+                        {renderDeleteButton(key, parentKeys)}
+                        {renderAddButton([...parentKeys, key])}
+                        {renderAddParentNodeButton([...parentKeys, key])}
+                    </section>
+                </VSCodeDataGridRow>
+                {Object.entries(value).map(([childKey, childValue], childIndex) =>
+                    renderDataGrid(childKey, childValue, childIndex, [...parentKeys, key])
+                )}
+            </VSCodeDataGrid>
+        );
+    }
+
+    function renderLeafNode(key: string, value: any, index: number, parentKeys: string[]) {
+        return (
+            <VSCodeDataGridRow rowType='default'>
+                <VSCodeTextField
+                    style={{ paddingLeft: 10 * parentKeys.length }}
+                    grid-column='1'
+                    currentValue={key}
+                    onChange={(e) => handleVariableKeyChange(e, key, parentKeys)}
+                />
+                {renderVariableValueElement(value, key, parentKeys)}
+                <section grid-column='3' className='edit-button-container'>
+                    {renderDeleteButton(key, parentKeys)}
+                </section>
+            </VSCodeDataGridRow>
+        );
+    }
+
+    function renderVariableValueElement(value: any, key: string, parentKeys: string[]) {
         const valueType = typeof value;
 
         if (valueType === 'string' || valueType === 'number') {
@@ -113,7 +141,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 <VSCodeTextField
                     grid-column='2'
                     currentValue={value}
-                    onChange={(e) => handleVariableValueChange(e, key)}
+                    onChange={(e) => handleVariableValueChange(e, key, parentKeys)}
                 />
             );
         }
@@ -122,18 +150,33 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 <VSCodeCheckbox
                     grid-column='2'
                     currentChecked={value}
-                    onClick={(e) => handleVariableValueClick(e, key)}
+                    onClick={(e) => handleVariableValueClick(e, key, parentKeys)}
                 />
             );
         }
+        return <VSCodeTextField grid-column='2' readOnly={true} />;
     }
 
-    function handleVariableKeyChange(e: Event, variableKey: string) {
+    function handleAddParentNodeClick(
+        e: React.MouseEvent<HTMLElement, MouseEvent>,
+        parentKeys: string[]
+    ) {
+        e.preventDefault();
+
+        if (e.target) {
+            const tmpYaml = Object.assign({}, yaml);
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            parentNode[''] = {};
+            updateYamlDocument(tmpYaml);
+        }
+    }
+
+    function handleVariableKeyChange(e: Event, variableKey: string, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
-            // update object key
-            delete Object.assign(tmpYaml, { [e.target['value']]: tmpYaml[variableKey] })[
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            delete Object.assign(parentNode, { [e.target['value']]: parentNode[variableKey] })[
                 variableKey
             ];
             props.vscodeApi?.postMessage({ type: 'updateDocument', text: YAML.stringify(tmpYaml) });
@@ -141,7 +184,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         }
     }
 
-    function handleVariableValueChange(e: Event, variableKey: string) {
+    function handleVariableValueChange(e: Event, variableKey: string, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
@@ -161,37 +204,46 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 // otherwise handle as string
                 newValue = changedValue;
             }
-            tmpYaml[variableKey] = newValue;
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            parentNode[variableKey] = newValue;
             updateYamlDocument(tmpYaml);
         }
     }
 
     function handleVariableValueClick(
         e: React.MouseEvent<HTMLElement, MouseEvent>,
-        variableKey: string
+        variableKey: string,
+        parentKeys: string[]
     ) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
-            tmpYaml[variableKey] = e.target['proxy'].checked;
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            parentNode[variableKey] = e.target['proxy'].checked;
             updateYamlDocument(tmpYaml);
         }
     }
 
-    function handleAddClick(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    function handleAddClick(e: React.MouseEvent<HTMLElement, MouseEvent>, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
-            tmpYaml[''] = '';
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            parentNode[''] = '';
             updateYamlDocument(tmpYaml);
         }
     }
 
-    function handleDeleteClick(e: React.MouseEvent<HTMLElement, MouseEvent>, variableKey: string) {
+    function handleDeleteClick(
+        e: React.MouseEvent<HTMLElement, MouseEvent>,
+        variableKey: string,
+        parentKeys: string[]
+    ) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = Object.assign({}, yaml);
-            delete tmpYaml[variableKey];
+            const parentNode = resolveParentNode(tmpYaml, parentKeys);
+            delete parentNode[variableKey];
             if (Object.keys(tmpYaml).length === 0) {
                 updateYamlDocument(EMPTY_YAML);
                 return;
@@ -212,5 +264,43 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             type: 'updateDocument',
             text: document
         });
+    }
+
+    function resolveParentNode(yaml: any, parentKeys: string[]) {
+        parentKeys.forEach((key) => (yaml = yaml[key]));
+        return yaml;
+    }
+
+    function renderAddButton(parentKeys: string[]) {
+        return (
+            <VSCodeButton
+                appearance='icon'
+                aria-label='Add'
+                onClick={(e) => handleAddClick(e, parentKeys)}>
+                <span className='codicon codicon-add' />
+            </VSCodeButton>
+        );
+    }
+
+    function renderAddParentNodeButton(parentKeys: string[]) {
+        return (
+            <VSCodeButton
+                appearance='icon'
+                aria-label='Add Parent Node'
+                onClick={(e) => handleAddParentNodeClick(e, parentKeys)}>
+                <span className='codicon codicon-type-hierarchy-sub' />
+            </VSCodeButton>
+        );
+    }
+
+    function renderDeleteButton(key: string, parentKeys: string[]) {
+        return (
+            <VSCodeButton
+                appearance='icon'
+                aria-label='Delete'
+                onClick={(e) => handleDeleteClick(e, key, parentKeys)}>
+                <span className='codicon codicon-trash' />
+            </VSCodeButton>
+        );
     }
 }
