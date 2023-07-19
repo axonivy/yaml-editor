@@ -16,49 +16,24 @@ interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
 
-const EMPTY_YAML = YAML.parseDocument('');
-
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
-    const [yaml, setYaml] = useState(EMPTY_YAML);
-
-    // const tst = `
-    // k1: "asdads"
-    // k2: "sasdasd"
-    // k3:
-    //   c1: 10
-    // k4: 101
-    // `;
-    const tst = 'a: "asdads"';
-
-    const d = YAML.parseDocument(tst);
-    d.add(d.createPair('', 111));
-    const j = d.toJS();
-    console.log(d, j);
+    const [yaml, setYaml] = useState(new YAML.Document());
 
     useEffect(() => {
         if (!props.vscodeApi) {
-            let parsedYaml = EMPTY_YAML;
             const config = localStorage.getItem('config');
             if (config) {
-                parsedYaml = YAML.parseDocument(config);
+                const parsedYaml = YAML.parseDocument(config);
+                setYaml(parsedYaml);
             }
-            setYaml(parsedYaml);
             return;
         }
         window.addEventListener('message', (event) => {
             const message = event.data;
             let text = message.text;
-            if (message.type === 'update') {
-                try {
-                    if (!text) {
-                        setYaml(EMPTY_YAML);
-                        return;
-                    }
-                    const parsedYaml = YAML.parseDocument(text);
-                    setYaml(parsedYaml);
-                } catch {
-                    setYaml(EMPTY_YAML);
-                }
+            if (message.type === 'update' && text) {
+                const parsedYaml = YAML.parseDocument(text);
+                setYaml(parsedYaml);
             }
         });
     }, [props]);
@@ -170,9 +145,8 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         e.preventDefault();
 
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            parentNode[''] = {};
+            const tmpYaml = yaml.clone();
+            tmpYaml.setIn([...parentKeys, ''], tmpYaml.createNode({}));
             updateYamlDocument(tmpYaml);
         }
     }
@@ -182,9 +156,8 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         if (e.target) {
             const tmpYaml = yaml.clone();
             const value = tmpYaml.getIn([...parentKeys, variableKey]);
-            tmpYaml.addIn([...parentKeys, e.target['value']], value);
+            tmpYaml.setIn([...parentKeys, e.target['value']], value);
             tmpYaml.deleteIn([...parentKeys, variableKey]);
-            props.vscodeApi?.postMessage({ type: 'updateDocument', text: tmpYaml.toString() });
             updateYamlDocument(tmpYaml);
         }
     }
@@ -231,8 +204,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = yaml.clone();
-            const newPair = tmpYaml.createPair('', '');
-            tmpYaml.addIn(parentKeys, newPair);
+            tmpYaml.setIn([...parentKeys, ''], '');
             updateYamlDocument(tmpYaml);
         }
     }
@@ -261,11 +233,6 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             type: 'updateDocument',
             text: document
         });
-    }
-
-    function resolveParentNode(yaml: any, parentKeys: string[]) {
-        parentKeys.forEach((key) => (yaml = yaml[key]));
-        return yaml;
     }
 
     function renderAddButton(parentKeys: string[]) {
