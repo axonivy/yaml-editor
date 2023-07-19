@@ -16,18 +16,31 @@ interface YAMLVariablesTableProps {
     vscodeApi?: WebviewApi<unknown>;
 }
 
-const EMPTY_YAML_TEXT = '{"":""}';
-const EMPTY_YAML = YAML.parse(EMPTY_YAML_TEXT);
+const EMPTY_YAML = YAML.parseDocument('');
 
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
-    const [yaml, setYaml] = useState({});
+    const [yaml, setYaml] = useState(EMPTY_YAML);
+
+    // const tst = `
+    // k1: "asdads"
+    // k2: "sasdasd"
+    // k3:
+    //   c1: 10
+    // k4: 101
+    // `;
+    const tst = 'a: "asdads"';
+
+    const d = YAML.parseDocument(tst);
+    d.add(d.createPair('', 111));
+    const j = d.toJS();
+    console.log(d, j);
 
     useEffect(() => {
         if (!props.vscodeApi) {
             let parsedYaml = EMPTY_YAML;
             const config = localStorage.getItem('config');
-            if (config && config !== '{}') {
-                parsedYaml = YAML.parse(config);
+            if (config) {
+                parsedYaml = YAML.parseDocument(config);
             }
             setYaml(parsedYaml);
             return;
@@ -41,25 +54,14 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                         setYaml(EMPTY_YAML);
                         return;
                     }
-                    const parsedYaml = YAML.parse(text);
+                    const parsedYaml = YAML.parseDocument(text);
                     setYaml(parsedYaml);
                 } catch {
-                    setYaml({});
+                    setYaml(EMPTY_YAML);
                 }
             }
         });
     }, [props]);
-
-    if (Object.keys(yaml).length === 0) {
-        return (
-            <main id='webview-body'>
-                <h2>
-                    Error: Could not parse the <code>*.yaml</code> file! Please doublecheck the
-                    file.
-                </h2>
-            </main>
-        );
-    }
 
     return (
         <main id='webview-body'>
@@ -74,9 +76,11 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                     </VSCodeDataGridCell>
                     <VSCodeDataGridCell cell-type='columnheader' grid-column='3' />
                 </VSCodeDataGridRow>
-                {Object.entries(yaml).map(([key, value], index) =>
-                    renderDataGrid(key, value, index, [])
-                )}
+                {yaml.toJS()
+                    ? Object.entries(yaml.toJS()).map(([key, value]) =>
+                          renderDataGrid(key, value, [])
+                      )
+                    : null}
                 <section style={{ justifyContent: 'flex-end' }} className='edit-button-container'>
                     {renderAddButton([])}
                     {renderAddParentNodeButton([])}
@@ -85,15 +89,15 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         </main>
     );
 
-    function renderDataGrid(key: string, value: any, index: number, parentKeys: string[]) {
+    function renderDataGrid(key: string, value: any, parentKeys: string[]) {
         const valueType = typeof value;
         if (valueType === 'object') {
-            return renderParentNode(key, value, index, parentKeys);
+            return renderParentNode(key, value, parentKeys);
         }
-        return renderLeafNode(key, value, index, parentKeys);
+        return renderLeafNode(key, value, parentKeys);
     }
 
-    function renderParentNode(key: string, value: any, index: number, parentKeys: string[]) {
+    function renderParentNode(key: string, value: any, parentKeys: string[]) {
         return (
             <VSCodeDataGrid grid-template-columns='48% 48% 4%' aria-label='Default'>
                 <VSCodeDataGridRow>
@@ -111,14 +115,14 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                         {renderDeleteButton(key, parentKeys)}
                     </section>
                 </VSCodeDataGridRow>
-                {Object.entries(value).map(([childKey, childValue], childIndex) =>
-                    renderDataGrid(childKey, childValue, childIndex, [...parentKeys, key])
+                {Object.entries(value).map(([childKey, childValue]) =>
+                    renderDataGrid(childKey, childValue, [...parentKeys, key])
                 )}
             </VSCodeDataGrid>
         );
     }
 
-    function renderLeafNode(key: string, value: any, index: number, parentKeys: string[]) {
+    function renderLeafNode(key: string, value: any, parentKeys: string[]) {
         return (
             <VSCodeDataGridRow rowType='default'>
                 <VSCodeTextField
@@ -176,20 +180,18 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     function handleVariableKeyChange(e: Event, variableKey: string, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            delete Object.assign(parentNode, { [e.target['value']]: parentNode[variableKey] })[
-                variableKey
-            ];
-            props.vscodeApi?.postMessage({ type: 'updateDocument', text: YAML.stringify(tmpYaml) });
-            setYaml(tmpYaml);
+            const tmpYaml = yaml.clone();
+            const value = tmpYaml.getIn([...parentKeys, variableKey]);
+            tmpYaml.addIn([...parentKeys, e.target['value']], value);
+            tmpYaml.deleteIn([...parentKeys, variableKey]);
+            props.vscodeApi?.postMessage({ type: 'updateDocument', text: tmpYaml.toString() });
+            updateYamlDocument(tmpYaml);
         }
     }
 
     function handleVariableValueChange(e: Event, variableKey: string, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
             // guess type of changed value
             const changedValue = e.target['value'];
             let newValue;
@@ -206,8 +208,8 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 // otherwise handle as string
                 newValue = changedValue;
             }
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            parentNode[variableKey] = newValue;
+            const tmpYaml = yaml.clone();
+            tmpYaml.setIn([...parentKeys, variableKey], newValue);
             updateYamlDocument(tmpYaml);
         }
     }
@@ -219,9 +221,8 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     ) {
         e.preventDefault();
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            parentNode[variableKey] = e.target['proxy'].checked;
+            const tmpYaml = yaml.clone();
+            tmpYaml.setIn([...parentKeys, variableKey], e.target['proxy'].checked);
             updateYamlDocument(tmpYaml);
         }
     }
@@ -229,9 +230,9 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     function handleAddClick(e: React.MouseEvent<HTMLElement, MouseEvent>, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            parentNode[''] = '';
+            const tmpYaml = yaml.clone();
+            const newPair = tmpYaml.createPair('', '');
+            tmpYaml.addIn(parentKeys, newPair);
             updateYamlDocument(tmpYaml);
         }
     }
@@ -243,21 +244,15 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     ) {
         e.preventDefault();
         if (e.target) {
-            const tmpYaml = Object.assign({}, yaml);
-            const parentNode = resolveParentNode(tmpYaml, parentKeys);
-            delete parentNode[variableKey];
-            if (Object.keys(tmpYaml).length === 0) {
-                updateYamlDocument(EMPTY_YAML);
-                return;
-            }
+            const tmpYaml = yaml.clone();
+            tmpYaml.deleteIn([...parentKeys, variableKey]);
             updateYamlDocument(tmpYaml);
         }
     }
 
-    function updateYamlDocument(newYamlDocument: object) {
+    function updateYamlDocument(newYamlDocument: any) {
         setYaml(newYamlDocument);
-        let document = JSON.stringify(newYamlDocument);
-        document = document === EMPTY_YAML_TEXT ? '' : document;
+        const document = newYamlDocument.toString();
         if (!props.vscodeApi) {
             localStorage.setItem('config', document);
             return;
