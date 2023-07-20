@@ -17,7 +17,7 @@ interface YAMLVariablesTableProps {
 }
 
 export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
-    const [yaml, setYaml] = useState(new YAML.Document());
+    const [yaml, setYaml] = useState(YAML.parseDocument(''));
 
     useEffect(() => {
         if (!props.vscodeApi) {
@@ -90,9 +90,11 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                         {renderDeleteButton(key, parentKeys)}
                     </section>
                 </VSCodeDataGridRow>
-                {Object.entries(value).map(([childKey, childValue]) =>
-                    renderDataGrid(childKey, childValue, [...parentKeys, key])
-                )}
+                {value
+                    ? Object.entries(value).map(([childKey, childValue]) =>
+                          renderDataGrid(childKey, childValue, [...parentKeys, key])
+                      )
+                    : null}
             </VSCodeDataGrid>
         );
     }
@@ -146,7 +148,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
 
         if (e.target) {
             const tmpYaml = yaml.clone();
-            tmpYaml.setIn([...parentKeys, ''], tmpYaml.createNode({}));
+            tmpYaml.setIn([...parentKeys, tmpYaml.createNode('')], tmpYaml.createNode({}));
             updateYamlDocument(tmpYaml);
         }
     }
@@ -154,10 +156,19 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
     function handleVariableKeyChange(e: Event, variableKey: string, parentKeys: string[]) {
         e.preventDefault();
         if (e.target) {
+            const newKey = e.target['value'];
             const tmpYaml = yaml.clone();
-            const value = tmpYaml.getIn([...parentKeys, variableKey]);
-            tmpYaml.setIn([...parentKeys, e.target['value']], value);
-            tmpYaml.deleteIn([...parentKeys, variableKey]);
+            const parentNode = tmpYaml.getIn([...parentKeys], true) as any;
+            YAML.visit(parentNode, {
+                Pair(_, pair) {
+                    const key = pair.key as any;
+                    if (key.value === variableKey) {
+                        key.value = newKey;
+                        key.soruce = newKey;
+                        key.type = YAML.Scalar.PLAIN;
+                    }
+                }
+            });
             updateYamlDocument(tmpYaml);
         }
     }
@@ -182,7 +193,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
                 newValue = changedValue;
             }
             const tmpYaml = yaml.clone();
-            tmpYaml.setIn([...parentKeys, variableKey], newValue);
+            tmpYaml.setIn([...parentKeys, variableKey], tmpYaml.createNode(newValue));
             updateYamlDocument(tmpYaml);
         }
     }
@@ -195,7 +206,10 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = yaml.clone();
-            tmpYaml.setIn([...parentKeys, variableKey], e.target['proxy'].checked);
+            tmpYaml.setIn(
+                [...parentKeys, variableKey],
+                tmpYaml.createNode(e.target['proxy'].checked)
+            );
             updateYamlDocument(tmpYaml);
         }
     }
@@ -204,7 +218,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = yaml.clone();
-            tmpYaml.setIn([...parentKeys, ''], '');
+            tmpYaml.setIn([...parentKeys, tmpYaml.createNode('')], tmpYaml.createNode(''));
             updateYamlDocument(tmpYaml);
         }
     }
@@ -224,7 +238,11 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
 
     function updateYamlDocument(newYamlDocument: any) {
         setYaml(newYamlDocument);
-        const document = newYamlDocument.toString();
+        const document = (newYamlDocument as YAML.Document).toString({
+            collectionStyle: 'block',
+            defaultStringType: 'PLAIN'
+        });
+
         if (!props.vscodeApi) {
             localStorage.setItem('config', document);
             return;
