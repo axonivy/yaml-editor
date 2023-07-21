@@ -159,6 +159,10 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
             const newKey = e.target['value'];
             const tmpYaml = yaml.clone();
             const parentNode = tmpYaml.getIn([...parentKeys], true) as any;
+            if (parentNode.has(newKey)) {
+                updateYamlDocument(tmpYaml);
+                return;
+            }
             YAML.visit(parentNode, {
                 Pair(_, pair) {
                     const key = pair.key as any;
