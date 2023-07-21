@@ -40,7 +40,6 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
 
     return (
         <main id='webview-body'>
-            <h1>YAML Variables Table Editor</h1>
             <VSCodeDataGrid grid-template-columns='48% 48% 4%' aria-label='Default'>
                 <VSCodeDataGridRow row-type='sticky-header'>
                     <VSCodeDataGridCell cell-type='columnheader' grid-column='1'>
@@ -158,7 +157,7 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         if (e.target) {
             const newKey = e.target['value'];
             const tmpYaml = yaml.clone();
-            const parentNode = tmpYaml.getIn([...parentKeys], true) as any;
+            const parentNode = tmpYaml.getIn(parentKeys, true) as any;
             if (parentNode.has(newKey)) {
                 updateYamlDocument(tmpYaml);
                 return;
@@ -222,6 +221,10 @@ export default function YAMLVariablesTable(props: YAMLVariablesTableProps) {
         e.preventDefault();
         if (e.target) {
             const tmpYaml = yaml.clone();
+            const parentValue = tmpYaml.getIn(parentKeys);
+            if (!parentValue) {
+                tmpYaml.setIn(parentKeys, tmpYaml.createNode({}));
+            }
             tmpYaml.setIn([...parentKeys, tmpYaml.createNode('')], tmpYaml.createNode(''));
             updateYamlDocument(tmpYaml);
         }
