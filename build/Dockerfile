@@ -1,1 +1,1 @@
-FROM node:16.19-bullseye
+FROM node:18.18.2-bookworm
