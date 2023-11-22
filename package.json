@@ -3,7 +3,7 @@
   "name": "parent",
   "engines": {
     "yarn": ">=1.7.0 <2.x.x",
-    "node": ">=16.15.1"
+    "node": ">=18.18.2"
   },
   "scripts": {
     "build": "lerna run build",
@@ -15,7 +15,7 @@
     "watch": "lerna run --parallel watch"
   },
   "devDependencies": {
-    "@types/node": "16.x",
+    "@types/node": "^18.18.12",
     "eslint": "^8.43.0",
     "eslint-config-react-app": "^7.0.1",
     "lerna": "^6.6.2",
