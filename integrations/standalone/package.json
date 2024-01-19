@@ -1,14 +1,14 @@
 {
   "name": "@axonivy/config-editor-standalone",
   "private": true,
-  "version": "11.3.0-next",
+  "version": "11.2.0-next",
   "scripts": {
     "build": "vite build",
     "lint": "eslint --ext .ts,.tsx ./src",
     "start": "vite"
   },
   "dependencies": {
-    "@axonivy/config-editor": "11.3.0-next",
+    "@axonivy/config-editor": "11.2.0-next",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

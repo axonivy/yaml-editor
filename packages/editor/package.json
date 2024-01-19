@@ -1,6 +1,6 @@
 {
   "name": "@axonivy/config-editor",
-  "version": "11.3.0-next",
+  "version": "11.2.0-next",
   "files": [
     "lib",
     "src"
