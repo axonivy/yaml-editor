@@ -1,5 +1,7 @@
 node_modules
 out
 dist
+build
 lib
-*tsconfig.tsbuildinfo
+*tsconfig*.tsbuildinfo
+eslint.xml

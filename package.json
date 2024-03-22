@@ -2,25 +2,37 @@
   "private": true,
   "name": "parent",
   "engines": {
-    "yarn": ">=1.7.0 <2.x.x",
-    "node": ">=18.18.2"
+    "node": ">=20.10.0"
+  },
+  "volta": {
+    "node": "20.10.0"
   },
   "scripts": {
-    "build": "lerna run build",
+    "ci": "npm install && npm run package && npm run lint:ci",
     "clean": "lerna run clean",
+    "build": "tsc --build && tscp --build",
+    "package": "lerna run package",
+    "build:clean": "lerna run build:clean",
+    "type": "lerna run type",
     "lint": "lerna run lint --",
-    "prepare": "lerna run prepare",
-    "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes",
-    "standalone": "yarn --cwd integrations/standalone",
-    "watch": "lerna run --parallel watch"
+    "lint:ci": "npm run lint -- -o eslint.xml -f checkstyle",
+    "dev": "npm --prefix integrations/standalone run dev",
+    "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
   },
   "devDependencies": {
-    "@types/node": "^18.18.12",
-    "eslint": "^8.43.0",
-    "eslint-config-react-app": "^7.0.1",
-    "lerna": "^6.6.2",
-    "prettier": "^2.8.8",
-    "typescript": "~5.1.3"
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "lerna": "^8.0.1",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.3.3",
+    "typescript-cp": "^0.1.9"
   },
   "workspaces": [
     "packages/*",

@@ -5,11 +5,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Standalone Config Editor",
+      "name": "Run Standalone (Chrome)",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:3000",
-      "preLaunchTask": "Start Dev Server"
+      "preLaunchTask": "Start Standalone",
+      "postDebugTask": "Terminate All Tasks"
     }
   ]
 }
