@@ -5,8 +5,8 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "Start Dev Server",
-      "command": "yarn standalone start",
+      "label": "Start Standalone",
+      "command": "npm run dev",
       "isBackground": true,
       "problemMatcher": [
         {
@@ -24,7 +24,21 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      },
+      }
+    },
+    {
+      "label": "Terminate All Tasks",
+      "command": "echo ${input:terminate}",
+      "type": "shell",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
     }
   ]
 }

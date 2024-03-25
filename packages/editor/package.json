@@ -1,29 +1,39 @@
 {
   "name": "@axonivy/config-editor",
   "version": "11.3.0-next",
+  "license": "Apache-2.0",
+  "author": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/config-editor-client"
+  },
   "files": [
     "lib",
     "src"
   ],
-  "scripts": {
-    "build": "tsc && yarn build:copyfiles",
-    "build:copyfiles": "copyfiles -u 1 src/*.css src/*.ttf lib",
-    "clean": "rimraf lib tsconfig.tsbuildinfo",
-    "prepare": "yarn clean && yarn build",
-    "lint": "eslint --ext .ts,.tsx ./src"
-  },
-  "main": "lib/index",
-  "types": "src/index",
-  "module": "src/index",
+  "type": "module",
+  "module": "lib/index",
+  "types": "lib/index",
+  "source": "src/index",
   "dependencies": {
     "@vscode/webview-ui-toolkit": "^1.2.2",
+    "@vscode/codicons": "^0.0.35",
     "react": "^18.2.0",
     "yaml": "^2.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.13",
-    "@types/vscode-webview": "^1.57.1",
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.1"
+  },
+  "scripts": {
+    "clean": "rimraf lib *.tsbuildinfo",
+    "build": "tsc --build && tscp",
+    "package": "tsc -p tsconfig.production.json && tscp",
+    "build:clean": "npm run clean && npm run build",
+    "type": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src"
   }
 }
