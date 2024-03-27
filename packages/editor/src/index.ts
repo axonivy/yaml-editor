@@ -1,1 +1,1 @@
-export { default as YAMLVariablesTable } from './yaml-table';
+export { default as App } from './App';
