@@ -1,3 +1,7 @@
+.editor {
+  height: 100vh !important;
+}
+
 .master-panel {
   background-color: var(--N100);
 }
@@ -5,4 +9,8 @@
 .master-toolbar {
   background-color: var(--N100);
   border-bottom: none;
+}
+
+.master-content {
+  margin-inline: var(--size-3);
 }
