@@ -1,0 +1,39 @@
+{
+  "name": "@axonivy/new-config-editor",
+  "version": "11.3.0-next",
+  "license": "Apache-2.0",
+  "author": "Axon Ivy AG",
+  "homepage": "https://developer.axonivy.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axonivy/config-editor-client"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "type": "module",
+  "module": "lib/index",
+  "types": "lib/index",
+  "source": "src/index",
+  "dependencies": {
+    "@axonivy/ui-components": "11.3.0-next.83",
+    "@axonivy/ui-icons": "11.3.0-next.83",
+    "react": "^18.2.0",
+    "yaml": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.13",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.1"
+  },
+  "scripts": {
+    "clean": "rimraf lib *.tsbuildinfo",
+    "build": "tsc --build && tscp",
+    "package": "tsc -p tsconfig.production.json && tscp",
+    "build:clean": "npm run clean && npm run build",
+    "type": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.tsx ./src",
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src"
+  }
+}

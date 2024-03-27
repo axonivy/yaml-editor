@@ -12,6 +12,10 @@
       "path": "./packages/editor"
     },
     {
+      "name": "package/new-editor",
+      "path": "./packages/new-editor"
+    },
+    {
       "name": "integrations/standalone",
       "path": "./integrations/standalone"
     },
