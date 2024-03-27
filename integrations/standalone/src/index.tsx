@@ -1,4 +1,4 @@
-import { App } from '@axonivy/config-editor';
+import { App } from '@axonivy/new-config-editor';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 
