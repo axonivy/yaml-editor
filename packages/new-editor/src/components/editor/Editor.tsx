@@ -9,12 +9,28 @@ export const Editor = () => {
   const detailTitle = 'Variables Editor - variableA';
   const variables = [
     {
-      key: 'param.procurementRequest',
+      key: 'microsoft-connector',
       value: '',
       children: [
-        { key: 'accepted', children: [], value: 'true' },
-        { key: 'amount', children: [], value: '1234' },
-        { key: 'requester', value: '', children: [{ key: 'user', value: 'Admin', children: [] }] }
+        { key: 'appId', value: 'MyAppId', children: [] },
+        { key: 'secretKey', value: 'MySecretKey', children: [] },
+        { key: 'useAppPermissions', value: 'false', children: [] },
+        { key: 'tenantId', value: 'common', children: [] },
+        {
+          key: 'useUserPassFlow',
+          value: '',
+          children: [
+            { key: 'enabled', value: 'false', children: [] },
+            { key: 'user', value: 'MyUser', children: [] },
+            { key: 'pass', value: 'MyPass', children: [] }
+          ]
+        },
+        {
+          key: 'permissions',
+          value: 'user.read Calendars.ReadWrite mail.readWrite mail.send Tasks.ReadWrite Chat.Read offline_access',
+          children: []
+        },
+        { key: 'connectorProvider', value: 'org.glassfish.jersey.client.HttpUrlConnectorProvider', children: [] }
       ]
     }
   ];
@@ -25,7 +41,7 @@ export const Editor = () => {
   );
 
   return (
-    <ResizablePanelGroup direction='horizontal' className='editor'>
+    <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
       <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
         <Flex direction='column'>
           <Toolbar className='master-toolbar'>
