@@ -6,3 +6,7 @@
   background-color: var(--N100);
   border-bottom: none;
 }
+
+.master-content {
+  margin-inline: var(--size-3);
+}
