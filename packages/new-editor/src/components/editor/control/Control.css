@@ -1,0 +1,6 @@
+.vertical-line {
+  flex: 0 0 1px;
+  margin: 0 10px;
+  align-self: stretch;
+  background-color: var(--N200);
+}

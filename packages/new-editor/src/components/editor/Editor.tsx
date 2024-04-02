@@ -74,6 +74,11 @@ export const Editor = () => {
 
   const [selectedVariable, setSelectedVariable] = useState<Variable>();
 
+  let sidebarHeaderTitle = title;
+  if (selectedVariable) {
+    sidebarHeaderTitle += ' - ' + selectedVariable.name;
+  }
+
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
       <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
@@ -86,19 +91,15 @@ export const Editor = () => {
           </Flex>
         </Flex>
       </ResizablePanel>
-      {selectedVariable && (
-        <>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={25} minSize={10}>
-            <Flex direction='column'>
-              <SidebarHeader icon={IvyIcons.PenEdit} title={title + ' - ' + selectedVariable.name} />
-              <Flex direction='column' gap={4} className='content'>
-                <VariableDetail variable={selectedVariable} />
-              </Flex>
-            </Flex>
-          </ResizablePanel>
-        </>
-      )}
+      <ResizableHandle />
+      <ResizablePanel defaultSize={25} minSize={10}>
+        <Flex direction='column'>
+          <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
+          <Flex direction='column' gap={4} className='content'>
+            <VariableDetail variable={selectedVariable} />
+          </Flex>
+        </Flex>
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 };

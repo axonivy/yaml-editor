@@ -1,9 +1,9 @@
 .master-panel {
-  background-color: var(--N100);
+  background-color: var(--N75);
 }
 
 .master-toolbar {
-  background-color: var(--N100);
+  background-color: var(--N75);
   border-bottom: none;
 }
 

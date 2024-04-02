@@ -2,15 +2,20 @@ import { Fieldset, Input, SimpleSelect, Textarea, ToolbarTitle } from '@axonivy/
 import { metadataOptions, type Variable } from '../../data/Variable';
 
 type VariableProps = {
-  variable: Variable;
+  variable: Variable | undefined;
 };
 
 export const VariableDetail = ({ variable }: VariableProps) => {
+  const title = <ToolbarTitle>Variable Configuration</ToolbarTitle>;
+  if (!variable) {
+    return title;
+  }
+
   const selectedMetadataOption = metadataOptions.find(option => option.value === variable.metadata);
 
   return (
     <>
-      <ToolbarTitle>Variable Configuration</ToolbarTitle>
+      {title}
       <Fieldset label='Name'>
         <Input value={variable.name} />
       </Fieldset>
