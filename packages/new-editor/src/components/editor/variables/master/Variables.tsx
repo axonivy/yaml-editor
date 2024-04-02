@@ -15,7 +15,7 @@ import type { Variable } from '../../data/Variable';
 
 type VariablesProps = {
   variables: Array<Variable>;
-  onSelection: any;
+  onSelection: (selectedVariable?: Variable) => void;
 };
 
 export const Variables = ({ variables, onSelection }: VariablesProps) => {

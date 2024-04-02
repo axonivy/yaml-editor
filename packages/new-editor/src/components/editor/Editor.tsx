@@ -72,7 +72,7 @@ export const Editor = () => {
     }
   ];
 
-  const [selectedVariable, setSelectedVariable] = useState(undefined);
+  const [selectedVariable, setSelectedVariable] = useState<Variable>();
 
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
@@ -91,7 +91,7 @@ export const Editor = () => {
           <ResizableHandle />
           <ResizablePanel defaultSize={25} minSize={10}>
             <Flex direction='column'>
-              <SidebarHeader icon={IvyIcons.PenEdit} title={title + ' - ' + (selectedVariable as Variable).name} />
+              <SidebarHeader icon={IvyIcons.PenEdit} title={title + ' - ' + selectedVariable.name} />
               <Flex direction='column' gap={4} className='content'>
                 <VariableDetail variable={selectedVariable} />
               </Flex>
