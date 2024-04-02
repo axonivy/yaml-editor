@@ -1,19 +1,12 @@
 import { Fieldset, Input, SimpleSelect, Textarea, ToolbarTitle } from '@axonivy/ui-components';
-import { Metadata, type Variable } from '../../data/Variable';
+import { metadataOptions, type Variable } from '../../data/Variable';
 
 type VariableProps = {
   variable: Variable;
 };
 
 export const VariableDetail = ({ variable }: VariableProps) => {
-  const metadataOptions = Object.keys(Metadata)
-    .filter(key => isNaN(Number(key)))
-    .map(key => {
-      const option = key.toString();
-      return { value: option, label: option };
-    });
-  metadataOptions.unshift({ value: 'None', label: 'None' });
-  const selectedMetadataOption = variable.metadata === undefined ? 'None' : Metadata[variable.metadata];
+  const selectedMetadataOption = metadataOptions.find(option => option.value === variable.metadata);
 
   return (
     <>
@@ -30,7 +23,7 @@ export const VariableDetail = ({ variable }: VariableProps) => {
             <Textarea value={variable.description} />
           </Fieldset>
           <Fieldset label='Metadata'>
-            <SimpleSelect defaultValue={selectedMetadataOption} items={metadataOptions}></SimpleSelect>
+            <SimpleSelect defaultValue={selectedMetadataOption?.value} items={metadataOptions}></SimpleSelect>
           </Fieldset>
         </>
       )}

@@ -2,13 +2,14 @@ export interface Variable {
   name: string;
   value: string;
   description: string;
-  metadata: Metadata | undefined;
+  metadata: string;
   children: Array<Variable>;
 }
 
-export enum Metadata {
-  Password,
-  Daytime,
-  Enum,
-  File
-}
+export const metadataOptions: { label: string; value: string }[] = [
+  { label: 'None', value: 'none' },
+  { label: 'Password', value: 'password' },
+  { label: 'Daytime', value: 'daytime' },
+  { label: 'Enum', value: 'enum' },
+  { label: 'File', value: 'file' }
+];
