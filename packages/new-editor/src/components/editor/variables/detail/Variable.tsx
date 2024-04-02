@@ -23,7 +23,7 @@ export const VariableDetail = ({ variable }: VariableProps) => {
             <Textarea value={variable.description} />
           </Fieldset>
           <Fieldset label='Metadata'>
-            <SimpleSelect defaultValue={selectedMetadataOption?.value} items={metadataOptions}></SimpleSelect>
+            <SimpleSelect value={selectedMetadataOption?.value} items={metadataOptions}></SimpleSelect>
           </Fieldset>
         </>
       )}
