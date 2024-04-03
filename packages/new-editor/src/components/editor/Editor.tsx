@@ -18,7 +18,7 @@ import { Variables } from './variables/master/Variables';
 export const Editor = () => {
   // TODO: Variables coming from context and choosing corresponding master and detail content components
   const title = 'Variables Editor';
-  const variables = [
+  const originalVariables = [
     {
       name: 'microsoft-connector',
       value: '',
@@ -78,9 +78,17 @@ export const Editor = () => {
           children: []
         }
       ]
+    },
+    {
+      name: 'other-connector',
+      value: '',
+      description: '',
+      metadata: 'none',
+      children: []
     }
   ];
 
+  const [variables, setVariables] = useState<Variable[]>(originalVariables);
   const [selectedVariable, setSelectedVariable] = useState<Variable>();
 
   let sidebarHeaderTitle = title;
@@ -97,7 +105,7 @@ export const Editor = () => {
             <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
-            <Variables variables={variables} onSelection={setSelectedVariable} />
+            <Variables variables={variables} setSelectedVariable={setSelectedVariable} setVariables={setVariables} />
           </Flex>
         </Flex>
       </ResizablePanel>
