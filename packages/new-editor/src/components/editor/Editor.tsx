@@ -1,4 +1,13 @@
-import { Flex, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Toolbar, ToolbarTitle } from '@axonivy/ui-components';
+import {
+  Button,
+  Flex,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  SidebarHeader,
+  Toolbar,
+  ToolbarTitle
+} from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
 import './Editor.css';
@@ -74,31 +83,33 @@ export const Editor = () => {
 
   const [selectedVariable, setSelectedVariable] = useState<Variable>();
 
+  let sidebarHeaderTitle = title;
+  if (selectedVariable) {
+    sidebarHeaderTitle += ' - ' + selectedVariable.name;
+  }
+
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
       <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
         <Flex direction='column'>
           <Toolbar className='master-toolbar'>
             <ToolbarTitle>{title}</ToolbarTitle>
+            <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
             <Variables variables={variables} onSelection={setSelectedVariable} />
           </Flex>
         </Flex>
       </ResizablePanel>
-      {selectedVariable && (
-        <>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={25} minSize={10}>
-            <Flex direction='column'>
-              <SidebarHeader icon={IvyIcons.PenEdit} title={title + ' - ' + selectedVariable.name} />
-              <Flex direction='column' gap={4} className='content'>
-                <VariableDetail variable={selectedVariable} />
-              </Flex>
-            </Flex>
-          </ResizablePanel>
-        </>
-      )}
+      <ResizableHandle />
+      <ResizablePanel defaultSize={25} minSize={10}>
+        <Flex direction='column'>
+          <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
+          <Flex direction='column' gap={4} className='content'>
+            <VariableDetail variable={selectedVariable} />
+          </Flex>
+        </Flex>
+      </ResizablePanel>
     </ResizablePanelGroup>
   );
 };

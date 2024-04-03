@@ -1,6 +1,8 @@
 import {
+  Button,
   ExpandableCell,
   ExpandableHeader,
+  Fieldset,
   SelectRow,
   Table,
   TableBody,
@@ -11,6 +13,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
 
 type VariablesProps = {
@@ -47,23 +50,39 @@ export const Variables = ({ variables, onSelection }: VariablesProps) => {
   });
 
   return (
-    <Table>
-      <TableResizableHeader
-        headerGroups={table.getHeaderGroups()}
-        onClick={() => {
-          selection.options.onRowSelectionChange({});
-          onSelection();
-        }}
-      />
-      <TableBody>
-        {table.getRowModel().rows.map(row => (
-          <SelectRow key={row.id} row={row} onClick={() => onSelection(row.original)}>
-            {row.getVisibleCells().map(cell => (
-              <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-            ))}
-          </SelectRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Fieldset
+      label='List of variables'
+      control={
+        <Control
+          buttons={[
+            <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
+            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteVariable} />
+          ]}
+        />
+      }
+    >
+      <Table>
+        <TableResizableHeader
+          headerGroups={table.getHeaderGroups()}
+          onClick={() => {
+            selection.options.onRowSelectionChange({});
+            onSelection();
+          }}
+        />
+        <TableBody>
+          {table.getRowModel().rows.map(row => (
+            <SelectRow key={row.id} row={row} onClick={() => onSelection(row.original)}>
+              {row.getVisibleCells().map(cell => (
+                <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+              ))}
+            </SelectRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Fieldset>
   );
 };
+
+const addVariable = () => {}; // TODO: Implementation
+
+const deleteVariable = () => {}; // TODO: Implementation

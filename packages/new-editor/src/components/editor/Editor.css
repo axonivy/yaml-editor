@@ -1,10 +1,5 @@
 .master-panel {
-  background-color: var(--N100);
-}
-
-.master-toolbar {
-  background-color: var(--N100);
-  border-bottom: none;
+  background-color: var(--N75);
 }
 
 .content {
