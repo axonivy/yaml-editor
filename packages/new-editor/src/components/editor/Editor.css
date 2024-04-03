@@ -2,11 +2,6 @@
   background-color: var(--N75);
 }
 
-.master-toolbar {
-  background-color: var(--N75);
-  border-bottom: none;
-}
-
 .content {
   margin: var(--size-3);
 }

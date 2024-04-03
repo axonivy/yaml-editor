@@ -1,4 +1,13 @@
-import { Flex, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Toolbar, ToolbarTitle } from '@axonivy/ui-components';
+import {
+  Button,
+  Flex,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  SidebarHeader,
+  Toolbar,
+  ToolbarTitle
+} from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
 import './Editor.css';
@@ -85,6 +94,7 @@ export const Editor = () => {
         <Flex direction='column'>
           <Toolbar className='master-toolbar'>
             <ToolbarTitle>{title}</ToolbarTitle>
+            <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
             <Variables variables={variables} onSelection={setSelectedVariable} />

@@ -1,21 +1,19 @@
-import { Fieldset, Input, SimpleSelect, Textarea, ToolbarTitle } from '@axonivy/ui-components';
+import { Fieldset, Input, Message, SimpleSelect, Textarea } from '@axonivy/ui-components';
 import { metadataOptions, type Variable } from '../../data/Variable';
 
 type VariableProps = {
-  variable: Variable | undefined;
+  variable?: Variable;
 };
 
 export const VariableDetail = ({ variable }: VariableProps) => {
-  const title = <ToolbarTitle>Variable Configuration</ToolbarTitle>;
   if (!variable) {
-    return title;
+    return <Message>Select a variable to edit.</Message>;
   }
 
   const selectedMetadataOption = metadataOptions.find(option => option.value === variable.metadata);
 
   return (
     <>
-      {title}
       <Fieldset label='Name'>
         <Input value={variable.name} />
       </Fieldset>
