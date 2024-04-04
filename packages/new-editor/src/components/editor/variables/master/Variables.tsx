@@ -13,16 +13,20 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
+import { useState } from 'react';
 import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
 
 type VariablesProps = {
-  variables: Array<Variable>;
+  variables: Variable[];
   setSelectedVariable: (selectedVariable?: Variable) => void;
-  setVariables: (variables: Variable[]) => void;
 };
 
-export const Variables = ({ variables, setSelectedVariable, setVariables }: VariablesProps) => {
+type TreePath = Array<number>;
+
+export const Variables = ({ variables: propsVariables, setSelectedVariable }: VariablesProps) => {
+  const [variables, setVariables] = useState<Variable[]>(propsVariables);
+
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const columns: ColumnDef<Variable, string>[] = [
@@ -54,7 +58,7 @@ export const Variables = ({ variables, setSelectedVariable, setVariables }: Vari
     return table.getRowModel().rowsById[Object.keys(selection.tableState.rowSelection!)[0]];
   };
 
-  const getParentIndexes = (row: Row<Variable>) => {
+  const getParentPath = (row: Row<Variable>) => {
     const parentId = row.parentId;
     if (!parentId) {
       return [];
@@ -62,51 +66,39 @@ export const Variables = ({ variables, setSelectedVariable, setVariables }: Vari
     return parentId.split('.').map(index => Number(index));
   };
 
-  const deepCopyVariables = () => {
-    return deepCopyVariablesRecursive(variables);
-  };
-
-  const deepCopyVariablesRecursive = (variables: Variable[]) => {
-    return variables.map(variable => {
-      const newVariable = { ...variable };
-      newVariable.children = deepCopyVariablesRecursive(variable.children);
-      return newVariable;
-    });
-  };
-
-  const getVariable = (variables: Variable[], indexes: number[]): Variable | undefined => {
-    if (indexes.length === 0) {
+  const getVariable = (variables: Variable[], path: TreePath): Variable | undefined => {
+    if (path.length === 0) {
       return;
     }
-    return getVariableRecursive(variables, [...indexes]);
+    return getVariableRecursive(variables, [...path]);
   };
 
-  const getVariableRecursive = (variables: Variable[], indexes: number[]): Variable => {
-    const variable = variables[indexes.shift()!];
-    if (indexes.length === 0) {
+  const getVariableRecursive = (variables: Variable[], path: TreePath): Variable => {
+    const variable = variables[path.shift()!];
+    if (path.length === 0) {
       return variable;
     }
-    return getVariableRecursive(variable.children, indexes);
+    return getVariableRecursive(variable.children, path);
   };
 
-  const selectVariable = (indexes: number[], variable?: Variable) => {
+  const selectVariable = (path: TreePath, variable?: Variable) => {
     setSelectedVariable(variable);
-    if (indexes.length === 0) {
+    if (path.length === 0) {
       selection.options.onRowSelectionChange({});
     } else {
-      selection.options.onRowSelectionChange({ [`${indexes.join('.')}`]: true });
+      selection.options.onRowSelectionChange({ [`${path.join('.')}`]: true });
     }
   };
 
-  const adjustSelectionBeforeDeletion = (index: number, children: Variable[], parentIndexes: number[], parent?: Variable) => {
+  const adjustSelectionBeforeDeletion = (index: number, children: Variable[], parentPath: TreePath, parent?: Variable) => {
     switch (children.length) {
       // variable is the last remaining child of its parent -> select parent
       case 1:
-        selectVariable(parentIndexes, parent);
+        selectVariable(parentPath, parent);
         break;
       // variable is the last child in the list of children of its parent -> select previous variable
       case index + 1:
-        selectVariable([...parentIndexes, index - 1], children[index - 1]);
+        selectVariable([...parentPath, index - 1], children[index - 1]);
         break;
       // select next variable
       default:
@@ -119,13 +111,13 @@ export const Variables = ({ variables, setSelectedVariable, setVariables }: Vari
 
   const deleteVariable = () => {
     const selectedRow = getSelectedRow();
-    const parentIndexes = getParentIndexes(selectedRow);
+    const parentPath = getParentPath(selectedRow);
     const index = selectedRow.index;
-    const newVariables = deepCopyVariables();
+    const newVariables = structuredClone(variables);
 
-    const parent = getVariable(newVariables, parentIndexes);
+    const parent = getVariable(newVariables, parentPath);
     const children = parent ? parent.children : newVariables;
-    adjustSelectionBeforeDeletion(index, children, parentIndexes, parent);
+    adjustSelectionBeforeDeletion(index, children, parentPath, parent);
 
     children.splice(index, 1);
     setVariables(newVariables);
