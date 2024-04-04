@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { Fragment, cloneElement } from 'react';
 
 type ControlProps = {
-  buttons: ReactElement[];
+  buttons: Array<ReactElement>;
 };
 
 export const Control = ({ buttons }: ControlProps) => {

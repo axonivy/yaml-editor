@@ -18,18 +18,18 @@ import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
 
 type VariablesProps = {
-  variables: Variable[];
+  variables: Array<Variable>;
   setSelectedVariable: (selectedVariable?: Variable) => void;
 };
 
 type TreePath = Array<number>;
 
 export const Variables = ({ variables: propsVariables, setSelectedVariable }: VariablesProps) => {
-  const [variables, setVariables] = useState<Variable[]>(propsVariables);
+  const [variables, setVariables] = useState(propsVariables);
 
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
-  const columns: ColumnDef<Variable, string>[] = [
+  const columns: Array<ColumnDef<Variable, string>> = [
     {
       accessorKey: 'name',
       header: header => <ExpandableHeader name='Name' header={header} />,
@@ -65,14 +65,14 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     return id.split('.').map(index => Number(index));
   };
 
-  const getVariable = (variables: Variable[], path: TreePath): Variable | undefined => {
+  const getVariable = (variables: Array<Variable>, path: TreePath): Variable | undefined => {
     if (path.length === 0) {
       return;
     }
     return getVariableRecursive(variables, [...path]);
   };
 
-  const getVariableRecursive = (variables: Variable[], path: TreePath): Variable => {
+  const getVariableRecursive = (variables: Array<Variable>, path: TreePath): Variable => {
     const variable = variables[path.shift()!];
     if (path.length === 0) {
       return variable;
@@ -89,7 +89,7 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     }
   };
 
-  const adjustSelectionBeforeDeletion = (index: number, children: Variable[], parentPath: TreePath, parent?: Variable) => {
+  const adjustSelectionBeforeDeletion = (index: number, children: Array<Variable>, parentPath: TreePath, parent?: Variable) => {
     switch (children.length) {
       // variable is the last remaining child of its parent -> select parent
       case 1:
@@ -108,10 +108,10 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
 
   const addVariable = () => {
     const selectedRow = getSelectedRow();
-    const indexes = getPath(selectedRow?.id);
+    const path = getPath(selectedRow?.id);
     const newVariables = structuredClone(variables);
 
-    const parent = getVariable(newVariables, indexes);
+    const parent = getVariable(newVariables, path);
     const children = parent ? parent.children : newVariables;
 
     if (parent) {
@@ -128,7 +128,7 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     children.push(newVariable);
     setVariables(newVariables);
 
-    selectVariable([...indexes, children.length - 1], newVariable);
+    selectVariable([...path, children.length - 1], newVariable);
   };
 
   const deleteVariable = () => {
