@@ -11,24 +11,25 @@ export const VariableDetail = ({ variable }: VariableProps) => {
   }
 
   const selectedMetadataOption = metadataOptions.find(option => option.value === variable.metadata);
+  const doesNotHaveChildren = variable.children.length == 0;
 
   return (
     <>
       <Fieldset label='Name'>
         <Input value={variable.name} />
       </Fieldset>
-      {variable.children.length == 0 && (
-        <>
-          <Fieldset label='Value'>
-            <Input value={variable.value} />
-          </Fieldset>
-          <Fieldset label='Description'>
-            <Textarea value={variable.description} />
-          </Fieldset>
-          <Fieldset label='Metadata'>
-            <SimpleSelect value={selectedMetadataOption?.value} items={metadataOptions}></SimpleSelect>
-          </Fieldset>
-        </>
+      {doesNotHaveChildren && (
+        <Fieldset label='Value'>
+          <Input value={variable.value} />
+        </Fieldset>
+      )}
+      <Fieldset label='Description'>
+        <Textarea value={variable.description} />
+      </Fieldset>
+      {doesNotHaveChildren && (
+        <Fieldset label='Metadata'>
+          <SimpleSelect value={selectedMetadataOption?.value} items={metadataOptions}></SimpleSelect>
+        </Fieldset>
       )}
     </>
   );
