@@ -10,6 +10,8 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
+import { getVariable } from '../../data/data';
+import type { TreePath } from '../../types/config';
 import './Editor.css';
 import type { Variable } from './data/Variable';
 import { VariableDetail } from './variables/detail/Variable';
@@ -89,9 +91,11 @@ export const Editor = () => {
   ];
 
   const [sidebar, setSidebar] = useState(true);
-  const [selectedVariable, setSelectedVariable] = useState<Variable>();
+  const [variables, setVariables] = useState<Array<Variable>>(testData);
+  const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
 
   let sidebarHeaderTitle = title;
+  const selectedVariable = getVariable(variables, selectedVariablePath);
   if (selectedVariable) {
     sidebarHeaderTitle += ' - ' + selectedVariable.name;
   }
@@ -105,7 +109,7 @@ export const Editor = () => {
             <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
-            <Variables variables={testData} setSelectedVariable={setSelectedVariable} />
+            <Variables variables={variables} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
           </Flex>
         </Flex>
       </ResizablePanel>
@@ -116,7 +120,7 @@ export const Editor = () => {
             <Flex direction='column'>
               <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
               <Flex direction='column' gap={4} className='content'>
-                <VariableDetail variable={selectedVariable} />
+                <VariableDetail variables={variables} variablePath={selectedVariablePath} setVariables={setVariables} />
               </Flex>
             </Flex>
           </ResizablePanel>
