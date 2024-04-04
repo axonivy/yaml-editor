@@ -6,7 +6,7 @@ export interface Variable {
   children: Array<Variable>;
 }
 
-export const metadataOptions: { label: string; value: string }[] = [
+export const metadataOptions: Array<{ label: string; value: string }> = [
   { label: 'None', value: 'none' },
   { label: 'Password', value: 'password' },
   { label: 'Daytime', value: 'daytime' },
