@@ -88,6 +88,7 @@ export const Editor = () => {
     }
   ];
 
+  const [sidebar, setSidebar] = useState(true);
   const [selectedVariable, setSelectedVariable] = useState<Variable>();
 
   let sidebarHeaderTitle = title;
@@ -101,22 +102,26 @@ export const Editor = () => {
         <Flex direction='column'>
           <Toolbar className='master-toolbar'>
             <ToolbarTitle>{title}</ToolbarTitle>
-            <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' />
+            <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
             <Variables variables={testData} setSelectedVariable={setSelectedVariable} />
           </Flex>
         </Flex>
       </ResizablePanel>
-      <ResizableHandle />
-      <ResizablePanel defaultSize={25} minSize={10}>
-        <Flex direction='column'>
-          <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
-          <Flex direction='column' gap={4} className='content'>
-            <VariableDetail variable={selectedVariable} />
-          </Flex>
-        </Flex>
-      </ResizablePanel>
+      {sidebar && (
+        <>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={25} minSize={10}>
+            <Flex direction='column'>
+              <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
+              <Flex direction='column' gap={4} className='content'>
+                <VariableDetail variable={selectedVariable} />
+              </Flex>
+            </Flex>
+          </ResizablePanel>
+        </>
+      )}
     </ResizablePanelGroup>
   );
 };
