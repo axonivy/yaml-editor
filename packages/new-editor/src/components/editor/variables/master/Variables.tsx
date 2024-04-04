@@ -12,7 +12,7 @@ import {
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { flexRender, getCoreRowModel, useReactTable, type ColumnDef, type Row } from '@tanstack/react-table';
+import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { useState } from 'react';
 import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
@@ -58,12 +58,11 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     return table.getRowModel().rowsById[Object.keys(selection.tableState.rowSelection!)[0]];
   };
 
-  const getParentPath = (row: Row<Variable>) => {
-    const parentId = row.parentId;
-    if (!parentId) {
+  const getPath = (id?: string) => {
+    if (!id) {
       return [];
     }
-    return parentId.split('.').map(index => Number(index));
+    return id.split('.').map(index => Number(index));
   };
 
   const getVariable = (variables: Variable[], path: TreePath): Variable | undefined => {
@@ -107,11 +106,34 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     }
   };
 
-  const addVariable = () => {}; // TODO: Implementation
+  const addVariable = () => {
+    const selectedRow = getSelectedRow();
+    const indexes = getPath(selectedRow?.id);
+    const newVariables = structuredClone(variables);
+
+    const parent = getVariable(newVariables, indexes);
+    const children = parent ? parent.children : newVariables;
+
+    if (parent) {
+      parent.value = '';
+      parent.metadata = 'none';
+    }
+    const newVariable = {
+      name: '',
+      value: '',
+      description: '',
+      metadata: 'none',
+      children: []
+    };
+    children.push(newVariable);
+    setVariables(newVariables);
+
+    selectVariable([...indexes, children.length - 1], newVariable);
+  };
 
   const deleteVariable = () => {
     const selectedRow = getSelectedRow();
-    const parentPath = getParentPath(selectedRow);
+    const parentPath = getPath(selectedRow.parentId);
     const index = selectedRow.index;
     const newVariables = structuredClone(variables);
 
