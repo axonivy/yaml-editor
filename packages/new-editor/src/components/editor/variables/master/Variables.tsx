@@ -13,20 +13,18 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { useState } from 'react';
+import { getVariable } from '../../../../data/data';
+import type { TreePath } from '../../../../types/config';
 import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
 
 type VariablesProps = {
   variables: Array<Variable>;
-  setSelectedVariable: (selectedVariable?: Variable) => void;
+  setVariables: (variables: Array<Variable>) => void;
+  setSelectedVariablePath: (path: TreePath) => void;
 };
 
-type TreePath = Array<number>;
-
-export const Variables = ({ variables: propsVariables, setSelectedVariable }: VariablesProps) => {
-  const [variables, setVariables] = useState(propsVariables);
-
+export const Variables = ({ variables, setVariables, setSelectedVariablePath }: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const columns: Array<ColumnDef<Variable, string>> = [
@@ -65,23 +63,8 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     return id.split('.').map(index => Number(index));
   };
 
-  const getVariable = (variables: Array<Variable>, path: TreePath): Variable | undefined => {
-    if (path.length === 0) {
-      return;
-    }
-    return getVariableRecursive(variables, [...path]);
-  };
-
-  const getVariableRecursive = (variables: Array<Variable>, path: TreePath): Variable => {
-    const variable = variables[path.shift()!];
-    if (path.length === 0) {
-      return variable;
-    }
-    return getVariableRecursive(variable.children, path);
-  };
-
-  const selectVariable = (path: TreePath, variable?: Variable) => {
-    setSelectedVariable(variable);
+  const selectVariable = (path: TreePath) => {
+    setSelectedVariablePath(path);
     if (path.length === 0) {
       selection.options.onRowSelectionChange({});
     } else {
@@ -89,19 +72,19 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     }
   };
 
-  const adjustSelectionBeforeDeletion = (index: number, children: Array<Variable>, parentPath: TreePath, parent?: Variable) => {
+  const adjustSelectionBeforeDeletion = (index: number, children: Array<Variable>, parentPath: TreePath) => {
     switch (children.length) {
       // variable is the last remaining child of its parent -> select parent
       case 1:
-        selectVariable(parentPath, parent);
+        selectVariable(parentPath);
         break;
       // variable is the last child in the list of children of its parent -> select previous variable
       case index + 1:
-        selectVariable([...parentPath, index - 1], children[index - 1]);
+        selectVariable([...parentPath, index - 1]);
         break;
       // select next variable
       default:
-        setSelectedVariable(children[index + 1]);
+        setSelectedVariablePath([...parentPath, index + 1]);
         break;
     }
   };
@@ -128,7 +111,7 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
     children.push(newVariable);
     setVariables(newVariables);
 
-    selectVariable([...path, children.length - 1], newVariable);
+    selectVariable([...path, children.length - 1]);
   };
 
   const deleteVariable = () => {
@@ -139,7 +122,7 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
 
     const parent = getVariable(newVariables, parentPath);
     const children = parent ? parent.children : newVariables;
-    adjustSelectionBeforeDeletion(index, children, parentPath, parent);
+    adjustSelectionBeforeDeletion(index, children, parentPath);
 
     children.splice(index, 1);
     setVariables(newVariables);
@@ -167,12 +150,12 @@ export const Variables = ({ variables: propsVariables, setSelectedVariable }: Va
           headerGroups={table.getHeaderGroups()}
           onClick={() => {
             selection.options.onRowSelectionChange({});
-            setSelectedVariable();
+            setSelectedVariablePath([]);
           }}
         />
         <TableBody>
           {table.getRowModel().rows.map(row => (
-            <SelectRow key={row.id} row={row} onClick={() => setSelectedVariable(row.original)}>
+            <SelectRow key={row.id} row={row} onClick={() => setSelectedVariablePath(getPath(row.id))}>
               {row.getVisibleCells().map(cell => (
                 <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
               ))}
