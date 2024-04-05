@@ -18,9 +18,13 @@ export const VariableDetail = ({ variables, variablePath, setVariables }: Variab
   const selectedMetadataOption = metadataOptions.find(option => option.value === variable.metadata);
   const doesNotHaveChildren = variable.children.length == 0;
 
-  const handleVariableAttributeChange = (key: keyof Variable, value: any) => {
+  const handleVariableAttributeChange = <TKey extends keyof Variable>(key: TKey, value: Variable[TKey]) => {
     const newVariables = structuredClone(variables);
-    getVariable(newVariables, variablePath)![key] = value;
+    const variable = getVariable(newVariables, variablePath);
+    if (!variable) {
+      return;
+    }
+    variable[key] = value;
     setVariables(newVariables);
   };
 
