@@ -8,5 +8,5 @@
     "outDir": "lib"
   },
   "include": ["src"],
-  "references": [{ "path": "../../packages/editor/tsconfig.json" }]
+  "references": [{ "path": "../../packages/new-editor/tsconfig.json" }]
 }
