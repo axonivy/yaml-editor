@@ -1,9 +1,8 @@
-export interface Variable {
-  name: string;
-  value: string;
+import type { TreeNode } from '../../../types/config';
+
+export interface Variable extends TreeNode<Variable> {
   description: string;
   metadata: string;
-  children: Array<Variable>;
 }
 
 export const metadataOptions: Array<{ label: string; value: string }> = [
@@ -13,3 +12,7 @@ export const metadataOptions: Array<{ label: string; value: string }> = [
   { label: 'Enum', value: 'enum' },
   { label: 'File', value: 'file' }
 ];
+
+export const getSelectedMetadataOption = (variable: Variable) => {
+  return metadataOptions.find(option => option.value === variable.metadata);
+};

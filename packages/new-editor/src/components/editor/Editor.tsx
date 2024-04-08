@@ -10,7 +10,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
-import { getVariable } from '../../data/data';
+import { getNode } from '../../data/data';
 import type { TreePath } from '../../types/config';
 import './Editor.css';
 import type { Variable } from './data/Variable';
@@ -20,7 +20,7 @@ import { Variables } from './variables/master/Variables';
 export const Editor = () => {
   // TODO: Variables coming from context and choosing corresponding master and detail content components
   const title = 'Variables Editor';
-  const testData = [
+  const testData: Array<Variable> = [
     {
       name: 'microsoft-connector',
       value: '',
@@ -95,7 +95,7 @@ export const Editor = () => {
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
 
   let sidebarHeaderTitle = title;
-  const selectedVariable = getVariable(variables, selectedVariablePath);
+  const selectedVariable = getNode(variables, selectedVariablePath);
   if (selectedVariable) {
     sidebarHeaderTitle += ' - ' + selectedVariable.name;
   }
