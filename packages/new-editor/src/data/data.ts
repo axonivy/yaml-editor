@@ -8,16 +8,23 @@ export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?
 };
 
 const getParentNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
-  if (!path || path.length === 0) {
+  if (!path || path.length === 0 || path.length === 1) {
     return;
   }
-  return getNodeRecursive(data, path.slice(0, -1));
+  const parentNode = getNodeRecursive(data, path.slice(0, -1));
+  if (!parentNode) {
+    return null;
+  }
+  return parentNode;
 };
 
-const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): TNode => {
+const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): TNode | undefined => {
   const node = data[path.shift()!];
   if (path.length === 0) {
     return node;
+  }
+  if (!node) {
+    return;
   }
   return getNodeRecursive(node.children, path);
 };
@@ -48,6 +55,9 @@ export const addNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path:
 
 export const removeNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {
   const parent = getParentNode(data, path);
+  if (parent === null) {
+    return;
+  }
   const children = parent ? parent.children : data;
   const childIndex = path[path.length - 1];
   children.splice(childIndex, 1);

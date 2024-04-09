@@ -17,6 +17,8 @@
     "lint": "lerna run lint --",
     "lint:ci": "npm run lint -- -o eslint.xml -f checkstyle",
     "dev": "npm --prefix integrations/standalone run dev",
+    "test": "npm --prefix packages/new-editor run test",
+    "test:ci": "lerna run test:ci",
     "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
   },
   "devDependencies": {
