@@ -18,7 +18,3 @@ const getRow = <TNode>(table: Table<TNode>, rowId?: string) => {
   }
   return table.getRowModel().rowsById[rowId];
 };
-
-export const hasSelectedRows = <TNode>(table: Table<TNode>) => {
-  return Object.entries(table.getState().rowSelection).length !== 0;
-};

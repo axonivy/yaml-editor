@@ -8,16 +8,19 @@ export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?
 };
 
 const getParentNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
-  if (!path || path.length === 0) {
+  if (!path || path.length === 0 || path.length === 1) {
     return;
   }
   return getNodeRecursive(data, path.slice(0, -1));
 };
 
-const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): TNode => {
+const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): TNode | undefined => {
   const node = data[path.shift()!];
   if (path.length === 0) {
     return node;
+  }
+  if (!node) {
+    return;
   }
   return getNodeRecursive(node.children, path);
 };
@@ -47,10 +50,23 @@ export const addNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path:
 };
 
 export const removeNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {
-  const parent = getParentNode(data, path);
-  const children = parent ? parent.children : data;
+  const children = getChildrenContainingNode(data, path);
+  if (!children) {
+    return;
+  }
   const childIndex = path[path.length - 1];
   children.splice(childIndex, 1);
+};
+
+const getChildrenContainingNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {
+  if (path.length === 1) {
+    return data;
+  }
+  const parent = getParentNode(data, path);
+  if (!parent) {
+    return;
+  }
+  return parent.children;
 };
 
 export const hasChildren = <TNode extends TreeNode<TNode>>(node: TNode) => {

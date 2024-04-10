@@ -25,7 +25,10 @@
   "devDependencies": {
     "@types/react": "^18.2.13",
     "copyfiles": "^2.4.1",
-    "rimraf": "^5.0.1"
+    "rimraf": "^5.0.1",
+    "eslint-plugin-testing-library": "^6.2.0",
+    "jsdom": "^23.0.1",
+    "vitest": "^1.1.0"
   },
   "scripts": {
     "clean": "rimraf lib *.tsbuildinfo",
@@ -34,6 +37,8 @@
     "build:clean": "npm run clean && npm run build",
     "type": "tsc --noEmit",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .ts,.tsx ./src"
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "test": "vitest",
+    "test:ci": "vitest --watch=false"
   }
 }

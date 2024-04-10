@@ -14,7 +14,7 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import type { TreePath } from '../../../../types/config';
-import { hasSelectedRows, selectRow } from '../../../../utils/table';
+import { selectRow } from '../../../../utils/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../../utils/tree';
 import { Control } from '../../control/Control';
 import type { Variable } from '../../data/Variable';
@@ -93,7 +93,7 @@ export const Variables = ({ variables, setVariables, setSelectedVariablePath }: 
         <Control
           buttons={[
             <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
-            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteVariable} disabled={!hasSelectedRows(table)} />
+            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteVariable} disabled={!table.getIsSomeRowsSelected()} />
           ]}
         />
       }
