@@ -1,7 +1,7 @@
 import { Fieldset, Input, Message, SimpleSelect, Textarea } from '@axonivy/ui-components';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../../data/data';
 import type { TreePath } from '../../../../types/config';
-import { metadataOptions, type Variable } from '../../data/Variable';
+import { metadataOptions, type Metadata, type Variable } from '../../data/Variable';
 
 type VariableProps = {
   variables: Array<Variable>;
@@ -41,7 +41,7 @@ export const VariableDetail = ({ variables, variablePath, setVariables }: Variab
           <SimpleSelect
             value={variable.metadata}
             items={metadataOptions}
-            onValueChange={(value: (typeof metadataOptions)[number]['value']) => handleVariableAttributeChange('metadata', value)}
+            onValueChange={(value: Metadata) => handleVariableAttributeChange('metadata', value)}
           ></SimpleSelect>
         </Fieldset>
       )}

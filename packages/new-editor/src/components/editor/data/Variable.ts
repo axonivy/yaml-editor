@@ -2,8 +2,10 @@ import type { TreeNode } from '../../../types/config';
 
 export interface Variable extends TreeNode<Variable> {
   description: string;
-  metadata: (typeof metadataOptions)[number]['value'];
+  metadata: Metadata;
 }
+
+export type Metadata = (typeof metadataOptions)[number]['value'];
 
 export const metadataOptions = [
   { label: 'None', value: 'none' },
