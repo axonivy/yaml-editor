@@ -1,12 +1,4 @@
-import { getSelectedMetadataOption, metadataOptions, type Variable } from './Variable';
-
-const variable: Variable = {
-  description: '',
-  metadata: '',
-  name: '',
-  value: '',
-  children: []
-};
+import { metadataOptions } from './Variable';
 
 describe('Variable', () => {
   describe('metadataOptions', () => {
@@ -18,18 +10,6 @@ describe('Variable', () => {
         { label: 'Enum', value: 'enum' },
         { label: 'File', value: 'file' }
       ]);
-    });
-
-    describe('getSelectedMetadataOption', () => {
-      test('present', () => {
-        variable.metadata = 'password';
-        expect(getSelectedMetadataOption(variable)).toEqual({ label: 'Password', value: 'password' });
-      });
-
-      test('missing', () => {
-        variable.metadata = 'missingMetadataOption';
-        expect(getSelectedMetadataOption(variable)).toBeUndefined();
-      });
     });
   });
 });
