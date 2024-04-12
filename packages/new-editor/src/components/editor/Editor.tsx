@@ -12,10 +12,10 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
 import { getNode } from '../../data/data';
 import type { TreePath } from '../../types/config';
+import { metadataTypePassword, type Variable } from './data/Variable';
+import { VariablesDetail } from './variables/detail/Variable';
+import { VariablesMaster } from './variables/master/Variables';
 import './Editor.css';
-import type { Variable } from './data/Variable';
-import { VariableDetail } from './variables/detail/Variable';
-import { Variables } from './variables/master/Variables';
 
 export const Editor = () => {
   // TODO: Variables coming from context and choosing corresponding master and detail content components
@@ -25,14 +25,20 @@ export const Editor = () => {
       name: 'microsoft-connector',
       value: '',
       description: '',
-      metadata: 'none',
+      metadata: { type: '' },
       children: [
-        { name: 'appId', value: 'MyAppId', description: 'Your Azure Application (client) ID', metadata: 'none', children: [] },
+        {
+          name: 'appId',
+          value: 'MyAppId',
+          description: 'Your Azure Application (client) ID',
+          metadata: { type: '' },
+          children: []
+        },
         {
           name: 'secretKey',
           value: 'MySecretKey',
           description: 'Secret key from your applications "certificates & secrets"',
-          metadata: 'password',
+          metadata: { type: metadataTypePassword },
           children: []
         },
         {
@@ -40,7 +46,7 @@ export const Editor = () => {
           value: 'false',
           description:
             "work with app permissions rather than in delegate of a user\nset to 'true' if no user consent should be accuired and adjust the 'tenantId' below.",
-          metadata: 'none',
+          metadata: { type: '' },
           children: []
         },
         {
@@ -48,7 +54,7 @@ export const Editor = () => {
           value: 'common',
           description:
             "tenant to use for OAUTH2 request.\nthe default 'common' fits for user delegate requests.\nset the Azure Directory (tenant) ID, for application requests.",
-          metadata: 'none',
+          metadata: { type: '' },
           children: []
         },
         {
@@ -56,11 +62,17 @@ export const Editor = () => {
           value: '',
           description:
             'use a static user+password authentication to work in the name of technical user.\nmost insecure but valid, if you must work with user permissions, while no real user is able to consent the action.',
-          metadata: 'none',
+          metadata: { type: '' },
           children: [
-            { name: 'enabled', value: 'false', description: '', metadata: 'none', children: [] },
-            { name: 'user', value: 'MyUser', description: 'technical user to login', metadata: 'none', children: [] },
-            { name: 'pass', value: 'MyPass', description: 'technical users password', metadata: 'password', children: [] }
+            { name: 'enabled', value: 'false', description: '', metadata: { type: '' }, children: [] },
+            { name: 'user', value: 'MyUser', description: 'technical user to login', metadata: { type: '' }, children: [] },
+            {
+              name: 'pass',
+              value: 'MyPass',
+              description: 'technical users password',
+              metadata: { type: metadataTypePassword },
+              children: []
+            }
           ]
         },
         {
@@ -68,7 +80,7 @@ export const Editor = () => {
           value: 'user.read Calendars.ReadWrite mail.readWrite mail.send Tasks.ReadWrite Chat.Read offline_access',
           description:
             'permissions to request access to.\nyou may exclude or add some, as your azure administrator allows or restricts them.\nfor sharepoint-demos, the following must be added: Sites.Read.All Files.ReadWrite',
-          metadata: 'none',
+          metadata: { type: '' },
           children: []
         },
         {
@@ -76,7 +88,7 @@ export const Editor = () => {
           value: 'org.glassfish.jersey.client.HttpUrlConnectorProvider',
           description:
             'this property specifies the library used to create and manage HTTP connections for Jersey client.\nit sets the connection provider class for the Jersey client.\nwhile the default provider works well for most methods, if you specifically need to use the PATCH method, consider switching the provider to:\n  org.glassfish.jersey.apache.connector.ApacheConnectorProvider',
-          metadata: 'none',
+          metadata: { type: '' },
           children: []
         }
       ]
@@ -85,7 +97,7 @@ export const Editor = () => {
       name: 'other-connector',
       value: '',
       description: '',
-      metadata: 'none',
+      metadata: { type: '' },
       children: []
     }
   ];
@@ -109,7 +121,7 @@ export const Editor = () => {
             <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
-            <Variables variables={variables} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
+            <VariablesMaster variables={variables} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
           </Flex>
         </Flex>
       </ResizablePanel>
@@ -120,7 +132,7 @@ export const Editor = () => {
             <Flex direction='column'>
               <SidebarHeader icon={IvyIcons.PenEdit} title={sidebarHeaderTitle} />
               <Flex direction='column' gap={4} className='content'>
-                <VariableDetail variables={variables} variablePath={selectedVariablePath} setVariables={setVariables} />
+                <VariablesDetail variables={variables} variablePath={selectedVariablePath} setVariables={setVariables} />
               </Flex>
             </Flex>
           </ResizablePanel>

@@ -1,4 +1,4 @@
-import type { TreeNode, TreePath } from '../types/config';
+import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from '../types/config';
 
 export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
   if (!path || path.length === 0) {
@@ -25,37 +25,40 @@ const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, pat
   return getNodeRecursive(node.children, path);
 };
 
-export const updateNode = <TNode extends TreeNode<TNode>, TKey extends keyof TNode>(
-  data: Array<TNode>,
-  path: TreePath,
-  key: TKey,
-  value: TNode[TKey]
-) => {
-  const node = getNode(data, path);
+export const updateNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, updates: TreeNodeUpdates<TNode>) => {
+  const newData = structuredClone(data);
+  const node = getNode(newData, path);
   if (!node) {
-    return;
+    return newData;
   }
-  node[key] = value;
+  updates.forEach(update => (node[update.key] = update.value));
+  return newData;
 };
 
-export const addNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, newNode: TNode) => {
-  const node = getNode(data, path);
+export const addNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, newNode: TNode): AddNodeReturnType<TNode> => {
+  const newData = structuredClone(data);
+  const node = getNode(newData, path);
+  let newChildIndex;
   if (!node) {
-    data.push(newNode);
-    return data.length - 1;
+    newData.push(newNode);
+    newChildIndex = newData.length - 1;
+  } else {
+    const children = node.children;
+    children.push(newNode);
+    newChildIndex = children.length - 1;
   }
-  const children = node.children;
-  children.push(newNode);
-  return children.length - 1;
+  return { newData: newData, newChildIndex: newChildIndex };
 };
 
 export const removeNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {
-  const children = getChildrenContainingNode(data, path);
+  const newData = structuredClone(data);
+  const children = getChildrenContainingNode(newData, path);
   if (!children) {
-    return;
+    return newData;
   }
   const childIndex = path[path.length - 1];
   children.splice(childIndex, 1);
+  return newData;
 };
 
 const getChildrenContainingNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {

@@ -55,24 +55,34 @@ beforeEach(() => {
 describe('tree', () => {
   describe('addChildToFirstSelectedRow', () => {
     test('selection', () => {
-      expect(data[1].children[1].children).toHaveLength(1);
+      const originalData = structuredClone(data);
       table.getState().rowSelection = { '1.1': true };
       const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, data, newNode);
-      expect(addChildToFirstSelectedRowReturnValue.selectedNode).toEqual(data[1].children[1]);
-      expect(addChildToFirstSelectedRowReturnValue.newChildPath).toEqual([1, 1, 1]);
-      expect(data[1].children[1].children).toHaveLength(2);
-      expect(data[1].children[1].children[1]).toEqual(newNode);
+      const newData = addChildToFirstSelectedRowReturnValue.newData;
+      const selectedNode = addChildToFirstSelectedRowReturnValue.selectedNode;
+      const newChildPath = addChildToFirstSelectedRowReturnValue.newChildPath;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(selectedNode).toEqual(newData[1].children[1]);
+      expect(newChildPath).toEqual([1, 1, 1]);
+      expect(newData[1].children[1].children).toHaveLength(2);
+      expect(newData[1].children[1].children[1]).toEqual(newNode);
       expect(onRowSelectionChangeValue).toEqual({ '1.1.1': true });
     });
 
     test('noSelection', () => {
-      expect(data).toHaveLength(2);
+      const originalData = structuredClone(data);
       table.getState().rowSelection = {};
       const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, data, newNode);
-      expect(addChildToFirstSelectedRowReturnValue.selectedNode).toBeUndefined();
-      expect(addChildToFirstSelectedRowReturnValue.newChildPath).toEqual([2]);
-      expect(data).toHaveLength(3);
-      expect(data[2]).toEqual(newNode);
+      const newData = addChildToFirstSelectedRowReturnValue.newData;
+      const selectedNode = addChildToFirstSelectedRowReturnValue.selectedNode;
+      const newChildPath = addChildToFirstSelectedRowReturnValue.newChildPath;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(selectedNode).toBeUndefined();
+      expect(newChildPath).toEqual([2]);
+      expect(newData).toHaveLength(3);
+      expect(newData[2]).toEqual(newNode);
       expect(onRowSelectionChangeValue).toEqual({ '2': true });
     });
   });
@@ -82,33 +92,44 @@ describe('tree', () => {
       describe('root', () => {
         test('default', () => {
           const originalData = structuredClone(data);
-          expect(data).toHaveLength(2);
           table.getState().rowSelection = { '0': true };
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([0]);
-          expect(data).toHaveLength(1);
-          expect(data[0]).toEqual(originalData[1]);
+          expect(newData).toHaveLength(1);
+          expect(newData[0]).toEqual(originalData[1]);
           expect(onRowSelectionChangeValue).toEqual({ '0': true });
         });
 
         test('lastChildInListOfChildren', () => {
           const originalData = structuredClone(data);
-          expect(data).toHaveLength(2);
           table.getState().rowSelection = { '1': true };
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([0]);
-          expect(data).toHaveLength(1);
-          expect(data[0]).toEqual(originalData[0]);
+          expect(newData).toHaveLength(1);
+          expect(newData[0]).toEqual(originalData[0]);
           expect(onRowSelectionChangeValue).toEqual({ '0': true });
         });
 
         test('lastRemainingChild', () => {
-          expect(data).toHaveLength(2);
+          data = [{ name: 'NameNode0', value: 'ValueNode0', children: [] }];
+          const originalData = structuredClone(data);
           table.getState().rowSelection = { '0': true };
-          deleteFirstSelectedRow(table, data);
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          onRowSelectionChangeValue = { '0': true };
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([]);
-          expect(data).toHaveLength(0);
+          expect(newData).toHaveLength(0);
           expect(onRowSelectionChangeValue).toEqual({});
         });
       });
@@ -116,32 +137,42 @@ describe('tree', () => {
       describe('deep', () => {
         test('default', () => {
           const originalData = structuredClone(data);
-          expect(data[1].children).toHaveLength(2);
           table.getState().rowSelection = { '1.0': true };
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([1, 0]);
-          expect(data[1].children).toHaveLength(1);
-          expect(data[1].children[0]).toEqual(originalData[1].children[1]);
+          expect(newData[1].children).toHaveLength(1);
+          expect(newData[1].children[0]).toEqual(originalData[1].children[1]);
           expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
         });
 
         test('lastChildInListOfChildren', () => {
           const originalData = structuredClone(data);
-          expect(data[1].children).toHaveLength(2);
           table.getState().rowSelection = { '1.1': true };
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([1, 0]);
-          expect(data[1].children).toHaveLength(1);
-          expect(data[1].children[0]).toEqual(originalData[1].children[0]);
+          expect(newData[1].children).toHaveLength(1);
+          expect(newData[1].children[0]).toEqual(originalData[1].children[0]);
           expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
         });
 
         test('lastRemainingChild', () => {
-          expect(data[1].children[1].children).toHaveLength(1);
+          const originalData = structuredClone(data);
           table.getState().rowSelection = { '1.1.0': true };
-          const selectedVariablePath = deleteFirstSelectedRow(table, data);
+          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+          const newData = deleteFirstSelectedRowReturnValue.newData;
+          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+          expect(data).toEqual(originalData);
+          expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([1, 1]);
-          expect(data[1].children[1].children).toHaveLength(0);
+          expect(newData[1].children[1].children).toHaveLength(0);
           expect(onRowSelectionChangeValue).toEqual({ '1.1': true });
         });
       });
@@ -150,9 +181,14 @@ describe('tree', () => {
     test('noSelection', () => {
       const originalData = structuredClone(data);
       table.getState().rowSelection = {};
-      const selectedVariablePath = deleteFirstSelectedRow(table, data);
-      expect(selectedVariablePath).toEqual([]);
+      const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+      const newData = deleteFirstSelectedRowReturnValue.newData;
+      const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
       expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(selectedVariablePath).toEqual([]);
+      expect(newData).toEqual(data);
+      expect(onRowSelectionChangeValue).toEqual({});
     });
   });
 

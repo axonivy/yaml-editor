@@ -1,4 +1,25 @@
-export type TreeNode<TNode extends TreeNode<TNode>> = { name: string; value: string; children: Array<TNode> };
+export const treeNodeNameAttribute = 'name';
+export const treeNodeValueAttribute = 'value';
+export const treeNodeChildrenAttribute = 'children';
+
+export type TreeNode<TNode extends TreeNode<TNode>> = {
+  name: string;
+  value: string;
+  children: Array<TNode>;
+};
+export type TreeNodeUpdate<TNode extends TreeNode<TNode>> = {
+  [TKey in keyof TNode]: {
+    key: TKey;
+    value: TNode[TKey];
+  };
+}[keyof TNode];
+export type TreeNodeUpdates<TNode extends TreeNode<TNode>> = Array<TreeNodeUpdate<TNode>>;
 export type TreePath = Array<number>;
 
-export type addChildToFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = { selectedNode?: TNode; newChildPath: TreePath };
+export type AddChildToFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = {
+  newData: Array<TNode>;
+  selectedNode?: TNode;
+  newChildPath: TreePath;
+};
+export type AddNodeReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; newChildIndex: number };
+export type DeleteFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; selectedVariablePath: TreePath };

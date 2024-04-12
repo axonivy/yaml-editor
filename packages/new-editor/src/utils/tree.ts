@@ -1,28 +1,36 @@
 import type { Row, Table } from '@tanstack/react-table';
+import { getFirstSelectedRow, selectRow } from '../utils/table';
 import { addNode, getNode, removeNode } from '../data/data';
-import type { TreeNode, TreePath, addChildToFirstSelectedRowReturnType } from '../types/config';
-import { getFirstSelectedRow, selectRow } from './table';
+import type { AddChildToFirstSelectedRowReturnType, DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from '../types/config';
 
 export const addChildToFirstSelectedRow = <TNode extends TreeNode<TNode>>(
   table: Table<TNode>,
   data: Array<TNode>,
   newNode: TNode
-): addChildToFirstSelectedRowReturnType<TNode> => {
+): AddChildToFirstSelectedRowReturnType<TNode> => {
   const row = getFirstSelectedRow(table);
   const path = getPathOfRow(row);
-  const newChildIndex = addNode(data, path, newNode);
+  const addNodeReturnValue = addNode(data, path, newNode);
+  const newData = addNodeReturnValue.newData;
+  const newChildIndex = addNodeReturnValue.newChildIndex;
   const newChildId = toRowId([...path, newChildIndex]);
   selectRow(table, newChildId);
-  return { selectedNode: getNode(data, path), newChildPath: [...path, newChildIndex] };
+  return { newData: newData, selectedNode: getNode(newData, path), newChildPath: [...path, newChildIndex] };
 };
 
-export const deleteFirstSelectedRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>, data: Array<TNode>) => {
+export const deleteFirstSelectedRow = <TNode extends TreeNode<TNode>>(
+  table: Table<TNode>,
+  data: Array<TNode>
+): DeleteFirstSelectedRowReturnType<TNode> => {
   const selectedRow = getFirstSelectedRow(table);
+  const newData = removeNode(data, getPathOfRow(selectedRow));
+  let selectedVariablePath: TreePath;
   if (!selectedRow) {
-    return [];
+    selectedVariablePath = [];
+  } else {
+    selectedVariablePath = adjustSelectionAfterDeletionOfRow(newData, table, selectedRow);
   }
-  removeNode(data, getPathOfRow(selectedRow));
-  return adjustSelectionAfterDeletionOfRow(data, table, selectedRow);
+  return { newData: newData, selectedVariablePath: selectedVariablePath };
 };
 
 export const getPathOfRow = <TNode extends TreeNode<TNode>>(row?: Row<TNode>) => {

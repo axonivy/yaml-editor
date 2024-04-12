@@ -1,6 +1,6 @@
-import type { Table } from '@tanstack/react-table';
+import type { Row, Table } from '@tanstack/react-table';
 
-export const selectRow = <TNode>(table: Table<TNode>, rowId?: string) => {
+export const selectRow = <TData>(table: Table<TData>, rowId?: string) => {
   if (!rowId || rowId === '') {
     table.setRowSelection({});
   } else {
@@ -8,13 +8,39 @@ export const selectRow = <TNode>(table: Table<TNode>, rowId?: string) => {
   }
 };
 
-export const getFirstSelectedRow = <TNode>(table: Table<TNode>) => {
+export const getFirstSelectedRow = <TData>(table: Table<TData>) => {
   return getRow(table, Object.keys(table.getState().rowSelection)[0]);
 };
 
-const getRow = <TNode>(table: Table<TNode>, rowId?: string) => {
+const getRow = <TData>(table: Table<TData>, rowId?: string) => {
   if (!rowId || rowId === '') {
     return;
   }
   return table.getRowModel().rowsById[rowId];
+};
+
+export const addRow = <TData>(table: Table<TData>, data: Array<TData>, newRowData: TData) => {
+  const newData = structuredClone(data);
+  newData.push(newRowData);
+  selectRow(table, String(newData.length - 1));
+  return newData;
+};
+
+export const deleteFirstSelectedRow = <TData>(table: Table<TData>, data: Array<TData>) => {
+  const newData = structuredClone(data);
+  const selectedRow = getFirstSelectedRow(table);
+  if (!selectedRow) {
+    return newData;
+  }
+  newData.splice(selectedRow.index, 1);
+  adjustSelectionAfterDeletionOfRow(newData, table, selectedRow);
+  return newData;
+};
+
+const adjustSelectionAfterDeletionOfRow = <TData>(data: Array<TData>, table: Table<TData>, row: Row<TData>) => {
+  if (data.length === 0) {
+    selectRow(table);
+  } else if (row.index === data.length) {
+    selectRow(table, String(data.length - 1));
+  }
 };

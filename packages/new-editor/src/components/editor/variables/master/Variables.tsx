@@ -13,11 +13,11 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import type { TreePath } from '../../../../types/config';
 import { selectRow } from '../../../../utils/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../../utils/tree';
+import { treeNodeNameAttribute, treeNodeValueAttribute, type TreePath } from '../../../../types/config';
 import { Control } from '../../control/Control';
-import type { Variable } from '../../data/Variable';
+import { type Variable } from '../../data/Variable';
 
 type VariablesProps = {
   variables: Array<Variable>;
@@ -25,18 +25,18 @@ type VariablesProps = {
   setSelectedVariablePath: (path: TreePath) => void;
 };
 
-export const Variables = ({ variables, setVariables, setSelectedVariablePath }: VariablesProps) => {
+export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePath }: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const columns: Array<ColumnDef<Variable, string>> = [
     {
-      accessorKey: 'name',
+      accessorKey: treeNodeNameAttribute,
       header: header => <ExpandableHeader name='Name' header={header} />,
       cell: cell => <ExpandableCell cell={cell} icon={cell.row.getCanExpand() ? IvyIcons.FolderOpen : IvyIcons.Note} />,
       minSize: 50
     },
     {
-      accessorKey: 'value',
+      accessorKey: treeNodeValueAttribute,
       header: () => <span>Value</span>,
       cell: cell => <div>{cell.getValue()}</div>
     }
@@ -54,31 +54,29 @@ export const Variables = ({ variables, setVariables, setSelectedVariablePath }: 
   });
 
   const addVariable = () => {
-    const newVariables = structuredClone(variables);
     const newVariable: Variable = {
       name: '',
       value: '',
       description: '',
-      metadata: 'none',
+      metadata: { type: '' },
       children: []
     };
 
-    const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, newVariables, newVariable);
+    const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, variables, newVariable);
     const parentNode = addChildToFirstSelectedRowReturnValue.selectedNode;
     if (parentNode) {
       parentNode.value = '';
-      parentNode.metadata = 'none';
+      parentNode.metadata = { type: '' };
     }
 
     setSelectedVariablePath(addChildToFirstSelectedRowReturnValue.newChildPath);
-    setVariables(newVariables);
+    setVariables(addChildToFirstSelectedRowReturnValue.newData);
   };
 
   const deleteVariable = () => {
-    const newVariables = structuredClone(variables);
-    const selectedVariablePath = deleteFirstSelectedRow(table, newVariables);
-    setSelectedVariablePath(selectedVariablePath);
-    setVariables(newVariables);
+    const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, variables);
+    setSelectedVariablePath(deleteFirstSelectedRowReturnValue.selectedVariablePath);
+    setVariables(deleteFirstSelectedRowReturnValue.newData);
   };
 
   const resetSelection = () => {
