@@ -1,28 +1,31 @@
 import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from './types';
 
 export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
-  if (!path || path.length === 0) {
-    return;
-  }
-  return getNodeRecursive(data, [...path]);
+  const nodes = getNodesOnPath(data, path);
+  return nodes[nodes.length - 1];
 };
 
 const getParentNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
-  if (!path || path.length === 0 || path.length === 1) {
-    return;
-  }
-  return getNodeRecursive(data, path.slice(0, -1));
+  const nodes = getNodesOnPath(data, path);
+  return nodes[nodes.length - 2];
 };
 
-const getNodeRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): TNode | undefined => {
+export const getNodesOnPath = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath): Array<TNode | undefined> => {
+  if (!path || path.length === 0) {
+    return [];
+  }
+  return getNodesOnPathRecursive(data, [...path]);
+};
+
+const getNodesOnPathRecursive = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath): Array<TNode | undefined> => {
   const node = data[path.shift()!];
   if (path.length === 0) {
-    return node;
+    return [node];
   }
   if (!node) {
-    return;
+    return [undefined];
   }
-  return getNodeRecursive(node.children, path);
+  return [node, ...getNodesOnPathRecursive(node.children, path)];
 };
 
 export const updateNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, updates: TreeNodeUpdates<TNode>) => {

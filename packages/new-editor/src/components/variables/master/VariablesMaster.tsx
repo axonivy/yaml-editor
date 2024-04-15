@@ -14,7 +14,8 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { selectRow } from '../../../utils/table/table';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../utils/tree/tree';
+import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
+import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { type Variable } from '../data/variable';
@@ -28,11 +29,12 @@ type VariablesProps = {
 export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePath }: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
+  const globalFilter = useTreeGlobalFilter(variables);
   const columns: Array<ColumnDef<Variable, string>> = [
     {
       accessorKey: treeNodeNameAttribute,
       header: header => <ExpandableHeader name='Name' header={header} />,
-      cell: cell => <ExpandableCell cell={cell} icon={cell.row.getCanExpand() ? IvyIcons.FolderOpen : IvyIcons.Note} />,
+      cell: cell => <ExpandableCell cell={cell} icon={hasChildren(cell.row.original) ? IvyIcons.FolderOpen : IvyIcons.Note} />,
       minSize: 50
     },
     {
@@ -44,12 +46,14 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
   const table = useReactTable({
     ...selection.options,
     ...expanded.options,
+    ...globalFilter.options,
     data: variables,
     columns,
     getCoreRowModel: getCoreRowModel(),
     state: {
       ...selection.tableState,
-      ...expanded.tableState
+      ...expanded.tableState,
+      ...globalFilter.tableState
     }
   });
 
@@ -96,6 +100,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
         />
       }
     >
+      {globalFilter.filter}
       <Table>
         <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
         <TableBody>

@@ -1,7 +1,7 @@
 import type { RowSelectionState, Table, Updater } from '@tanstack/react-table';
 import { createRow, createTable, getCoreRowModel } from '@tanstack/react-table';
 import type { TestNode } from './test-utils/types';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from './tree';
+import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, treeGlobalFilter } from './tree';
 
 let data: Array<TestNode>;
 let newNode: TestNode;
@@ -14,22 +14,23 @@ beforeEach(() => {
     { name: 'NameNode0', value: 'ValueNode0', children: [] },
     {
       name: 'NameNode1',
-      value: 'ValueNode1',
+      value: '',
       children: [
         { name: 'NameNode1.0', value: 'ValueNode1.0', children: [] },
         {
           name: 'NameNode1.1',
-          value: 'ValueNode1.1',
+          value: '',
           children: [
             {
               name: 'NameNode1.1.0',
-              value: 'ValueNode1.1.0',
+              value: '',
               children: [{ name: 'NameNode1.1.0.0', value: 'ValueNode1.1.0.0', children: [] }]
             }
           ]
         }
       ]
-    }
+    },
+    { name: 'SearchForParentName', value: '', children: [{ name: 'SearchForChildName', value: 'SearchForChildValue', children: [] }] }
   ];
   newNode = {
     name: 'newNodeName',
@@ -80,10 +81,10 @@ describe('tree', () => {
       expect(data).toEqual(originalData);
       expect(newData).not.toBe(data);
       expect(selectedNode).toBeUndefined();
-      expect(newChildPath).toEqual([2]);
-      expect(newData).toHaveLength(3);
-      expect(newData[2]).toEqual(newNode);
-      expect(onRowSelectionChangeValue).toEqual({ '2': true });
+      expect(newChildPath).toEqual([3]);
+      expect(newData).toHaveLength(4);
+      expect(newData[3]).toEqual(newNode);
+      expect(onRowSelectionChangeValue).toEqual({ '3': true });
     });
   });
 
@@ -99,23 +100,25 @@ describe('tree', () => {
           expect(data).toEqual(originalData);
           expect(newData).not.toBe(data);
           expect(selectedVariablePath).toEqual([0]);
-          expect(newData).toHaveLength(1);
+          expect(newData).toHaveLength(2);
           expect(newData[0]).toEqual(originalData[1]);
+          expect(newData[1]).toEqual(originalData[2]);
           expect(onRowSelectionChangeValue).toEqual({ '0': true });
         });
 
         test('lastChildInListOfChildren', () => {
           const originalData = structuredClone(data);
-          table.getState().rowSelection = { '1': true };
+          table.getState().rowSelection = { '2': true };
           const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
           const newData = deleteFirstSelectedRowReturnValue.newData;
           const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
           expect(data).toEqual(originalData);
           expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([0]);
-          expect(newData).toHaveLength(1);
+          expect(selectedVariablePath).toEqual([1]);
+          expect(newData).toHaveLength(2);
           expect(newData[0]).toEqual(originalData[0]);
-          expect(onRowSelectionChangeValue).toEqual({ '0': true });
+          expect(newData[1]).toEqual(originalData[1]);
+          expect(onRowSelectionChangeValue).toEqual({ '1': true });
         });
 
         test('lastRemainingChild', () => {
@@ -203,6 +206,32 @@ describe('tree', () => {
 
     test('missing', () => {
       expect(getPathOfRow(undefined)).toEqual([]);
+    });
+  });
+
+  describe('treeGlobalFilter', () => {
+    describe('true', () => {
+      test('inParentName', () => {
+        expect(treeGlobalFilter(data, [2, 0], 'fOrPaReNtNa')).toBeTruthy();
+      });
+
+      test('inNodeName', () => {
+        expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDnA')).toBeTruthy();
+      });
+
+      test('inNodeValue', () => {
+        expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDvAl')).toBeTruthy();
+      });
+    });
+
+    describe('false', () => {
+      test('noMatch', () => {
+        expect(treeGlobalFilter(data, [2, 0], 'noMatch')).toBeFalsy();
+      });
+
+      test('pathEmpty', () => {
+        expect(treeGlobalFilter(data, [], 'pathEmpty')).toBeFalsy();
+      });
     });
   });
 });
