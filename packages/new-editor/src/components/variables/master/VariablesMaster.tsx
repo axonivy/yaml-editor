@@ -13,11 +13,11 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { selectRow } from '../../../../utils/table';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../../utils/tree';
-import { treeNodeNameAttribute, treeNodeValueAttribute, type TreePath } from '../../../../types/config';
+import { selectRow } from '../../../utils/table/table';
+import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../utils/tree/tree';
+import { treeNodeNameAttribute, treeNodeValueAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
-import { type Variable } from '../../data/Variable';
+import { type Variable } from '../data/variable';
 
 type VariablesProps = {
   variables: Array<Variable>;

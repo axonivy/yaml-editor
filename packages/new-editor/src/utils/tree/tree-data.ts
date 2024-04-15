@@ -1,4 +1,4 @@
-import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from '../types/config';
+import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from './types';
 
 export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
   if (!path || path.length === 0) {

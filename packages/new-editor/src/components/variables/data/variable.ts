@@ -1,4 +1,4 @@
-import type { TreeNode, TreeNodeUpdate, TreeNodeUpdates } from '../../../types/config';
+import type { TreeNode, TreeNodeUpdate, TreeNodeUpdates } from '../../../utils/tree/types';
 
 export const variableDescriptionAttribute = 'description';
 export const variableMetadataAttribute = 'metadata';

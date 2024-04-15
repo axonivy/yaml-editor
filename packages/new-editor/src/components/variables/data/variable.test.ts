@@ -1,4 +1,4 @@
-import { isEnumMetadata, metadataOptions, toEnumMetadataUpdate, variableMetadataAttribute } from './Variable';
+import { isEnumMetadata, metadataOptions, toEnumMetadataUpdate, variableMetadataAttribute } from './variable';
 
 describe('variable', () => {
   describe('metadataOptions', () => {

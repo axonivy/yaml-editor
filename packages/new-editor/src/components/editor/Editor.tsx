@@ -10,12 +10,12 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
-import { getNode } from '../../data/data';
-import type { TreePath } from '../../types/config';
+import { getNode } from '../../utils/tree/tree-data';
+import type { TreePath } from '../../utils/tree/types';
+import type { Variable } from '../variables/data/variable';
+import { VariablesDetail } from '../variables/detail/VariablesDetail';
+import { VariablesMaster } from '../variables/master/VariablesMaster';
 import './Editor.css';
-import type { Variable } from './data/Variable';
-import { VariablesDetail } from './variables/detail/Variable';
-import { VariablesMaster } from './variables/master/Variables';
 
 export const Editor = () => {
   // TODO: Variables coming from context and choosing corresponding master and detail content components
