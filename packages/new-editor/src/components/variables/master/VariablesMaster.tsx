@@ -15,7 +15,7 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { selectRow } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow } from '../../../utils/tree/tree';
-import { treeNodeNameAttribute, treeNodeValueAttribute, type TreePath } from '../../../utils/tree/types';
+import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { type Variable } from '../data/variable';
 
@@ -36,8 +36,8 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
       minSize: 50
     },
     {
-      accessorKey: treeNodeValueAttribute,
-      header: () => <span>Value</span>,
+      accessorFn: (variable: Variable) => (variable.metadata.type === 'password' ? '***' : variable.value),
+      header: 'Value',
       cell: cell => <div>{cell.getValue()}</div>
     }
   ];
