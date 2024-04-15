@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import type { Variable, VariableUpdates } from '../data/variable';
 import { isEnumMetadata } from '../data/variable';
+import { PasswordInput } from './PasswordInput';
 
 type ValueFieldsetProps = {
   variable: Variable;
@@ -20,6 +21,13 @@ export const Value = ({ variable, onChange }: ValueFieldsetProps) => {
 
   const input = () => {
     switch (variable.metadata.type) {
+      case 'password':
+        return (
+          <PasswordInput
+            value={variable.value}
+            onChange={(newValue: string) => onChange([{ key: treeNodeValueAttribute, value: newValue }])}
+          />
+        );
       case 'daytime':
         return (
           <Input

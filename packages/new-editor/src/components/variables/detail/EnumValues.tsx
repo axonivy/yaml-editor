@@ -23,12 +23,11 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
     }
   ];
   const meta = {
-    updateData: (rowId: string, _columnId: string, value: unknown) => {
-      const valueString = String(value);
-      if (values.includes(valueString)) {
+    updateData: (rowId: string, _columnId: string, value: string) => {
+      if (values.includes(value)) {
         return;
       }
-      const newValues = updateRowData(values, Number(rowId), valueString);
+      const newValues = updateRowData(values, Number(rowId), value);
       onChange([toEnumMetadataUpdate(newValues)]);
     }
   };
