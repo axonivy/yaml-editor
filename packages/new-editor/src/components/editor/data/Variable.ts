@@ -10,16 +10,11 @@ export interface Variable extends TreeNode<Variable> {
 export type VariableUpdate = TreeNodeUpdate<Variable>;
 export type VariableUpdates = TreeNodeUpdates<Variable>;
 
-export const metadataTypePassword = 'password';
-export const metadataTypeDaytime = 'daytime';
-export const metadataTypeEnum = 'enum';
-export const metadataTypeFile = 'file';
-
 export const metadataOptions = [
-  { label: 'Password', value: metadataTypePassword },
-  { label: 'Daytime', value: metadataTypeDaytime },
-  { label: 'Enum', value: metadataTypeEnum },
-  { label: 'File', value: metadataTypeFile }
+  { label: 'Password', value: 'password' },
+  { label: 'Daytime', value: 'daytime' },
+  { label: 'Enum', value: 'enum' },
+  { label: 'File', value: 'file' }
 ] as const satisfies Array<{ label: string; value: string }>;
 
 export type MetadataType = (typeof metadataOptions)[number]['value'] | '';
@@ -28,12 +23,10 @@ export interface EnumMetadata extends Metadata {
   values: Array<string>;
 }
 
-export const asEnumMetadata = (metadata?: Metadata) => {
-  if (!metadata || metadata.type !== metadataTypeEnum) {
-    return;
-  }
-  return metadata as EnumMetadata;
+export const isEnumMetadata = (metadata?: Metadata): metadata is EnumMetadata => {
+  return metadata !== undefined && metadata.type === 'enum';
 };
 export const toEnumMetadataUpdate = (values: Array<string>): VariableUpdate => {
-  return { key: variableMetadataAttribute, value: { type: metadataTypeEnum, values: values } as EnumMetadata };
+  const metadata: EnumMetadata = { type: 'enum', values: values };
+  return { key: variableMetadataAttribute, value: metadata };
 };

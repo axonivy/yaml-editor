@@ -1,47 +1,33 @@
-import {
-  asEnumMetadata,
-  metadataOptions,
-  metadataTypeDaytime,
-  metadataTypeEnum,
-  metadataTypeFile,
-  metadataTypePassword,
-  toEnumMetadataUpdate,
-  variableMetadataAttribute,
-  type EnumMetadata
-} from './Variable';
+import { isEnumMetadata, metadataOptions, toEnumMetadataUpdate, variableMetadataAttribute } from './Variable';
 
 describe('variable', () => {
   describe('metadataOptions', () => {
     test('allOptionsPresent', () => {
       expect(metadataOptions).toEqual([
-        { label: 'Password', value: metadataTypePassword },
-        { label: 'Daytime', value: metadataTypeDaytime },
-        { label: 'Enum', value: metadataTypeEnum },
-        { label: 'File', value: metadataTypeFile }
+        { label: 'Password', value: 'password' },
+        { label: 'Daytime', value: 'daytime' },
+        { label: 'Enum', value: 'enum' },
+        { label: 'File', value: 'file' }
       ]);
     });
   });
 
-  describe('asEnumMetadata', () => {
+  describe('isEnumMetadata', () => {
     test('default', () => {
-      const enumMetadata = asEnumMetadata({ type: metadataTypeEnum });
-      expect(enumMetadata).toBeDefined();
-      if (enumMetadata) {
-        expectTypeOf(enumMetadata).toEqualTypeOf<EnumMetadata>();
-      }
+      expect(isEnumMetadata({ type: 'enum' })).toBeTruthy();
     });
 
     test('isNotEnumMetadata', () => {
-      expect(asEnumMetadata({ type: metadataTypePassword })).toBeUndefined();
+      expect(isEnumMetadata({ type: 'password' })).toBeFalsy();
     });
 
     test('metadataNotProvided', () => {
-      expect(asEnumMetadata()).toBeUndefined();
+      expect(isEnumMetadata()).toBeFalsy();
     });
   });
 
   test('toEnumMetadataUpdate', () => {
     const values = ['value0', 'value1'];
-    expect(toEnumMetadataUpdate(values)).toEqual({ key: variableMetadataAttribute, value: { type: metadataTypeEnum, values: values } });
+    expect(toEnumMetadataUpdate(values)).toEqual({ key: variableMetadataAttribute, value: { type: 'enum', values: values } });
   });
 });

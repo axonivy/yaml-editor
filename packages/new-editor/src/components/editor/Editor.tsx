@@ -12,10 +12,10 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useState } from 'react';
 import { getNode } from '../../data/data';
 import type { TreePath } from '../../types/config';
-import { metadataTypePassword, type Variable } from './data/Variable';
+import './Editor.css';
+import type { Variable } from './data/Variable';
 import { VariablesDetail } from './variables/detail/Variable';
 import { VariablesMaster } from './variables/master/Variables';
-import './Editor.css';
 
 export const Editor = () => {
   // TODO: Variables coming from context and choosing corresponding master and detail content components
@@ -38,7 +38,7 @@ export const Editor = () => {
           name: 'secretKey',
           value: 'MySecretKey',
           description: 'Secret key from your applications "certificates & secrets"',
-          metadata: { type: metadataTypePassword },
+          metadata: { type: 'password' },
           children: []
         },
         {
@@ -70,7 +70,7 @@ export const Editor = () => {
               name: 'pass',
               value: 'MyPass',
               description: 'technical users password',
-              metadata: { type: metadataTypePassword },
+              metadata: { type: 'password' },
               children: []
             }
           ]

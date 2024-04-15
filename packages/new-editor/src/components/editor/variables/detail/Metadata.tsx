@@ -1,17 +1,14 @@
 import { Fieldset, SimpleSelect } from '@axonivy/ui-components';
 import { treeNodeValueAttribute } from '../../../../types/config';
 import {
-  asEnumMetadata,
+  isEnumMetadata,
   metadataOptions,
-  metadataTypeDaytime,
-  metadataTypeEnum,
   variableMetadataAttribute,
-  type EnumMetadata,
   type MetadataType,
   type Variable,
   type VariableUpdates
 } from '../../data/Variable';
-import { PossibleEnumValues } from './PossibleEnumValues';
+import { EnumValues } from './EnumValues';
 
 type MetadataFieldsetProps = {
   variable: Variable;
@@ -19,33 +16,32 @@ type MetadataFieldsetProps = {
 };
 
 export const Metadata = ({ variable, onChange }: MetadataFieldsetProps) => {
-  const enumMetadata = asEnumMetadata(variable.metadata);
+  const metadata = variable.metadata;
+
+  const onValueChange = (value: MetadataType) => {
+    const newMetadata = { type: value };
+    const updates: VariableUpdates = [];
+    switch (value) {
+      case 'daytime':
+        updates.push({ key: treeNodeValueAttribute, value: '00:00' });
+        break;
+      case 'enum':
+        updates.push({ key: treeNodeValueAttribute, value: '' });
+        if (isEnumMetadata(newMetadata)) {
+          newMetadata.values = [''];
+        }
+        break;
+    }
+    updates.push({ key: variableMetadataAttribute, value: newMetadata });
+    onChange(updates);
+  };
 
   return (
     <>
       <Fieldset label='Metadata'>
-        <SimpleSelect
-          value={variable.metadata.type}
-          items={metadataOptions}
-          emptyItem={true}
-          onValueChange={(value: MetadataType) => {
-            const newMetadata = { type: value };
-            const updates: VariableUpdates = [];
-            switch (value) {
-              case metadataTypeDaytime:
-                updates.push({ key: treeNodeValueAttribute, value: '00:00' });
-                break;
-              case metadataTypeEnum:
-                updates.push({ key: treeNodeValueAttribute, value: '' });
-                (newMetadata as EnumMetadata).values = [''];
-                break;
-            }
-            updates.push({ key: variableMetadataAttribute, value: newMetadata });
-            onChange(updates);
-          }}
-        />
+        <SimpleSelect value={metadata.type} items={metadataOptions} emptyItem={true} onValueChange={onValueChange} />
       </Fieldset>
-      {enumMetadata && <PossibleEnumValues selectedValue={variable.value} values={enumMetadata.values} onChange={onChange} />}
+      {isEnumMetadata(metadata) && <EnumValues selectedValue={variable.value} values={metadata.values} onChange={onChange} />}
     </>
   );
 };

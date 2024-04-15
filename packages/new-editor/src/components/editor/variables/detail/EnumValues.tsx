@@ -1,19 +1,19 @@
 import { Button, Fieldset, InputCell, SelectRow, Table, TableBody, TableCell, useTableSelect } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { addRow, deleteFirstSelectedRow } from '../../../../utils/table';
 import { updateRowData } from '../../../../data/table-data';
 import { treeNodeValueAttribute } from '../../../../types/config';
+import { addRow, deleteFirstSelectedRow } from '../../../../utils/table';
 import { Control } from '../../control/Control';
 import { toEnumMetadataUpdate, type VariableUpdates } from '../../data/Variable';
 
-type PossibleEnumValuesProps = {
+type EnumValuesProps = {
   selectedValue: string;
   values: Array<string>;
   onChange: (updates: VariableUpdates) => void;
 };
 
-export const PossibleEnumValues = ({ selectedValue: value, values, onChange }: PossibleEnumValuesProps) => {
+export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValuesProps) => {
   const selection = useTableSelect<string>();
   const columns: Array<ColumnDef<string, string>> = [
     {
@@ -24,7 +24,11 @@ export const PossibleEnumValues = ({ selectedValue: value, values, onChange }: P
   ];
   const meta = {
     updateData: (rowId: string, _columnId: string, value: unknown) => {
-      const newValues = updateRowData(values, Number(rowId), String(value));
+      const valueString = String(value);
+      if (values.includes(valueString)) {
+        return;
+      }
+      const newValues = updateRowData(values, Number(rowId), valueString);
       onChange([toEnumMetadataUpdate(newValues)]);
     }
   };
@@ -39,12 +43,12 @@ export const PossibleEnumValues = ({ selectedValue: value, values, onChange }: P
     meta: meta
   });
 
-  const addPossibleValue = () => {
+  const addValue = () => {
     const newValues = addRow(table, values, '');
     onChange([toEnumMetadataUpdate(newValues)]);
   };
 
-  const deletePossibleValue = () => {
+  const deleteValue = () => {
     const newValues = deleteFirstSelectedRow(table, values);
     const updates: VariableUpdates = [toEnumMetadataUpdate(newValues)];
     if (!newValues.includes(value)) {
@@ -55,12 +59,12 @@ export const PossibleEnumValues = ({ selectedValue: value, values, onChange }: P
 
   return (
     <Fieldset
-      label='List of possible Values'
+      label='List of possible values'
       control={
         <Control
           buttons={[
-            <Button key='addButton' icon={IvyIcons.Plus} onClick={addPossibleValue} />,
-            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deletePossibleValue} disabled={!table.getIsSomeRowsSelected()} />
+            <Button key='addButton' icon={IvyIcons.Plus} onClick={addValue} />,
+            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteValue} disabled={!table.getIsSomeRowsSelected()} />
           ]}
         />
       }
