@@ -23,9 +23,6 @@
   "settings": {
     "task.autoDetect": "off",
     "typescript.tsdk": "node_modules/typescript/lib",
-    "vitest.commandLine": "npm run test",
-    "vitest.disabledWorkspaceFolders": ["root", "integrations/standalone"],
-    "vitest.include": ["packages/new-editor/src/**/*.test.{ts,tsx}"],
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "explicit"
