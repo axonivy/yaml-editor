@@ -1,5 +1,5 @@
 import { Fieldset, SimpleSelect } from '@axonivy/ui-components';
-import { treeNodeValueAttribute } from '../../../../types/config';
+import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import {
   isEnumMetadata,
   metadataOptions,
@@ -7,7 +7,7 @@ import {
   type MetadataType,
   type Variable,
   type VariableUpdates
-} from '../../data/Variable';
+} from '../data/variable';
 import { EnumValues } from './EnumValues';
 
 type MetadataFieldsetProps = {

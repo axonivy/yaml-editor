@@ -1,11 +1,11 @@
 import { Button, Fieldset, InputCell, SelectRow, Table, TableBody, TableCell, useTableSelect } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { updateRowData } from '../../../../data/table-data';
-import { treeNodeValueAttribute } from '../../../../types/config';
-import { addRow, deleteFirstSelectedRow } from '../../../../utils/table';
+import { addRow, deleteFirstSelectedRow } from '../../../utils/table/table';
+import { updateRowData } from '../../../utils/table/table-data';
+import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
-import { toEnumMetadataUpdate, type VariableUpdates } from '../../data/Variable';
+import { toEnumMetadataUpdate, type VariableUpdates } from '../data/variable';
 
 type EnumValuesProps = {
   selectedValue: string;

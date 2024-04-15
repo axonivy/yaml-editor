@@ -1,5 +1,5 @@
 import { updateRowData } from './table-data';
-import type { TestData } from '../test-utils/types';
+import type { TestData } from './test-utils/types';
 
 let data: Array<TestData>;
 let newRowData: TestData;

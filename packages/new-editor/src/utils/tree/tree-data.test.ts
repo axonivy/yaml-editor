@@ -1,6 +1,6 @@
-import type { TestNode } from '../test-utils/types';
-import { addNode, getNode, hasChildren, removeNode, updateNode } from './data';
-import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from '../types/config';
+import type { TestNode } from './test-utils/types';
+import { addNode, getNode, hasChildren, removeNode, updateNode } from './tree-data';
+import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from './types';
 
 let data: Array<TestNode>;
 let nodeUpdates: TreeNodeUpdates<TestNode>;

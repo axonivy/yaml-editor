@@ -1,7 +1,7 @@
 import type { Row, Table } from '@tanstack/react-table';
-import { getFirstSelectedRow, selectRow } from '../utils/table';
-import { addNode, getNode, removeNode } from '../data/data';
-import type { AddChildToFirstSelectedRowReturnType, DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from '../types/config';
+import { getFirstSelectedRow, selectRow } from '../table/table';
+import { addNode, getNode, removeNode } from './tree-data';
+import type { AddChildToFirstSelectedRowReturnType, DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from './types';
 
 export const addChildToFirstSelectedRow = <TNode extends TreeNode<TNode>>(
   table: Table<TNode>,

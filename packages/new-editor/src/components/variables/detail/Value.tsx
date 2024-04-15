@@ -1,8 +1,8 @@
 import { Fieldset, Input, SimpleSelect } from '@axonivy/ui-components';
 import { useMemo } from 'react';
-import { treeNodeValueAttribute } from '../../../../types/config';
-import type { Variable, VariableUpdates } from '../../data/Variable';
-import { isEnumMetadata } from '../../data/Variable';
+import { treeNodeValueAttribute } from '../../../utils/tree/types';
+import type { Variable, VariableUpdates } from '../data/variable';
+import { isEnumMetadata } from '../data/variable';
 
 type ValueFieldsetProps = {
   variable: Variable;

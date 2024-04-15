@@ -1,7 +1,7 @@
 import type { RowSelectionState, Table, Updater } from '@tanstack/react-table';
 import { createTable, getCoreRowModel } from '@tanstack/react-table';
 import { addRow, deleteFirstSelectedRow, getFirstSelectedRow, selectRow } from './table';
-import type { TestData } from '../test-utils/types';
+import type { TestData } from './test-utils/types';
 
 let data: Array<TestData>;
 let newRowData: TestData;

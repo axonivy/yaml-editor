@@ -1,7 +1,7 @@
 import { Fieldset, Input, Message, Textarea } from '@axonivy/ui-components';
-import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../../data/data';
-import { treeNodeNameAttribute, type TreePath } from '../../../../types/config';
-import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../../data/Variable';
+import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
+import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
+import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../data/variable';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
 
