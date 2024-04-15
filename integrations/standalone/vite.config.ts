@@ -12,7 +12,7 @@ export default defineConfig({
   server: { port: 3000 },
   resolve: {
     alias: {
-      '@axonivy/config-editor': resolve(__dirname, '../../packages/editor/src')
+      '@axonivy/new-config-editor': resolve(__dirname, '../../packages/new-editor/src')
     }
   },
   base: './'

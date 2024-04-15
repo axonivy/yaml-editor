@@ -1,7 +1,9 @@
-import { Fieldset, Input, Message, SimpleSelect, Textarea } from '@axonivy/ui-components';
+import { Fieldset, Input, Message, Textarea } from '@axonivy/ui-components';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../../data/data';
-import type { TreePath } from '../../../../types/config';
-import { metadataOptions, type Metadata, type Variable } from '../../data/Variable';
+import { treeNodeNameAttribute, type TreePath } from '../../../../types/config';
+import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../../data/Variable';
+import { Metadata } from './Metadata';
+import { Value } from './Value';
 
 type VariableProps = {
   variables: Array<Variable>;
@@ -9,7 +11,7 @@ type VariableProps = {
   setVariables: (variables: Array<Variable>) => void;
 };
 
-export const VariableDetail = ({ variables, variablePath, setVariables }: VariableProps) => {
+export const VariablesDetail = ({ variables, variablePath, setVariables }: VariableProps) => {
   const variable = getNode(variables, variablePath);
   if (!variable) {
     return <Message>Select a variable to edit.</Message>;
@@ -17,34 +19,27 @@ export const VariableDetail = ({ variables, variablePath, setVariables }: Variab
 
   const hasChildren = variableHasChildren(variable);
 
-  const handleVariableAttributeChange = <TKey extends keyof Variable>(key: TKey, value: Variable[TKey]) => {
-    const newVariables = structuredClone(variables);
-    updateNode(newVariables, variablePath, key, value);
+  const handleVariableAttributeChange = (updates: VariableUpdates) => {
+    const newVariables = updateNode(variables, variablePath, updates);
     setVariables(newVariables);
   };
 
   return (
     <>
       <Fieldset label='Name'>
-        <Input value={variable.name} onChange={event => handleVariableAttributeChange('name', event.target.value)} />
+        <Input
+          value={variable.name}
+          onChange={event => handleVariableAttributeChange([{ key: treeNodeNameAttribute, value: event.target.value }])}
+        />
       </Fieldset>
-      {!hasChildren && (
-        <Fieldset label='Value'>
-          <Input value={variable.value} onChange={event => handleVariableAttributeChange('value', event.target.value)} />
-        </Fieldset>
-      )}
+      {!hasChildren && <Value variable={variable} onChange={handleVariableAttributeChange} />}
       <Fieldset label='Description'>
-        <Textarea value={variable.description} onChange={event => handleVariableAttributeChange('description', event.target.value)} />
+        <Textarea
+          value={variable.description}
+          onChange={event => handleVariableAttributeChange([{ key: variableDescriptionAttribute, value: event.target.value }])}
+        />
       </Fieldset>
-      {!hasChildren && (
-        <Fieldset label='Metadata'>
-          <SimpleSelect
-            value={variable.metadata}
-            items={metadataOptions}
-            onValueChange={(value: Metadata) => handleVariableAttributeChange('metadata', value)}
-          ></SimpleSelect>
-        </Fieldset>
-      )}
+      {!hasChildren && <Metadata variable={variable} onChange={handleVariableAttributeChange} />}
     </>
   );
 };

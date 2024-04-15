@@ -1,7 +1,9 @@
 import type { TestNode } from '../test-utils/types';
 import { addNode, getNode, hasChildren, removeNode, updateNode } from './data';
+import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from '../types/config';
 
 let data: Array<TestNode>;
+let nodeUpdates: TreeNodeUpdates<TestNode>;
 let newNode: TestNode;
 
 beforeEach(() => {
@@ -26,6 +28,10 @@ beforeEach(() => {
       ]
     }
   ];
+  nodeUpdates = [
+    { key: treeNodeNameAttribute, value: 'newName' },
+    { key: treeNodeValueAttribute, value: 'newValue' }
+  ];
   newNode = {
     name: 'newNodeName',
     value: 'newNodeValue',
@@ -33,7 +39,7 @@ beforeEach(() => {
   };
 });
 
-describe('data', () => {
+describe('tree-data', () => {
   describe('getNode', () => {
     describe('present', () => {
       test('root', () => {
@@ -55,7 +61,7 @@ describe('data', () => {
       });
     });
 
-    describe('pathNotSupplied', () => {
+    describe('pathNotProvided', () => {
       test('undefined', () => {
         expect(getNode(data, undefined)).toBeUndefined();
       });
@@ -68,40 +74,60 @@ describe('data', () => {
 
   describe('updateNode', () => {
     test('present', () => {
-      expect(data[1].children[0].value).toEqual('ValueNode1.0');
-      updateNode(data, [1, 0], 'value', 'newValue');
-      expect(data[1].children[0].value).toEqual('newValue');
+      const originalData = structuredClone(data);
+      const newData = updateNode(data, [1, 0], nodeUpdates);
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newData[1].children[0].name).toEqual('newName');
+      expect(newData[1].children[0].value).toEqual('newValue');
     });
 
     test('missing', () => {
       const originalData = structuredClone(data);
-      updateNode(data, [42], 'value', 'newValue');
+      const newData = updateNode(data, [42], nodeUpdates);
       expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newData).toEqual(data);
     });
   });
 
   describe('addNode', () => {
     describe('present', () => {
       test('root', () => {
-        expect(data).toHaveLength(2);
-        expect(addNode(data, [], newNode)).toEqual(2);
-        expect(data).toHaveLength(3);
-        expect(data[2]).toEqual(newNode);
+        const originalData = structuredClone(data);
+        const addNodeReturnValue = addNode(data, [], newNode);
+        const newData = addNodeReturnValue.newData;
+        const newChildIndex = addNodeReturnValue.newChildIndex;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(newChildIndex).toEqual(2);
+        expect(newData).toHaveLength(3);
+        expect(newData[2]).toEqual(newNode);
       });
 
       test('deep', () => {
-        expect(data[1].children[1].children).toHaveLength(1);
-        expect(addNode(data, [1, 1], newNode)).toEqual(1);
-        expect(data[1].children[1].children).toHaveLength(2);
-        expect(data[1].children[1].children[1]).toEqual(newNode);
+        const originalData = structuredClone(data);
+        const addNodeReturnValue = addNode(data, [1, 1], newNode);
+        const newData = addNodeReturnValue.newData;
+        const newChildIndex = addNodeReturnValue.newChildIndex;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(newChildIndex).toEqual(1);
+        expect(newData[1].children[1].children).toHaveLength(2);
+        expect(newData[1].children[1].children[1]).toEqual(newNode);
       });
     });
 
     test('missing', () => {
-      expect(data).toHaveLength(2);
-      expect(addNode(data, [42], newNode)).toEqual(2);
-      expect(data).toHaveLength(3);
-      expect(data[2]).toEqual(newNode);
+      const originalData = structuredClone(data);
+      const addNodeReturnValue = addNode(data, [42], newNode);
+      const newData = addNodeReturnValue.newData;
+      const newChildIndex = addNodeReturnValue.newChildIndex;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newChildIndex).toEqual(2);
+      expect(newData).toHaveLength(3);
+      expect(newData[2]).toEqual(newNode);
     });
   });
 
@@ -109,23 +135,28 @@ describe('data', () => {
     describe('present', () => {
       test('root', () => {
         const originalData = structuredClone(data);
-        expect(data).toHaveLength(2);
-        removeNode(data, [1]);
-        expect(data).toHaveLength(1);
-        expect(data[0]).toEqual(originalData[0]);
+        const newData = removeNode(data, [1]);
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(newData).toHaveLength(1);
+        expect(newData[0]).toEqual(data[0]);
       });
 
       test('deep', () => {
-        expect(data[1].children[1].children).toHaveLength(1);
-        removeNode(data, [1, 1, 0]);
-        expect(data[1].children[1].children).toHaveLength(0);
+        const originalData = structuredClone(data);
+        const newData = removeNode(data, [1, 1, 0]);
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(newData[1].children[1].children).toHaveLength(0);
       });
     });
 
     test('missing', () => {
       const originalData = structuredClone(data);
-      removeNode(data, [42]);
+      const newData = removeNode(data, [42]);
       expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newData).toEqual(data);
     });
   });
 
