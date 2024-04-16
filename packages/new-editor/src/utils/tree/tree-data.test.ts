@@ -1,5 +1,5 @@
 import type { TestNode } from './test-utils/types';
-import { addNode, getNode, hasChildren, removeNode, updateNode } from './tree-data';
+import { addNode, getNode, getNodesOnPath, hasChildren, removeNode, updateNode } from './tree-data';
 import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from './types';
 
 let data: Array<TestNode>;
@@ -68,6 +68,33 @@ describe('tree-data', () => {
 
       test('empty', () => {
         expect(getNode(data, [])).toBeUndefined();
+      });
+    });
+  });
+
+  describe('getNodesOnPath', () => {
+    test('default', () => {
+      const nodesOnPath = getNodesOnPath(data, [1, 1, 0]);
+      expect(nodesOnPath).toHaveLength(3);
+      expect(nodesOnPath[0]).toEqual(data[1]);
+      expect(nodesOnPath[1]).toEqual(data[1].children[1]);
+      expect(nodesOnPath[2]).toEqual(data[1].children[1].children[0]);
+    });
+
+    test('missing', () => {
+      const nodesOnPath = getNodesOnPath(data, [1, 42, 42]);
+      expect(nodesOnPath).toHaveLength(2);
+      expect(nodesOnPath[0]).toEqual(data[1]);
+      expect(nodesOnPath[1]).toBeUndefined();
+    });
+
+    describe('pathNotProvided', () => {
+      test('undefined', () => {
+        expect(getNodesOnPath(data, undefined)).toEqual([]);
+      });
+
+      test('empty', () => {
+        expect(getNodesOnPath(data, [])).toEqual([]);
       });
     });
   });

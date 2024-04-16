@@ -1,6 +1,7 @@
+import { useTableGlobalFilter } from '@axonivy/ui-components';
 import type { Row, Table } from '@tanstack/react-table';
 import { getFirstSelectedRow, selectRow } from '../table/table';
-import { addNode, getNode, removeNode } from './tree-data';
+import { addNode, getNode, getNodesOnPath, removeNode } from './tree-data';
 import type { AddChildToFirstSelectedRowReturnType, DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from './types';
 
 export const addChildToFirstSelectedRow = <TNode extends TreeNode<TNode>>(
@@ -78,4 +79,26 @@ const toTreePath = (rowId: string) => {
 
 const toRowId = (path: TreePath) => {
   return path.join('.');
+};
+
+export const useTreeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNode>) => {
+  const globalFilter = useTableGlobalFilter();
+  const globalFilterFn = (row: Row<TNode>, _columnId: string, filterValue: string) =>
+    treeGlobalFilter(data, toTreePath(row.id), filterValue);
+  return { ...globalFilter, options: { ...globalFilter.options, globalFilterFn: globalFilterFn, filterFromLeafRows: true } };
+};
+
+export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, filterValue: string) => {
+  filterValue = filterValue.toLowerCase();
+  const nodesOnPath = getNodesOnPath(data, path);
+  for (const node of nodesOnPath) {
+    if (node?.name.toLowerCase().includes(filterValue)) {
+      return true;
+    }
+  }
+  const node = nodesOnPath.at(-1);
+  if (node) {
+    return node.value.toLowerCase().includes(filterValue);
+  }
+  return false;
 };
