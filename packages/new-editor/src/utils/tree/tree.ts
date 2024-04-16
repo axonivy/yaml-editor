@@ -96,7 +96,7 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
       return true;
     }
   }
-  const node = nodesOnPath[nodesOnPath.length - 1];
+  const node = nodesOnPath.at(-1);
   if (node) {
     return node.value.toLowerCase().includes(filterValue);
   }

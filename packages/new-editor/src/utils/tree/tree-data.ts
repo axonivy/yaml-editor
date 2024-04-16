@@ -2,12 +2,12 @@ import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from './t
 
 export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
   const nodes = getNodesOnPath(data, path);
-  return nodes[nodes.length - 1];
+  return nodes.at(-1);
 };
 
 const getParentNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
   const nodes = getNodesOnPath(data, path);
-  return nodes[nodes.length - 2];
+  return nodes.at(-2);
 };
 
 export const getNodesOnPath = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath): Array<TNode | undefined> => {
@@ -59,7 +59,10 @@ export const removeNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, pa
   if (!children) {
     return newData;
   }
-  const childIndex = path[path.length - 1];
+  const childIndex = path.at(-1);
+  if (childIndex === undefined) {
+    return newData;
+  }
   children.splice(childIndex, 1);
   return newData;
 };
