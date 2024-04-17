@@ -12,8 +12,8 @@
       "path": "./packages/editor"
     },
     {
-      "name": "package/new-editor",
-      "path": "./packages/new-editor"
+      "name": "package/variable-editor",
+      "path": "./packages/variable-editor"
     },
     {
       "name": "integrations/standalone",

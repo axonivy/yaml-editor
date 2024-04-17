@@ -6,12 +6,10 @@ import {
   isFileMetadata,
   metadataOptions,
   toFileMetadataUpdate,
-  variableMetadataAttribute,
   type FileMetadataFilenameExtension,
-  type MetadataType,
-  type Variable,
-  type VariableUpdates
-} from '../data/variable';
+  type MetadataType
+} from '../data/metadata';
+import { variableMetadataAttribute, type Variable, type VariableUpdates } from '../data/variable';
 import { EnumValues } from './EnumValues';
 
 type MetadataFieldsetProps = {
