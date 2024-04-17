@@ -1,9 +1,13 @@
 import { Fieldset, SimpleSelect } from '@axonivy/ui-components';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import {
+  fileMetadataFilenameExtensionOptions,
   isEnumMetadata,
+  isFileMetadata,
   metadataOptions,
+  toFileMetadataUpdate,
   variableMetadataAttribute,
+  type FileMetadataFilenameExtension,
   type MetadataType,
   type Variable,
   type VariableUpdates
@@ -31,6 +35,10 @@ export const Metadata = ({ variable, onChange }: MetadataFieldsetProps) => {
           newMetadata.values = [''];
         }
         break;
+      case 'file':
+        if (isFileMetadata(newMetadata)) {
+          newMetadata.filenameExtension = 'txt';
+        }
     }
     updates.push({ key: variableMetadataAttribute, value: newMetadata });
     onChange(updates);
@@ -42,6 +50,15 @@ export const Metadata = ({ variable, onChange }: MetadataFieldsetProps) => {
         <SimpleSelect value={metadata.type} items={metadataOptions} emptyItem={true} onValueChange={onValueChange} />
       </Fieldset>
       {isEnumMetadata(metadata) && <EnumValues selectedValue={variable.value} values={metadata.values} onChange={onChange} />}
+      {isFileMetadata(metadata) && (
+        <Fieldset label='Filename extension'>
+          <SimpleSelect
+            value={metadata.filenameExtension}
+            items={fileMetadataFilenameExtensionOptions}
+            onValueChange={(filenameExtension: FileMetadataFilenameExtension) => onChange([toFileMetadataUpdate(filenameExtension)])}
+          />
+        </Fieldset>
+      )}
     </>
   );
 };
