@@ -179,20 +179,42 @@ describe('toVariables', () => {
   test('metadata', () => {
     const content = `Variables:
   # [password]
-  passwordKey: passwordValue
+  passwordKeyOne: passwordValueOne
+  #   [password]   
+  passwordKeyTwo: passwordValueTwo
+  # [ password ]
+  passwordKeyThree: passwordValueThree
   # [daytime]
   daytimeKey: 08:00
-  # [enum: value0, value1, value2]
-  enumKey: value1
+  # [enum: valueOne0, valueOne1, valueOne2]
+  enumKeyOne: valueOne1
+  # [enum:valueTwo0,valueTwo1,valueTwo2]
+  enumKeyTwo: valueTwo1
+  #    [enum:   valueThree0,   valueThree1,   valueThree2]   
+  enumKeyThree: valueThree1
   # [file: json]
   fileKey: fileValue
 `;
     expect(toVariables(content)).toEqual([
       {
-        name: 'passwordKey',
-        value: 'passwordValue',
+        name: 'passwordKeyOne',
+        value: 'passwordValueOne',
         description: '',
         metadata: { type: 'password' },
+        children: []
+      },
+      {
+        name: 'passwordKeyTwo',
+        value: 'passwordValueTwo',
+        description: '',
+        metadata: { type: 'password' },
+        children: []
+      },
+      {
+        name: 'passwordKeyThree',
+        value: 'passwordValueThree',
+        description: '',
+        metadata: { type: '' },
         children: []
       },
       {
@@ -203,10 +225,24 @@ describe('toVariables', () => {
         children: []
       },
       {
-        name: 'enumKey',
-        value: 'value1',
+        name: 'enumKeyOne',
+        value: 'valueOne1',
         description: '',
-        metadata: { type: 'enum', values: ['value0', 'value1', 'value2'] },
+        metadata: { type: 'enum', values: ['valueOne0', 'valueOne1', 'valueOne2'] },
+        children: []
+      },
+      {
+        name: 'enumKeyTwo',
+        value: 'valueTwo1',
+        description: '',
+        metadata: { type: 'enum', values: ['valueTwo0', 'valueTwo1', 'valueTwo2'] },
+        children: []
+      },
+      {
+        name: 'enumKeyThree',
+        value: 'valueThree1',
+        description: '',
+        metadata: { type: 'enum', values: ['valueThree0', 'valueThree1', 'valueThree2'] },
         children: []
       },
       {

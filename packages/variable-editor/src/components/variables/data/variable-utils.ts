@@ -80,10 +80,10 @@ const enrichVariableMetadata = (variable: Variable) => {
   if (isMetadataType(metadata)) {
     return enrichVariableWithMetadata(variable, metadata);
   }
-  if (metadata.startsWith('enum: ')) {
+  if (metadata.startsWith('enum:')) {
     return enrichVariableWithEnumMetadata(variable, metadata);
   }
-  if (metadata.startsWith('file: ')) {
+  if (metadata.startsWith('file:')) {
     return enrichVariableWithFileMetadata(variable, metadata);
   }
   return variable;
@@ -94,7 +94,7 @@ const extractMetadata = (variable: Variable) => {
   if (!lastDescriptionLine) {
     return;
   }
-  const metadataMatch = lastDescriptionLine.match(/^\[(.+)\]$/);
+  const metadataMatch = lastDescriptionLine.match(/^\s*\[(.+)\]\s*$/);
   if (!metadataMatch || metadataMatch.length !== 2) {
     return;
   }
@@ -108,14 +108,17 @@ const enrichVariableWithMetadata = (variable: Variable, metadataType: MetadataTy
 };
 
 const enrichVariableWithEnumMetadata = (variable: Variable, metadata: string) => {
-  const enumValues = metadata.replace(/^enum: /, '').split(', ');
+  const enumValues = metadata
+    .replace(/^enum:/, '')
+    .replace(/\s/g, '')
+    .split(',');
   const enumMetadata: EnumMetadata = { type: 'enum', values: enumValues };
   variable.metadata = enumMetadata;
   return variable;
 };
 
 const enrichVariableWithFileMetadata = (variable: Variable, metadata: string) => {
-  const filenameExtension = metadata.replace(/^file: /, '');
+  const filenameExtension = metadata.replace(/^file:\s*/, '');
   if (isFileMetadataFilenameExtension(filenameExtension)) {
     const fileMetadata: FileMetadata = { type: 'file', filenameExtension: filenameExtension };
     variable.metadata = fileMetadata;
