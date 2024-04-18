@@ -88,6 +88,9 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     setSelectedVariablePath([]);
   };
 
+  /* workaround for "table.getIsSomeRowsSelected" as it returns false if only last remaining row is selected */
+  const isRowSelected = () => document.querySelectorAll('[data-state="selected"]').length > 0;
+
   return (
     <Fieldset
       className='variable-wrapper'
@@ -96,7 +99,12 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
         <Control
           buttons={[
             <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
-            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteVariable} disabled={!table.getIsSomeRowsSelected()} />
+            <Button
+              key='deleteButton'
+              icon={IvyIcons.Trash}
+              onClick={deleteVariable}
+              disabled={!table.getIsSomeRowsSelected() && !isRowSelected()}
+            />
           ]}
         />
       }
