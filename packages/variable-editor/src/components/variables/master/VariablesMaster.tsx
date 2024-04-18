@@ -90,6 +90,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
 
   return (
     <Fieldset
+      className='variable-wrapper'
       label='List of variables'
       control={
         <Control
