@@ -14,6 +14,8 @@ type VariableEditorProps = {
   onChange: (content: string) => void;
 };
 
+// TODO: remove this after implementing onChange
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function VariableEditor({ content, onChange }: VariableEditorProps) {
   const [variables, setVariables] = useState<Array<Variable>>([]);
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
