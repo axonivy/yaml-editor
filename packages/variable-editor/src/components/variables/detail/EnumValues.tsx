@@ -5,7 +5,8 @@ import { addRow, deleteFirstSelectedRow } from '../../../utils/table/table';
 import { updateRowData } from '../../../utils/table/table-data';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
-import { toEnumMetadataUpdate, type VariableUpdates } from '../data/variable';
+import { toEnumMetadataUpdate } from '../data/metadata';
+import { type VariableUpdates } from '../data/variable';
 
 type EnumValuesProps = {
   selectedValue: string;
