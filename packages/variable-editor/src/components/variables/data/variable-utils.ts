@@ -1,5 +1,5 @@
-import { parseDocument } from 'yaml';
-import { getLastLine, removeLeadingWhitespacesFromEachLine } from '../../../utils/string/string';
+import { Pair, Scalar, YAMLMap, parseDocument, stringify } from 'yaml';
+import { addSingleLeadingWhitespaceToEachLine, getLastLine, removeSingleLeadingWhitespaceFromEachLine } from '../../../utils/string/string';
 import {
   isYAMLNodeWithChildren,
   isYAMLNodeWithoutChildren,
@@ -8,7 +8,16 @@ import {
   type YAMLNodeWithChildren,
   type YAMLNodeWithoutChildren
 } from '../../../utils/yaml/types';
-import { isFileMetadataFilenameExtension, isMetadataType, type EnumMetadata, type FileMetadata, type MetadataType } from './metadata';
+import {
+  isEnumMetadata,
+  isFileMetadata,
+  isFileMetadataFilenameExtension,
+  isMetadataType,
+  type EnumMetadata,
+  type FileMetadata,
+  type Metadata,
+  type MetadataType
+} from './metadata';
 import type { Variable } from './variable';
 
 export const toVariables = (content: string) => {
@@ -18,8 +27,7 @@ export const toVariables = (content: string) => {
   }
   const nodeChildren = variablesNode.items;
   nodeChildren[0].key.commentBefore = variablesNode.commentBefore;
-  const newLocal = parseNodes(nodeChildren);
-  return newLocal;
+  return parseNodes(nodeChildren);
 };
 
 const parseNodes = (nodes: Array<YAMLNode>): Array<Variable> => {
@@ -49,7 +57,7 @@ const parseNode = (node: YAMLNode) => {
 const enrichVariableWithChildren = (variable: Variable, node: YAMLNodeWithChildren) => {
   const commentBefore = node.key.commentBefore;
   if (commentBefore) {
-    variable.description = removeLeadingWhitespacesFromEachLine(commentBefore);
+    variable.description = removeSingleLeadingWhitespaceFromEachLine(commentBefore);
   }
   const nodeChildren = node.value.items;
   nodeChildren[0].key.commentBefore = node.value.commentBefore;
@@ -67,7 +75,7 @@ const enrichVariableDescriptionAndMetadata = (variable: Variable, node: YAMLNode
   if (!commentBefore) {
     return variable;
   }
-  variable.description = removeLeadingWhitespacesFromEachLine(commentBefore);
+  variable.description = removeSingleLeadingWhitespaceFromEachLine(commentBefore);
   return enrichVariableMetadata(variable);
 };
 
@@ -124,4 +132,75 @@ const enrichVariableWithFileMetadata = (variable: Variable, metadata: string) =>
     variable.metadata = fileMetadata;
   }
   return variable;
+};
+
+export const toContent = (variables: Array<Variable>) => {
+  return stringify(new Pair(new Scalar('Variables'), parseVariables(variables)));
+};
+
+const parseVariables = (variables: Array<Variable>) => {
+  const map = new YAMLMap();
+  variables.forEach(variable => map.add(parseVariable(variable)));
+  return map;
+};
+
+const parseVariable = (variable: Variable) => {
+  const variableKey = new Scalar(variable.name);
+  variableKey.commentBefore = parseKeyDescription(variable);
+  let variableValue;
+  if (variable.children.length === 0) {
+    variableValue = new Scalar(parseVariableValue(variable.value));
+  } else {
+    variableValue = parseVariables(variable.children);
+  }
+  return new Pair(variableKey, variableValue);
+};
+
+const parseKeyDescription = (variable: Variable) => {
+  const metadata = variable.metadata;
+  const description = variable.description;
+  if (metadata.type === '') {
+    return description && addSingleLeadingWhitespaceToEachLine(description);
+  }
+
+  const metadataComment = parseMetadataComment(metadata);
+  const commentBefore = description ? description + '\n' + metadataComment : metadataComment;
+  return addSingleLeadingWhitespaceToEachLine(commentBefore);
+};
+
+const parseMetadataComment = (metadata: Metadata) => {
+  let metadataComment;
+  switch (metadata.type) {
+    case 'enum':
+      if (isEnumMetadata(metadata)) {
+        metadataComment = 'enum: ' + metadata.values.join(', ');
+      }
+      break;
+    case 'file':
+      if (isFileMetadata(metadata)) {
+        metadataComment = 'file: ' + metadata.filenameExtension;
+      }
+      break;
+    default:
+      metadataComment = metadata.type;
+      break;
+  }
+  return '[' + metadataComment + ']';
+};
+
+const parseVariableValue = (value: string) => {
+  const valueLowercase = value.toLowerCase();
+  if (valueLowercase === 'true') {
+    return true;
+  }
+  if (valueLowercase === 'false') {
+    return false;
+  }
+
+  const valueNumber = Number(value);
+  if (!isNaN(valueNumber)) {
+    return valueNumber;
+  }
+
+  return value;
 };

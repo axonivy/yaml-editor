@@ -1,33 +1,47 @@
-import { getLastLine, removeLeadingWhitespacesFromEachLine } from './string';
+import { addSingleLeadingWhitespaceToEachLine, getLastLine, removeSingleLeadingWhitespaceFromEachLine } from './string';
 
 describe('string', () => {
-  describe('removeLeadingWhitespacesFromEachLine', () => {
+  describe('removeSingleLeadingWhitespaceFromEachLine', () => {
     test('empty', () => {
-      expect(removeLeadingWhitespacesFromEachLine('')).toEqual('');
+      expect(removeSingleLeadingWhitespaceFromEachLine('')).toEqual('');
     });
 
     describe('whitespaceOnly', () => {
       test('singleLine', () => {
-        expect(removeLeadingWhitespacesFromEachLine('   ')).toEqual('');
+        expect(removeSingleLeadingWhitespaceFromEachLine('   ')).toEqual('  ');
       });
 
       test('multiLine', () => {
-        expect(removeLeadingWhitespacesFromEachLine('   \n \n  ')).toEqual('\n\n');
+        expect(removeSingleLeadingWhitespaceFromEachLine('   \n \n  ')).toEqual('  \n\n ');
       });
     });
 
     describe('default', () => {
       test('singleLine', () => {
-        expect(removeLeadingWhitespacesFromEachLine('   string')).toEqual('string');
+        expect(removeSingleLeadingWhitespaceFromEachLine('   string')).toEqual('  string');
       });
 
       test('multiLine', () => {
-        expect(removeLeadingWhitespacesFromEachLine('   one\n two\n  three')).toEqual('one\ntwo\nthree');
+        expect(removeSingleLeadingWhitespaceFromEachLine('   one\n two\n  three')).toEqual('  one\ntwo\n three');
       });
     });
 
     test('mixed', () => {
-      expect(removeLeadingWhitespacesFromEachLine('\none\n\n   two\n  \n three\n\n')).toEqual('\none\n\ntwo\n\nthree\n\n');
+      expect(removeSingleLeadingWhitespaceFromEachLine('\none\n\n   two\n  \n three\n\n')).toEqual('\none\n\n  two\n \nthree\n\n');
+    });
+  });
+
+  describe('addSingleLeadingWhitespaceToEachLine', () => {
+    test('empty', () => {
+      expect(addSingleLeadingWhitespaceToEachLine('')).toEqual(' ');
+    });
+
+    test('singleLine', () => {
+      expect(addSingleLeadingWhitespaceToEachLine('text')).toEqual(' text');
+    });
+
+    test('multiLine', () => {
+      expect(addSingleLeadingWhitespaceToEachLine('lineOne\nlineTwo\nlineThree')).toEqual(' lineOne\n lineTwo\n lineThree');
     });
   });
 
