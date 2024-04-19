@@ -5,3 +5,13 @@
 .content {
   margin: var(--size-3);
 }
+
+/* makes master-table scrollable */
+.content,
+.master-wrapper,
+.variable-wrapper {
+  flex: 1;
+  flex-basis: 0;
+  min-height: 0;
+  height: 100%;
+}
