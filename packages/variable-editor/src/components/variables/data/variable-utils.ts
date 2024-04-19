@@ -26,6 +26,9 @@ export const toVariables = (content: string) => {
     return [];
   }
   const nodeChildren = variablesNode.items;
+  if (nodeChildren.length === 0) {
+    return [];
+  }
   nodeChildren[0].key.commentBefore = variablesNode.commentBefore;
   return parseNodes(nodeChildren);
 };

@@ -73,6 +73,12 @@ describe('variable-utils', () => {
     test('mixed', () => {
       expect(toVariables(contentMixed)).toEqual(variablesMixed);
     });
+
+    test('noVariables', () => {
+      const content = `Variables: {}
+`;
+      expect(toVariables(content)).toEqual([]);
+    });
   });
 
   describe('toContent', () => {
