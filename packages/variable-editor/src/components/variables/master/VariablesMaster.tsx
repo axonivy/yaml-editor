@@ -13,7 +13,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { selectRow } from '../../../utils/table/table';
+import { selectRow, isRowSelected } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
@@ -88,9 +88,6 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     setSelectedVariablePath([]);
   };
 
-  /* workaround for "table.getIsSomeRowsSelected" as it returns false if only last remaining row is selected */
-  const isRowSelected = () => document.querySelectorAll('[data-state="selected"]').length > 0;
-
   return (
     <Fieldset
       className='variable-wrapper'
@@ -103,7 +100,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
               key='deleteButton'
               icon={IvyIcons.Trash}
               onClick={deleteVariable}
-              disabled={!table.getIsSomeRowsSelected() && !isRowSelected()}
+              disabled={!table.getIsSomeRowsSelected() && !isRowSelected(table)}
             />
           ]}
         />
