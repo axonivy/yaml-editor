@@ -160,7 +160,10 @@ const parseKeyDescription = (variable: Variable) => {
   const metadata = variable.metadata;
   const description = variable.description;
   if (metadata.type === '') {
-    return description && addSingleLeadingWhitespaceToEachLine(description);
+    if (description) {
+      return addSingleLeadingWhitespaceToEachLine(description);
+    }
+    return undefined;
   }
 
   const metadataComment = parseMetadataComment(metadata);
