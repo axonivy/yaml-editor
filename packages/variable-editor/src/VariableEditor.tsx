@@ -3,7 +3,7 @@ import '@axonivy/ui-icons/lib/ivy-icons.css';
 import { useMemo, useState } from 'react';
 import { Editor } from './components/editor/Editor';
 import { type Variable } from './components/variables/data/variable';
-import { toVariables } from './components/variables/data/variable-utils';
+import { toContent, toVariables } from './components/variables/data/variable-utils';
 import { VariablesDetail } from './components/variables/detail/VariablesDetail';
 import { VariablesMaster } from './components/variables/master/VariablesMaster';
 import { getNode } from './utils/tree/tree-data';
@@ -23,6 +23,9 @@ function VariableEditor({ content, onChange }: VariableEditorProps) {
   useMemo(() => {
     setVariables(toVariables(content));
   }, [content]);
+  useMemo(() => {
+    onChange(toContent(variables));
+  }, [onChange, variables]);
 
   const title = 'Variables Editor';
   let detailTitle = title;

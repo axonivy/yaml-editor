@@ -48,11 +48,6 @@ const mockData = `Variables:
 
 root.render(
   <React.StrictMode>
-    <VariableEditor
-      content={mockData}
-      onChange={content => {
-        console.log(content);
-      }}
-    />
+    <VariableEditor content={mockData} onChange={() => {}} />
   </React.StrictMode>
 );
