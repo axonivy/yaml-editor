@@ -1,4 +1,5 @@
 import { content, variables } from './test-utils/variables';
+import { variablesDuplicates } from './test-utils/variables-duplicates';
 import { contentMixed, variablesMixed } from './test-utils/variables-mixed';
 import { contentWithDescriptions, variablesWithDescriptions } from './test-utils/variables-with-descriptions';
 import { contentWithMetadata, variablesWithMetadata } from './test-utils/variables-with-metadata';
@@ -96,6 +97,14 @@ describe('variable-utils', () => {
 
     test('mixed', () => {
       expect(toContent(variablesMixed)).toEqual(contentMixed);
+    });
+
+    test('ignoreDuplicateKeys', () => {
+      expect(toContent(variablesDuplicates)).toEqual(`Variables:
+  duplicateKey: duplicateValueOne
+  duplicateMapping:
+    deepDuplicateKeyOne: deepDuplicateValueOneOne
+`);
     });
   });
 });
