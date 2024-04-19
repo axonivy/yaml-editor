@@ -143,7 +143,11 @@ export const toContent = (variables: Array<Variable>) => {
 
 const parseVariables = (variables: Array<Variable>) => {
   const map = new YAMLMap();
-  variables.forEach(variable => map.add(parseVariable(variable)));
+  variables.forEach(variable => {
+    if (!map.has(variable.name)) {
+      map.add(parseVariable(variable));
+    }
+  });
   return map;
 };
 
