@@ -1,6 +1,6 @@
 import '@axonivy/ui-components/lib/style.css';
 import '@axonivy/ui-icons/lib/ivy-icons.css';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Editor } from './components/editor/Editor';
 import { type Variable } from './components/variables/data/variable';
 import { toContent, toVariables } from './components/variables/data/variable-utils';
@@ -23,7 +23,7 @@ function VariableEditor({ content, onChange }: VariableEditorProps) {
   useMemo(() => {
     setVariables(toVariables(content));
   }, [content]);
-  useMemo(() => {
+  useEffect(() => {
     onChange(toContent(variables));
   }, [onChange, variables]);
 
