@@ -1,13 +1,5 @@
-import { Pair, Scalar, YAMLMap, parseDocument, stringify } from 'yaml';
+import { Pair, Scalar, YAMLMap, isMap, isPair, isScalar, parseDocument, stringify } from 'yaml';
 import { addSingleLeadingWhitespaceToEachLine, getLastLine, removeSingleLeadingWhitespaceFromEachLine } from '../../../utils/string/string';
-import {
-  isYAMLNodeWithChildren,
-  isYAMLNodeWithoutChildren,
-  isYAMLRoot,
-  type YAMLNode,
-  type YAMLNodeWithChildren,
-  type YAMLNodeWithoutChildren
-} from '../../../utils/yaml/types';
 import {
   isEnumMetadata,
   isFileMetadata,
@@ -21,59 +13,74 @@ import {
 import type { Variable } from './variable';
 
 export const toVariables = (content: string) => {
-  const variablesNode = parseDocument(content).get('Variables');
-  if (!isYAMLRoot(variablesNode)) {
+  const variablesRoot = parseDocument(content).get('Variables');
+  if (!isMap<Scalar, Pair>(variablesRoot)) {
     return [];
   }
-  const nodeChildren = variablesNode.items;
-  if (nodeChildren.length === 0) {
+  const variablesNodes = variablesRoot.items;
+  if (variablesNodes.length === 0) {
     return [];
   }
-  nodeChildren[0].key.commentBefore = variablesNode.commentBefore;
-  return parseNodes(nodeChildren);
+  const firstVariablesNodeKey = variablesNodes[0].key;
+  if (isScalar(firstVariablesNodeKey)) {
+    firstVariablesNodeKey.commentBefore = variablesRoot.commentBefore;
+  }
+  return parseNodes(variablesNodes);
 };
 
-const parseNodes = (nodes: Array<YAMLNode>): Array<Variable> => {
+const parseNodes = (nodes: Array<Pair>): Array<Variable> => {
   if (!nodes || nodes.length === 0) {
     return [];
   }
   return nodes.map(parseNode);
 };
 
-const parseNode = (node: YAMLNode) => {
+const parseNode = (node: Pair) => {
   const variable: Variable = {
-    name: node.key.value,
+    name: '',
     value: '',
     description: '',
     metadata: { type: '' },
     children: []
   };
 
-  if (isYAMLNodeWithChildren(node)) {
+  const key = node.key;
+  if (isScalar<string>(key)) {
+    variable.name = key.value;
+  }
+
+  const nodeValue = node.value;
+  if (isPair<Scalar, YAMLMap>(node) && isMap(nodeValue)) {
     return enrichVariableWithChildren(variable, node);
-  } else if (isYAMLNodeWithoutChildren(node)) {
+  } else if (isPair<Scalar, Scalar>(node) && isScalar(nodeValue)) {
     return enrichVariableWithoutChildren(variable, node);
   }
   return variable;
 };
 
-const enrichVariableWithChildren = (variable: Variable, node: YAMLNodeWithChildren) => {
+const enrichVariableWithChildren = (variable: Variable, node: Pair<Scalar, YAMLMap>) => {
   const commentBefore = node.key.commentBefore;
   if (commentBefore) {
     variable.description = removeSingleLeadingWhitespaceFromEachLine(commentBefore);
   }
-  const nodeChildren = node.value.items;
-  nodeChildren[0].key.commentBefore = node.value.commentBefore;
-  variable.children = parseNodes(nodeChildren);
+  const nodeValue = node.value;
+  if (isMap<Scalar, Pair>(nodeValue)) {
+    const nodeValueItems = nodeValue.items;
+    nodeValueItems[0].key.commentBefore = nodeValue.commentBefore;
+    variable.children = parseNodes(nodeValueItems);
+  }
   return variable;
 };
 
-const enrichVariableWithoutChildren = (variable: Variable, node: YAMLNodeWithoutChildren) => {
-  variable.value = String(node.value.value);
+const enrichVariableWithoutChildren = (variable: Variable, node: Pair<Scalar, Scalar>) => {
+  const nodeValue = node.value;
+  if (nodeValue) {
+    variable.value = String(nodeValue.value);
+  }
   return enrichVariableDescriptionAndMetadata(variable, node);
 };
 
-const enrichVariableDescriptionAndMetadata = (variable: Variable, node: YAMLNodeWithoutChildren) => {
+const enrichVariableDescriptionAndMetadata = (variable: Variable, node: Pair<Scalar, Scalar>) => {
   const commentBefore = node.key.commentBefore;
   if (!commentBefore) {
     return variable;
