@@ -8,10 +8,6 @@
       "path": "."
     },
     {
-      "name": "package/editor",
-      "path": "./packages/editor"
-    },
-    {
       "name": "package/variable-editor",
       "path": "./packages/variable-editor"
     },
