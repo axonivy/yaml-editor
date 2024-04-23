@@ -28,7 +28,7 @@
 
         <executions>
           <execution>
-            <id>zip.variable.editor</id>
+            <id>jar.variable.editor</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
