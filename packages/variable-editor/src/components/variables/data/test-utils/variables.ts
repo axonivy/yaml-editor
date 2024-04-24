@@ -12,6 +12,18 @@ export const content = `Variables:
       deepKeyOne: deepValueOne
       deepKeyTwo: deepValueTwo
 `;
+export const contentStringsOnly = `Variables:
+  string: value
+  number: "42"
+  boolean: "true"
+  mapping:
+    mappingString: mappingValue
+    mappingNumber: "43"
+    mappingBoolean: "false"
+    mappingMapping:
+      deepKeyOne: deepValueOne
+      deepKeyTwo: deepValueTwo
+`;
 export const variables: Array<Variable> = [
   {
     name: 'string',

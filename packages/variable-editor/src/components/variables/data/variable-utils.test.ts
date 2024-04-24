@@ -1,4 +1,4 @@
-import { content, variables } from './test-utils/variables';
+import { content, contentStringsOnly, variables } from './test-utils/variables';
 import { variablesDuplicates } from './test-utils/variables-duplicates';
 import { contentMixed, variablesMixed } from './test-utils/variables-mixed';
 import { contentWithDescriptions, variablesWithDescriptions } from './test-utils/variables-with-descriptions';
@@ -84,7 +84,7 @@ describe('variable-utils', () => {
 
   describe('toContent', () => {
     test('default', () => {
-      expect(toContent(variables)).toEqual(content);
+      expect(toContent(variables)).toEqual(contentStringsOnly);
     });
 
     test('description', () => {

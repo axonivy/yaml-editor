@@ -9,7 +9,7 @@ export const contentMixed = `Variables:
     secretKey: MySecretKey
     # work with app permissions rather than in delegate of a user
     # set to 'true' if no user consent should be accuired and adjust the 'tenantId' below.
-    useAppPermissions: false
+    useAppPermissions: "false"
     # tenant to use for OAUTH2 request.
     # the default 'common' fits for user delegate requests.
     # set the Azure Directory (tenant) ID, for application requests.
@@ -17,7 +17,7 @@ export const contentMixed = `Variables:
     # use a static user+password authentication to work in the name of technical user.
     # most insecure but valid, if you must work with user permissions, while no real user is able to consent the action.
     useUserPassFlow:
-      enabled: false
+      enabled: "false"
       # technical user to login
       user: MyUser
       # technical users password
