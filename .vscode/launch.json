@@ -5,10 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Standalone (Chrome)",
+      "name": "Launch Standalone (Chrome)",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "http://localhost:3001/?server=localhost:8081&app=designer&pmv=variables&file=/variables.yaml",
+      "preLaunchTask": "Start Standalone",
+      "postDebugTask": "Terminate All Tasks"
+    },
+    {
+      "name": "Launch Standalone Mock (Chrome)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001/mock.html",
       "preLaunchTask": "Start Standalone",
       "postDebugTask": "Terminate All Tasks"
     }

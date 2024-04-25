@@ -13,7 +13,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { selectRow, isRowSelected } from '../../../utils/table/table';
+import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';

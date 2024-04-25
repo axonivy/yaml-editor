@@ -1,53 +1,28 @@
-import { VariableEditor } from '@axonivy/variable-editor';
+import { ThemeProvider } from '@axonivy/ui-components';
+import { ClientContextProvider, ClientJsonRpc, QueryProvider, VariableEditor, initQueryClient } from '@axonivy/variable-editor';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
+import './index.css';
+import { URLParams } from './url-helper';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
+const server = URLParams.webSocketBase();
+const app = URLParams.app();
+const pmv = URLParams.pmv();
+const file = URLParams.file();
+const theme = URLParams.theme();
 
-const mockData = `Variables:
-  
-  microsoft-connector:
-    
-    # Your Azure Application (client) ID
-    appId: "MyAppId"
-    
-    # Secret key from your applications "certificates & secrets"
-    # [password]
-    secretKey: "MySecretKey"
-    
-    # work with app permissions rather than in delegate of a user
-    # set to 'true' if no user consent should be accuired and adjust the 'tenantId' below.
-    useAppPermissions: false
-    
-    # tenant to use for OAUTH2 request.
-    # the default 'common' fits for user delegate requests.
-    # set the Azure Directory (tenant) ID, for application requests.
-    tenantId: "common"
-    
-    # use a static user+password authentication to work in the name of technical user.
-    # most insecure but valid, if you must work with user permissions, while no real user is able to consent the action.
-    useUserPassFlow:
-      enabled: false
-      # technical user to login
-      user: "MyUser"
-      # technical users password
-      # [password]
-      pass: "MyPass"
-    
-    # permissions to request access to.
-    # you may exclude or add some, as your azure administrator allows or restricts them.
-    # for sharepoint-demos, the following must be added: Sites.Read.All Files.ReadWrite
-    permissions: "user.read Calendars.ReadWrite mail.readWrite mail.send Tasks.ReadWrite Chat.Read offline_access"
-    
-    # this property specifies the library used to create and manage HTTP connections for Jersey client. 
-    # it sets the connection provider class for the Jersey client.
-    # while the default provider works well for most methods, if you specifically need to use the PATCH method, consider switching the provider to:
-    #   org.glassfish.jersey.apache.connector.ApacheConnectorProvider
-    connectorProvider: "org.glassfish.jersey.client.HttpUrlConnectorProvider"
-`;
+const client = await ClientJsonRpc.startWebSocketClient(server);
+const queryClient = initQueryClient();
 
 root.render(
   <React.StrictMode>
-    <VariableEditor content={mockData} onChange={() => {}} />
+    <ThemeProvider defaultTheme={theme}>
+      <ClientContextProvider client={client}>
+        <QueryProvider client={queryClient}>
+          <VariableEditor app={app} pmv={pmv} file={file} />
+        </QueryProvider>
+      </ClientContextProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
