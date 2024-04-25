@@ -163,7 +163,7 @@ const parseVariable = (variable: Variable) => {
   variableKey.commentBefore = parseKeyDescription(variable);
   let variableValue;
   if (variable.children.length === 0) {
-    variableValue = new Scalar(parseVariableValue(variable.value));
+    variableValue = new Scalar(variable.value);
   } else {
     variableValue = parseVariables(variable.children);
   }
@@ -203,21 +203,4 @@ const parseMetadataComment = (metadata: Metadata) => {
       break;
   }
   return '[' + metadataComment + ']';
-};
-
-const parseVariableValue = (value: string) => {
-  const valueLowercase = value.toLowerCase();
-  if (valueLowercase === 'true') {
-    return true;
-  }
-  if (valueLowercase === 'false') {
-    return false;
-  }
-
-  const valueNumber = Number(value);
-  if (!isNaN(valueNumber)) {
-    return valueNumber;
-  }
-
-  return value;
 };
