@@ -9,11 +9,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 5000,
     rollupOptions: { input: { index: './index.html' } }
   },
-  esbuild: {
-    supported: {
-      'top-level-await': true
-    }
-  },
   server: { port: 3001 },
   resolve: {
     alias: {

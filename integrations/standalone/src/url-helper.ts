@@ -12,10 +12,6 @@ export namespace URLParams {
     return parameter('pmv') ?? '';
   }
 
-  export function file(): string {
-    return parameter('file') ?? '';
-  }
-
   export function theme(): 'dark' | 'light' {
     const theme = parameter('theme');
     if (theme === 'dark') {

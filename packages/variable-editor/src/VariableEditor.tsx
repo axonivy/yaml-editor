@@ -20,7 +20,7 @@ function VariableEditor(props: DataContext) {
   }, [props]);
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
 
-  const client = useClient();
+  const client = useClient<string>();
   const queryClient = useQueryClient();
 
   const queryKeys = useMemo(() => {
