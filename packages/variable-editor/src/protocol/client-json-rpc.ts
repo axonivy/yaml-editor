@@ -9,7 +9,7 @@ import {
 } from '@axonivy/jsonrpc';
 import type { Client, Data, DataContext, NotificationTypes, RequestTypes } from './types';
 
-export class ClientJsonRpc<T> extends BaseRpcClient implements Client<T> {
+export class ClientJsonRpc extends BaseRpcClient implements Client {
   protected onDataChangedEmitter = new Emitter<void>();
   onDataChanged = this.onDataChangedEmitter.event;
   protected override setupConnection(): void {
@@ -18,11 +18,11 @@ export class ClientJsonRpc<T> extends BaseRpcClient implements Client<T> {
     this.onNotification('dataChanged', data => this.onDataChangedEmitter.fire(data));
   }
 
-  data(context: DataContext): Promise<Data<T>> {
+  data(context: DataContext): Promise<Data> {
     return this.sendRequest('data', context);
   }
 
-  saveData(saveData: Data<T>): Promise<void> {
+  saveData(saveData: Data): Promise<void> {
     return this.sendRequest('saveData', saveData);
   }
 
@@ -34,15 +34,15 @@ export class ClientJsonRpc<T> extends BaseRpcClient implements Client<T> {
     return this.connection.onNotification(kind, listener);
   }
 
-  public static async startWebSocketClient<T>(url: string): Promise<Client<T>> {
+  public static async startWebSocketClient(url: string): Promise<Client> {
     const webSocketUrl = urlBuilder(url, 'ivy-config-lsp');
     const connection = await createWebSocketConnection(webSocketUrl);
-    return ClientJsonRpc.startClient<T>(connection);
+    return ClientJsonRpc.startClient(connection);
   }
 
-  public static async startClient<T>(connection: Connection): Promise<Client<T>> {
+  public static async startClient(connection: Connection): Promise<Client> {
     const messageConnection = createMessageConnection(connection.reader, connection.writer);
-    const client = new ClientJsonRpc<T>(messageConnection);
+    const client = new ClientJsonRpc(messageConnection);
     client.start();
     connection.reader.onClose(() => client.stop());
     return client;

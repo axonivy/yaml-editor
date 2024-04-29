@@ -3,13 +3,13 @@ import { createContext, useContext } from 'react';
 import type { Client, ClientContext } from './types';
 
 const defaultClientContext: any = undefined;
-const ClientContextInstance = createContext<ClientContext<any>>(defaultClientContext);
+const ClientContextInstance = createContext<ClientContext>(defaultClientContext);
 
-export const useClient = <T,>(): Client<T> => {
+export const useClient = (): Client => {
   const { client } = useContext(ClientContextInstance);
   return client;
 };
 
-export const ClientContextProvider = <T,>({ client, children }: { client: Client<T>; children: ReactNode }) => {
+export const ClientContextProvider = ({ client, children }: { client: Client; children: ReactNode }) => {
   return <ClientContextInstance.Provider value={{ client }}>{children}</ClientContextInstance.Provider>;
 };

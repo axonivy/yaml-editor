@@ -1,4 +1,4 @@
-export type Data<T> = { context: DataContext; data: T };
+export type Data = { context: DataContext; data: string };
 export type DataContext = { app: string; pmv: string; file: string };
 
 export interface RequestTypes {
@@ -18,12 +18,12 @@ export interface Disposable {
   dispose(): void;
 }
 
-export interface Client<T> {
-  data(context: DataContext): Promise<Data<T>>;
-  saveData(saveData: Data<T>): Promise<void>;
+export interface Client {
+  data(context: DataContext): Promise<Data>;
+  saveData(saveData: Data): Promise<void>;
   onDataChanged: Event<void>;
 }
 
-export interface ClientContext<T> {
-  client: Client<T>;
+export interface ClientContext {
+  client: Client;
 }

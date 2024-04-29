@@ -20,7 +20,7 @@ function VariableEditor(props: DataContext) {
   }, [props]);
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
 
-  const client = useClient<string>();
+  const client = useClient();
   const queryClient = useQueryClient();
 
   const queryKeys = useMemo(() => {
@@ -32,21 +32,21 @@ function VariableEditor(props: DataContext) {
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: queryKeys.data(),
-    queryFn: () => client.data(context).then(data => ({ ...data, data: toVariables(data.data) })),
+    queryFn: () => client.data(context),
     structuralSharing: false
   });
 
   const mutation = useMutation({
     mutationKey: queryKeys.saveData(),
-    mutationFn: (updateData: Unary<Array<Variable>>) => {
-      const saveData = queryClient.setQueryData<Data<Array<Variable>>>(queryKeys.data(), prevData => {
+    mutationFn: (updateData: Unary<string>) => {
+      const saveData = queryClient.setQueryData<Data>(queryKeys.data(), prevData => {
         if (prevData) {
           return { ...prevData, data: updateData(prevData.data) };
         }
         return undefined;
       });
       if (saveData) {
-        return client.saveData({ context, data: toContent(saveData.data) });
+        return client.saveData({ context, data: saveData.data });
       }
       return Promise.resolve();
     }
@@ -60,9 +60,9 @@ function VariableEditor(props: DataContext) {
     return <p>{'An error has occurred: ' + error}</p>;
   }
 
-  const variables = data.data;
+  const variables = toVariables(data.data);
   const setVariables = (variables: Array<Variable>) => {
-    mutation.mutate(() => variables);
+    mutation.mutate(() => toContent(variables));
   };
 
   const title = 'Variables Editor';

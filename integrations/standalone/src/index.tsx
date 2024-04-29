@@ -20,7 +20,7 @@ export async function start(): Promise<void> {
       <ThemeProvider defaultTheme={theme}>
         <ClientContextProvider client={client}>
           <QueryProvider client={queryClient}>
-            <VariableEditor app={app} pmv={pmv} file='variables.yaml' />
+            <VariableEditor app={app} pmv={pmv} file='/variables.yaml' />
           </QueryProvider>
         </ClientContextProvider>
       </ThemeProvider>
