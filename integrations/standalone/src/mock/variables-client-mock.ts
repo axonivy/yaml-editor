@@ -1,7 +1,7 @@
 import type { Client, Data, Event } from '@axonivy/variable-editor/src/protocol/types';
 
-export class VariablesClientMock implements Client<string> {
-  private variablesData: Data<string> = {
+export class VariablesClientMock implements Client {
+  private variablesData: Data = {
     context: { app: '', pmv: '', file: '' },
     data: `Variables:
   microsoft-connector:
@@ -39,11 +39,11 @@ export class VariablesClientMock implements Client<string> {
 `
   };
 
-  data(): Promise<Data<string>> {
+  data(): Promise<Data> {
     return Promise.resolve(this.variablesData);
   }
 
-  saveData(saveData: Data<string>): Promise<void> {
+  saveData(saveData: Data): Promise<void> {
     this.variablesData.data = saveData.data;
     return Promise.resolve();
   }
