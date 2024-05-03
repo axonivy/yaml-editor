@@ -19,6 +19,7 @@
     "dev": "npm --prefix integrations/standalone run dev",
     "test": "npm --prefix packages/variable-editor run test",
     "test:ci": "lerna run test:ci",
+    "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
   },
   "devDependencies": {
