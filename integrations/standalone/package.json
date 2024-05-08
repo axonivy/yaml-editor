@@ -3,7 +3,7 @@
   "private": true,
   "version": "11.4.0-next",
   "dependencies": {
-    "@axonivy/config-editor": "*",
+    "@axonivy/variable-editor": "*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
