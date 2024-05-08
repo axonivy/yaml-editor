@@ -1,12 +1,22 @@
 import {
   Button,
+  Field,
   Flex,
+  IvyIcon,
+  Label,
+  Popover,
+  PopoverArrow,
+  PopoverContent,
+  PopoverTrigger,
+  ReadonlyProvider,
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
   SidebarHeader,
+  Switch,
   Toolbar,
-  ToolbarTitle
+  ToolbarTitle,
+  useTheme
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useState, type ReactElement } from 'react';
@@ -21,6 +31,7 @@ type EditorProps = {
 
 export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent }: EditorProps) => {
   const [sidebar, setSidebar] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
@@ -28,7 +39,36 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
         <Flex className='master-wrapper' direction='column'>
           <Toolbar className='master-toolbar'>
             <ToolbarTitle>{masterTitle}</ToolbarTitle>
-            <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
+            <Flex gap={1}>
+              {theme !== 'system' && (
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button icon={IvyIcons.Settings} size='large' />
+                  </PopoverTrigger>
+                  <PopoverContent sideOffset={12}>
+                    <ReadonlyProvider readonly={false}>
+                      <Flex direction='column' gap={2}>
+                        <Field direction='row' alignItems='center' justifyContent='space-between' gap={4}>
+                          <Label>
+                            <Flex alignItems='center' gap={1}>
+                              <IvyIcon icon={IvyIcons.DarkMode} />
+                              Theme
+                            </Flex>
+                          </Label>
+                          <Switch
+                            defaultChecked={theme === 'dark'}
+                            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                            size='small'
+                          />
+                        </Field>
+                      </Flex>
+                      <PopoverArrow />
+                    </ReadonlyProvider>
+                  </PopoverContent>
+                </Popover>
+              )}
+              <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
+            </Flex>
           </Toolbar>
           <Flex direction='column' gap={4} className='content'>
             {masterContent}
