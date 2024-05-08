@@ -20,6 +20,14 @@ export namespace URLParams {
     return 'light';
   }
 
+  export function readonly(): boolean {
+    const readonly = parameter('readonly');
+    if (readonly === 'true') {
+      return true;
+    }
+    return false;
+  }
+
   export function webSocketBase(): string {
     return `${isSecureConnection() ? 'wss' : 'ws'}://${server()}`;
   }

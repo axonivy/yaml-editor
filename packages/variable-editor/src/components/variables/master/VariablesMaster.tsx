@@ -8,6 +8,7 @@ import {
   TableBody,
   TableCell,
   TableResizableHeader,
+  useReadonly,
   useTableExpand,
   useTableSelect
 } from '@axonivy/ui-components';
@@ -88,24 +89,22 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     setSelectedVariablePath([]);
   };
 
+  const readonly = useReadonly();
+  const controls = [];
+  if (!readonly) {
+    controls.push(
+      <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
+      <Button
+        key='deleteButton'
+        icon={IvyIcons.Trash}
+        onClick={deleteVariable}
+        disabled={!table.getIsSomeRowsSelected() && !isRowSelected(table)}
+      />
+    );
+  }
+
   return (
-    <Fieldset
-      className='variable-wrapper'
-      label='List of variables'
-      control={
-        <Control
-          buttons={[
-            <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
-            <Button
-              key='deleteButton'
-              icon={IvyIcons.Trash}
-              onClick={deleteVariable}
-              disabled={!table.getIsSomeRowsSelected() && !isRowSelected(table)}
-            />
-          ]}
-        />
-      }
-    >
+    <Fieldset className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
       {globalFilter.filter}
       <Table>
         <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
