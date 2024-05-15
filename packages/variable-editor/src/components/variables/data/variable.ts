@@ -10,3 +10,7 @@ export interface Variable extends TreeNode<Variable> {
 }
 export type VariableUpdate = TreeNodeUpdate<Variable>;
 export type VariableUpdates = TreeNodeUpdates<Variable>;
+
+export interface RootVariable extends Variable {
+  commentAfter: string;
+}
