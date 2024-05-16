@@ -13,7 +13,7 @@ export const Control = ({ buttons }: ControlProps) => {
     }
     return (
       <Fragment key={index}>
-        <Separator decorative orientation='vertical' style={{ height: `20px` }} />
+        <Separator decorative orientation='vertical' style={{ height: `20px`, margin: `0 10px` }} />
         {button}
       </Fragment>
     );
