@@ -1,110 +1,110 @@
-import { content, contentStringsOnly, variables } from './test-utils/variables';
-import { variablesDuplicates } from './test-utils/variables-duplicates';
-import { contentMixed, variablesMixed } from './test-utils/variables-mixed';
-import { contentWithDescriptions, variablesWithDescriptions } from './test-utils/variables-with-descriptions';
-import { contentWithMetadata, variablesWithMetadata } from './test-utils/variables-with-metadata';
+import { content, contentStringsOnly, rootVariable } from './test-utils/variables';
+import {
+  contentEmpty,
+  contentWithCommentOnly,
+  contentWithEmptyVariables,
+  contentWithEmptyVariablesMapping,
+  rootVariableEmpty,
+  rootVariableParsedFromContentWithCommentOnly
+} from './test-utils/variables-empty';
+import { contentNotYAML, contentWithMultipleTopLevelNodes, contentWithWrongNameOfTopLevelNode } from './test-utils/variables-malformed';
+import { contentMixed, rootVariableMixed } from './test-utils/variables-mixed';
+import { contentWithComments, rootVariableWithComments } from './test-utils/variables-with-comments';
+import { contentParsedFromRootVariableWithDuplicates, rootVariableWithDuplicates } from './test-utils/variables-with-duplicates';
+import {
+  contentWithMetadata,
+  contentWithWeirdMetadataFormat,
+  contentWithWrongMetadataFormat,
+  rootVariableParsedFromContentWithWeirdMetadataFormat,
+  rootVariableParsedFromContentWithWrongMetadataFormat,
+  rootVariableWithMetadata
+} from './test-utils/variables-with-metadata';
 import { toContent, toVariables } from './variable-utils';
 
 describe('variable-utils', () => {
   describe('toVariables', () => {
     test('default', () => {
-      expect(toVariables(content)).toEqual(variables);
+      expect(toVariables(content)).toEqual(rootVariable);
     });
 
-    test('description', () => {
-      expect(toVariables(contentWithDescriptions)).toEqual(variablesWithDescriptions);
+    test('comments', () => {
+      expect(toVariables(contentWithComments)).toEqual(rootVariableWithComments);
     });
 
     describe('metadata', () => {
       test('default', () => {
-        expect(toVariables(contentWithMetadata)).toEqual(variablesWithMetadata);
+        expect(toVariables(contentWithMetadata)).toEqual(rootVariableWithMetadata);
       });
 
       test('weirdFormat', () => {
-        const content = `Variables:
-  #   [password]   
-  passwordKey: passwordValue
-  # [enum:valueOne0,valueOne1,valueOne2]
-  enumKeyOne: valueOne1
-  #    [enum:   valueTwo0,   valueTwo1,   valueTwo2]   
-  enumKeyTwo: valueTwo1
-`;
-        expect(toVariables(content)).toEqual([
-          {
-            name: 'passwordKey',
-            value: 'passwordValue',
-            description: '',
-            metadata: { type: 'password' },
-            children: []
-          },
-          {
-            name: 'enumKeyOne',
-            value: 'valueOne1',
-            description: '',
-            metadata: { type: 'enum', values: ['valueOne0', 'valueOne1', 'valueOne2'] },
-            children: []
-          },
-          {
-            name: 'enumKeyTwo',
-            value: 'valueTwo1',
-            description: '',
-            metadata: { type: 'enum', values: ['valueTwo0', 'valueTwo1', 'valueTwo2'] },
-            children: []
-          }
-        ]);
+        expect(toVariables(contentWithWeirdMetadataFormat)).toEqual(rootVariableParsedFromContentWithWeirdMetadataFormat);
       });
 
       test('wrongFormat', () => {
-        const content = `Variables:
-  # [ password ]
-  passwordKey: passwordValue
-`;
-        expect(toVariables(content)).toEqual([
-          {
-            name: 'passwordKey',
-            value: 'passwordValue',
-            description: '',
-            metadata: { type: '' },
-            children: []
-          }
-        ]);
+        expect(toVariables(contentWithWrongMetadataFormat)).toEqual(rootVariableParsedFromContentWithWrongMetadataFormat);
       });
     });
 
     test('mixed', () => {
-      expect(toVariables(contentMixed)).toEqual(variablesMixed);
+      expect(toVariables(contentMixed)).toEqual(rootVariableMixed);
     });
 
-    test('noVariables', () => {
-      const content = `Variables: {}
-`;
-      expect(toVariables(content)).toEqual([]);
+    describe('empty', () => {
+      test('empty', () => {
+        expect(toVariables(contentEmpty)).toEqual(rootVariableEmpty);
+      });
+
+      test('emptyVariables', () => {
+        expect(toVariables(contentWithEmptyVariables)).toEqual(rootVariableEmpty);
+      });
+
+      test('emptyVariablesMapping', () => {
+        expect(toVariables(contentWithEmptyVariablesMapping)).toEqual(rootVariableEmpty);
+      });
+
+      test('commentOnly', () => {
+        expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
+      });
+    });
+
+    describe('malformed', () => {
+      test('wrongNameOfTopLevelNode', () => {
+        expect(toVariables(contentWithWrongNameOfTopLevelNode)).toEqual(rootVariableEmpty);
+      });
+
+      test('multipleTopLevelNodes', () => {
+        expect(toVariables(contentWithMultipleTopLevelNodes)).toEqual(rootVariableEmpty);
+      });
+
+      test('notYAML', () => {
+        expect(toVariables(contentNotYAML)).toEqual(rootVariableEmpty);
+      });
     });
   });
 
   describe('toContent', () => {
     test('default', () => {
-      expect(toContent(variables)).toEqual(contentStringsOnly);
+      expect(toContent(rootVariable)).toEqual(contentStringsOnly);
     });
 
-    test('description', () => {
-      expect(toContent(variablesWithDescriptions)).toEqual(contentWithDescriptions);
+    test('comments', () => {
+      expect(toContent(rootVariableWithComments)).toEqual(contentWithComments);
     });
 
     test('metadata', () => {
-      expect(toContent(variablesWithMetadata)).toEqual(contentWithMetadata);
+      expect(toContent(rootVariableWithMetadata)).toEqual(contentWithMetadata);
     });
 
     test('mixed', () => {
-      expect(toContent(variablesMixed)).toEqual(contentMixed);
+      expect(toContent(rootVariableMixed)).toEqual(contentMixed);
     });
 
     test('ignoreDuplicateKeys', () => {
-      expect(toContent(variablesDuplicates)).toEqual(`Variables:
-  duplicateKey: duplicateValueOne
-  duplicateMapping:
-    deepDuplicateKeyOne: deepDuplicateValueOneOne
-`);
+      expect(toContent(rootVariableWithDuplicates)).toEqual(contentParsedFromRootVariableWithDuplicates);
+    });
+
+    test('empty', () => {
+      expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
     });
   });
 });

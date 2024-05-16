@@ -10,22 +10,62 @@ import {
   type Metadata,
   type MetadataType
 } from './metadata';
-import type { Variable } from './variable';
+import type { RootVariable, Variable } from './variable';
 
 export const toVariables = (content: string) => {
-  const variablesRoot = parseDocument(content).get('Variables');
-  if (!isMap<Scalar, Pair>(variablesRoot)) {
-    return [];
+  const rootVariable: RootVariable = {
+    name: 'Variables',
+    value: '',
+    description: '',
+    commentAfter: '',
+    metadata: { type: '' },
+    children: []
+  };
+
+  const document = parseDocument(content);
+  const documentComment = document.commentBefore;
+  if (documentComment) {
+    rootVariable.description = documentComment;
   }
-  const variablesNodes = variablesRoot.items;
-  if (variablesNodes.length === 0) {
-    return [];
+
+  const contents = document.contents;
+  if (!isMap<Scalar, Pair>(contents)) {
+    return rootVariable;
   }
-  const firstVariablesNodeKey = variablesNodes[0].key;
-  if (isScalar(firstVariablesNodeKey)) {
-    firstVariablesNodeKey.commentBefore = variablesRoot.commentBefore;
+  const topLevelNodes = contents.items;
+  if (topLevelNodes.length !== 1) {
+    return rootVariable;
   }
-  return parseNodes(variablesNodes);
+  const variablesNode = topLevelNodes[0];
+  if (variablesNode.key.value != 'Variables') {
+    return rootVariable;
+  }
+
+  const variablesDescription = variablesNode.key.commentBefore;
+  if (variablesDescription) {
+    rootVariable.description = variablesDescription;
+  }
+  const commentAfter = document.comment;
+  if (commentAfter) {
+    rootVariable.commentAfter = commentAfter;
+  }
+
+  const variablesNodeValue = variablesNode.value;
+  if (!isMap<Scalar, Pair>(variablesNodeValue)) {
+    return rootVariable;
+  }
+  const variables = variablesNodeValue.items;
+  if (variables.length === 0) {
+    return rootVariable;
+  }
+
+  const firstVariableKey = variables[0].key;
+  if (isScalar(firstVariableKey)) {
+    firstVariableKey.commentBefore = variablesNodeValue.commentBefore;
+  }
+
+  rootVariable.children = parseNodes(variables);
+  return rootVariable;
 };
 
 const parseNodes = (nodes: Array<Pair>): Array<Variable> => {
@@ -144,8 +184,12 @@ const enrichVariableWithFileMetadata = (variable: Variable, metadata: string) =>
   return variable;
 };
 
-export const toContent = (variables: Array<Variable>) => {
-  return stringify(new Pair(new Scalar('Variables'), parseVariables(variables)));
+export const toContent = (rootVariable: RootVariable) => {
+  const variables = new YAMLMap();
+  variables.add(new Pair(new Scalar('Variables'), parseVariables(rootVariable.children)));
+  variables.commentBefore = rootVariable.description;
+  variables.comment = rootVariable.commentAfter;
+  return stringify(variables);
 };
 
 const parseVariables = (variables: Array<Variable>) => {
