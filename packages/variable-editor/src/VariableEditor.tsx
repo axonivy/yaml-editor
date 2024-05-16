@@ -60,14 +60,16 @@ function VariableEditor(props: DataContext) {
     return <p>{'An error has occurred: ' + error}</p>;
   }
 
-  const variables = toVariables(data.data);
+  const rootVariable = toVariables(data.data);
   const setVariables = (variables: Array<Variable>) => {
-    mutation.mutate(() => toContent(variables));
+    const newRootVariable = structuredClone(rootVariable);
+    newRootVariable.children = variables;
+    mutation.mutate(() => toContent(newRootVariable));
   };
 
   const title = 'Variables Editor';
   let detailTitle = title;
-  const selectedVariable = getNode(variables, selectedVariablePath);
+  const selectedVariable = getNode(rootVariable.children, selectedVariablePath);
   if (selectedVariable) {
     detailTitle += ' - ' + selectedVariable.name;
   }
@@ -76,10 +78,10 @@ function VariableEditor(props: DataContext) {
     <Editor
       masterTitle={title}
       masterContent={
-        <VariablesMaster variables={variables} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
+        <VariablesMaster variables={rootVariable.children} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
       }
       detailTitle={detailTitle}
-      detailContent={<VariablesDetail variables={variables} variablePath={selectedVariablePath} setVariables={setVariables} />}
+      detailContent={<VariablesDetail variables={rootVariable.children} variablePath={selectedVariablePath} setVariables={setVariables} />}
     />
   );
 }
