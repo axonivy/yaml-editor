@@ -1,7 +1,7 @@
 {
   "name": "@axonivy/config-editor-standalone",
   "private": true,
-  "version": "11.3.0-next",
+  "version": "11.3.1-next",
   "dependencies": {
     "@axonivy/variable-editor": "*",
     "react": "^18.2.0",
