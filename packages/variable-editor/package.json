@@ -1,6 +1,6 @@
 {
   "name": "@axonivy/variable-editor",
-  "version": "11.3.0-next",
+  "version": "11.3.1-next",
   "license": "Apache-2.0",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
@@ -17,9 +17,9 @@
   "types": "lib/index",
   "source": "src/index",
   "dependencies": {
+    "@axonivy/jsonrpc": "11.3.0-next.154",
     "@axonivy/ui-components": "11.3.0-next.154",
     "@axonivy/ui-icons": "11.3.0-next.154",
-    "@axonivy/jsonrpc": "11.3.0-next.154",
     "@tanstack/react-query": "5.32.1",
     "@tanstack/react-query-devtools": "5.32.1",
     "react": "^18.2.0",
@@ -28,9 +28,9 @@
   "devDependencies": {
     "@types/react": "^18.2.13",
     "copyfiles": "^2.4.1",
-    "rimraf": "^5.0.1",
     "eslint-plugin-testing-library": "^6.2.1",
     "jsdom": "^24.0.0",
+    "rimraf": "^5.0.1",
     "vitest": "^1.5.0"
   },
   "scripts": {
