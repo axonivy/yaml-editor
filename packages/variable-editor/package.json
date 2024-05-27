@@ -17,9 +17,9 @@
   "types": "lib/index",
   "source": "src/index",
   "dependencies": {
-    "@axonivy/jsonrpc": "11.3.0-next.154",
-    "@axonivy/ui-components": "11.3.0-next.154",
-    "@axonivy/ui-icons": "11.3.0-next.154",
+    "@axonivy/jsonrpc": "11.3.1-next.158",
+    "@axonivy/ui-components": "11.3.1-next.158",
+    "@axonivy/ui-icons": "11.3.1-next.158",
     "@tanstack/react-query": "5.32.1",
     "@tanstack/react-query-devtools": "5.32.1",
     "react": "^18.2.0",
