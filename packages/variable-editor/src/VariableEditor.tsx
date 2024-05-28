@@ -26,7 +26,8 @@ function VariableEditor(props: DataContext) {
   const queryKeys = useMemo(() => {
     return {
       data: () => ['data'],
-      saveData: () => ['saveData']
+      saveData: () => ['saveData'],
+      validate: () => ['validate']
     };
   }, []);
 
@@ -34,6 +35,11 @@ function VariableEditor(props: DataContext) {
     queryKey: queryKeys.data(),
     queryFn: () => client.data(context),
     structuralSharing: false
+  });
+
+  const { data: validationMessages } = useQuery({
+    queryKey: queryKeys.validate(),
+    queryFn: () => client.validate(context)
   });
 
   const mutation = useMutation({
@@ -78,7 +84,12 @@ function VariableEditor(props: DataContext) {
     <Editor
       masterTitle={title}
       masterContent={
-        <VariablesMaster variables={rootVariable.children} setVariables={setVariables} setSelectedVariablePath={setSelectedVariablePath} />
+        <VariablesMaster
+          variables={rootVariable.children}
+          setVariables={setVariables}
+          setSelectedVariablePath={setSelectedVariablePath}
+          validationMessages={validationMessages}
+        />
       }
       detailTitle={detailTitle}
       detailContent={<VariablesDetail variables={rootVariable.children} variablePath={selectedVariablePath} setVariables={setVariables} />}
