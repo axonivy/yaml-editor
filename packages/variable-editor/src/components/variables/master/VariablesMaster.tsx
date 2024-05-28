@@ -3,6 +3,7 @@ import {
   ExpandableCell,
   ExpandableHeader,
   Fieldset,
+  Message,
   SelectRow,
   Table,
   TableBody,
@@ -14,6 +15,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import type { ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
@@ -25,9 +27,10 @@ type VariablesProps = {
   variables: Array<Variable>;
   setVariables: (variables: Array<Variable>) => void;
   setSelectedVariablePath: (path: TreePath) => void;
+  validationMessages?: ValidationMessages;
 };
 
-export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePath }: VariablesProps) => {
+export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePath, validationMessages }: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const globalFilter = useTreeGlobalFilter(variables);
@@ -104,20 +107,25 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
   }
 
   return (
-    <Fieldset className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
-      {globalFilter.filter}
-      <Table>
-        <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
-        <TableBody>
-          {table.getRowModel().rows.map(row => (
-            <SelectRow key={row.id} row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
-              {row.getVisibleCells().map(cell => (
-                <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-              ))}
-            </SelectRow>
-          ))}
-        </TableBody>
-      </Table>
-    </Fieldset>
+    <>
+      {validationMessages?.map((validationMessage, index) => (
+        <Message key={index}>{validationMessage.message}</Message>
+      ))}
+      <Fieldset className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
+        {globalFilter.filter}
+        <Table>
+          <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
+          <TableBody>
+            {table.getRowModel().rows.map(row => (
+              <SelectRow key={row.id} row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
+                {row.getVisibleCells().map(cell => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                ))}
+              </SelectRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Fieldset>
+    </>
   );
 };
