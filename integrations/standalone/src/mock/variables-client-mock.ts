@@ -1,4 +1,4 @@
-import type { Client, Data, Event } from '@axonivy/variable-editor/src/protocol/types';
+import type { Client, Data, Event, ValidationMessages } from '@axonivy/variable-editor/src/protocol/types';
 
 export class VariablesClientMock implements Client {
   private variablesData: Data = {
@@ -46,6 +46,10 @@ export class VariablesClientMock implements Client {
   saveData(saveData: Data): Promise<void> {
     this.variablesData.data = saveData.data;
     return Promise.resolve();
+  }
+
+  validate(): Promise<ValidationMessages> {
+    return Promise.resolve([]);
   }
 
   onDataChanged: Event<void>;
