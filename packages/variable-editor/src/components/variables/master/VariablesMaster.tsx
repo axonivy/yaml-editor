@@ -3,7 +3,6 @@ import {
   ExpandableCell,
   ExpandableHeader,
   Fieldset,
-  Message,
   SelectRow,
   Table,
   TableBody,
@@ -15,6 +14,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { Fragment } from 'react';
 import type { ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
@@ -22,6 +22,7 @@ import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { type Variable } from '../data/variable';
+import { ValidationMessagesRows } from './ValidationMessagesRows';
 
 type VariablesProps = {
   variables: Array<Variable>;
@@ -108,20 +109,20 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
 
   return (
     <>
-      {validationMessages?.map((validationMessage, index) => (
-        <Message key={index}>{validationMessage.message}</Message>
-      ))}
       <Fieldset className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
         {globalFilter.filter}
         <Table>
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
           <TableBody>
             {table.getRowModel().rows.map(row => (
-              <SelectRow key={row.id} row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
-                {row.getVisibleCells().map(cell => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </SelectRow>
+              <Fragment key={row.id}>
+                <ValidationMessagesRows rowId={row.id} validationMessages={validationMessages} />
+                <SelectRow row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </SelectRow>
+              </Fragment>
             ))}
           </TableBody>
         </Table>
