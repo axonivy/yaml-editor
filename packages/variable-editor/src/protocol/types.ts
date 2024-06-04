@@ -1,7 +1,7 @@
 export type Data = { context: DataContext; data: string };
 export type DataContext = { app: string; pmv: string; file: string };
 
-type ValidationMessage = { message: string; path: string; severity: number };
+export type ValidationMessage = { message: string; path: string; severity: number };
 export type ValidationMessages = Array<ValidationMessage>;
 
 export interface RequestTypes {
