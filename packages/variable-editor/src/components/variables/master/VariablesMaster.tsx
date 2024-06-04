@@ -116,12 +116,12 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
           <TableBody>
             {table.getRowModel().rows.map(row => (
               <Fragment key={row.id}>
-                <ValidationMessagesRows rowId={row.id} validationMessages={validationMessages} />
                 <SelectRow row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
                   {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </SelectRow>
+                <ValidationMessagesRows rowId={row.id} validationMessages={validationMessages} />
               </Fragment>
             ))}
           </TableBody>
