@@ -8,7 +8,7 @@ import { toContent, toVariables } from './components/variables/data/variable-uti
 import { VariablesDetail } from './components/variables/detail/VariablesDetail';
 import { VariablesMaster } from './components/variables/master/VariablesMaster';
 import { useClient } from './protocol/ClientContextProvider';
-import type { Data, DataContext } from './protocol/types';
+import type { Data, DataContext, ValidationMessages } from './protocol/types';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
@@ -23,11 +23,18 @@ function VariableEditor(props: DataContext) {
   const client = useClient();
   const queryClient = useQueryClient();
 
+  const [validationMessages, setValidationMessages] = useState<ValidationMessages>();
+  useEffect(() => {
+    const fetchValidationMessages = async () => {
+      setValidationMessages(await client.validate(context));
+    };
+    fetchValidationMessages();
+  }, [client, context]);
+
   const queryKeys = useMemo(() => {
     return {
       data: () => ['data'],
-      saveData: () => ['saveData'],
-      validate: () => ['validate']
+      saveData: () => ['saveData']
     };
   }, []);
 
@@ -37,14 +44,9 @@ function VariableEditor(props: DataContext) {
     structuralSharing: false
   });
 
-  const { data: validationMessages } = useQuery({
-    queryKey: queryKeys.validate(),
-    queryFn: () => client.validate(context)
-  });
-
   const mutation = useMutation({
     mutationKey: queryKeys.saveData(),
-    mutationFn: (updateData: Unary<string>) => {
+    mutationFn: async (updateData: Unary<string>) => {
       const saveData = queryClient.setQueryData<Data>(queryKeys.data(), prevData => {
         if (prevData) {
           return { ...prevData, data: updateData(prevData.data) };
@@ -52,7 +54,8 @@ function VariableEditor(props: DataContext) {
         return undefined;
       });
       if (saveData) {
-        return client.saveData({ context, data: saveData.data });
+        const data = await client.saveData({ context, data: saveData.data });
+        return setValidationMessages(data);
       }
       return Promise.resolve();
     }

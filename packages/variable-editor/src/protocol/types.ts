@@ -6,7 +6,7 @@ export type ValidationMessages = Array<ValidationMessage>;
 
 export interface RequestTypes {
   data: [any, any];
-  saveData: [any, void];
+  saveData: [any, any];
   validate: [any, any];
 }
 
@@ -24,7 +24,7 @@ export interface Disposable {
 
 export interface Client {
   data(context: DataContext): Promise<Data>;
-  saveData(saveData: Data): Promise<void>;
+  saveData(saveData: Data): Promise<ValidationMessages>;
   validate(validate: DataContext): Promise<ValidationMessages>;
   onDataChanged: Event<void>;
 }
