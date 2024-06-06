@@ -3,26 +3,24 @@ import {
   ExpandableCell,
   ExpandableHeader,
   Fieldset,
-  SelectRow,
   Table,
   TableBody,
-  TableCell,
   TableResizableHeader,
   useReadonly,
   useTableExpand,
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { Fragment } from 'react';
+import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
+import { addChildToFirstSelectedRow, deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
+import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
-import { ValidationMessagesRows } from './ValidationMessagesRows';
+import { ValidationRow } from './ValidationRow';
 
 type VariablesProps = {
   variables: Array<Variable>;
@@ -115,14 +113,12 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
           <TableBody>
             {table.getRowModel().rows.map(row => (
-              <Fragment key={row.id}>
-                <SelectRow row={row} onClick={() => setSelectedVariablePath(getPathOfRow(row))}>
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
-                </SelectRow>
-                <ValidationMessagesRows rowId={row.id} validationMessages={validationMessages} />
-              </Fragment>
+              <ValidationRow
+                key={row.id}
+                row={row}
+                setSelectedVariablePath={setSelectedVariablePath}
+                validationMessages={validationMessagesOfRow(row.id, validationMessages)}
+              />
             ))}
           </TableBody>
         </Table>

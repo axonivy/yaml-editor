@@ -1,5 +1,5 @@
 import type { ValidationMessages } from '../../../protocol/types';
-import { toValidationMessageVariant, validationMessagesOfRow } from './validation-utils';
+import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from './validation-utils';
 
 let validationMessages: ValidationMessages;
 
@@ -40,6 +40,33 @@ describe('validaton-utils', () => {
     test('noMatches', () => {
       const messages = validationMessagesOfRow('0.2', validationMessages);
       expect(messages).toHaveLength(0);
+    });
+
+    test('undefined', () => {
+      const messages = validationMessagesOfRow('0.1', undefined);
+      expect(messages).toHaveLength(0);
+    });
+  });
+
+  describe('containsError', () => {
+    test('true', () => {
+      validationMessages[1].severity = 2;
+      expect(containsError(validationMessages)).toBeTruthy();
+    });
+
+    test('false', () => {
+      expect(containsError(validationMessages)).toBeFalsy();
+    });
+  });
+
+  describe('containsWarning', () => {
+    test('true', () => {
+      validationMessages[1].severity = 1;
+      expect(containsWarning(validationMessages)).toBeTruthy();
+    });
+
+    test('false', () => {
+      expect(containsWarning(validationMessages)).toBeFalsy();
     });
   });
 
