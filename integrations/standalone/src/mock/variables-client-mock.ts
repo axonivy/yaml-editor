@@ -43,9 +43,9 @@ export class VariablesClientMock implements Client {
     return Promise.resolve(this.variablesData);
   }
 
-  saveData(saveData: Data): Promise<void> {
+  saveData(saveData: Data): Promise<ValidationMessages> {
     this.variablesData.data = saveData.data;
-    return Promise.resolve();
+    return Promise.resolve([]);
   }
 
   validate(): Promise<ValidationMessages> {
