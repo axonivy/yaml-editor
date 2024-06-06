@@ -22,7 +22,7 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
     return this.sendRequest('data', context);
   }
 
-  saveData(saveData: Data): Promise<void> {
+  saveData(saveData: Data): Promise<ValidationMessages> {
     return this.sendRequest('saveData', saveData);
   }
 
