@@ -19,22 +19,16 @@ function VariableEditor(props: DataContext) {
     setContext(props);
   }, [props]);
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
+  const [validationMessages, setValidationMessages] = useState<ValidationMessages>();
 
   const client = useClient();
   const queryClient = useQueryClient();
 
-  const [validationMessages, setValidationMessages] = useState<ValidationMessages>();
-  useEffect(() => {
-    const fetchValidationMessages = async () => {
-      setValidationMessages(await client.validate(context));
-    };
-    fetchValidationMessages();
-  }, [client, context]);
-
   const queryKeys = useMemo(() => {
     return {
       data: () => ['data'],
-      saveData: () => ['saveData']
+      saveData: () => ['saveData'],
+      validate: () => ['validate']
     };
   }, []);
 
@@ -42,6 +36,13 @@ function VariableEditor(props: DataContext) {
     queryKey: queryKeys.data(),
     queryFn: () => client.data(context),
     structuralSharing: false
+  });
+
+  useQuery({
+    queryKey: queryKeys.validate(),
+    queryFn: async () => {
+      setValidationMessages(await client.validate(context));
+    }
   });
 
   const mutation = useMutation({
