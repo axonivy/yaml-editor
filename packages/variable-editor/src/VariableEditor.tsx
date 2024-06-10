@@ -41,7 +41,9 @@ function VariableEditor(props: DataContext) {
   useQuery({
     queryKey: queryKeys.validate(),
     queryFn: async () => {
-      setValidationMessages(await client.validate(context));
+      const validationMessages = await client.validate(context);
+      setValidationMessages(validationMessages);
+      return validationMessages;
     }
   });
 
