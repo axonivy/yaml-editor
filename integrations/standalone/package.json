@@ -11,7 +11,8 @@
     "@types/react": "^18.2.13",
     "@types/react-dom": "^18.2.6",
     "@vitejs/plugin-react": "4.2.1",
-    "vite": "^5.2.8"
+    "vite": "^5.2.8",
+    "@playwright/test": "1.44.1"
   },
   "scripts": {
     "clean": "rimraf build",
@@ -22,7 +23,8 @@
     "dev": "vite",
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .ts,.tsx ./src"
+    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
+    "webtest:engine": "npx playwright test -c ./tests/integration"
   },
   "type": "module"
 }
