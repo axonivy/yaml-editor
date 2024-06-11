@@ -13,7 +13,7 @@ export const PasswordInput = ({ value, onChange }: PasswordInputProps) => {
   return (
     <InputGroup>
       <Input value={value} onChange={event => onChange(event.target.value)} type={showPassword ? 'text' : 'password'} />
-      <Button icon={IvyIcons.Attribute} size='large' onClick={() => setShowPassword(!showPassword)} />
+      <Button icon={IvyIcons.Eye} size='large' onClick={() => setShowPassword(!showPassword)} />
     </InputGroup>
   );
 };
