@@ -28,6 +28,21 @@ pipeline {
         }
       }
     }
+    stage('Mock Tests') {
+      steps {
+        script {
+           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+            docker.image('mcr.microsoft.com/playwright:v1.44.1-jammy').inside {
+              sh 'npm run webtest:mock'
+            }
+          }
+          archiveArtifacts artifacts: '**/standalone/test-results/**', allowEmptyArchive: true
+          withChecks('Mock WebTest') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'integrations/**/report.xml'
+          }
+        }
+      }
+    }
     stage('Deploy (Maven)') {
       when {
         expression { isReleaseOrMasterBranch() }
