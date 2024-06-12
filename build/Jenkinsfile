@@ -25,6 +25,10 @@ pipeline {
           withChecks('ESLint') {
             recordIssues enabledForFailure: true, publishAllIssues: true, aggregatingResults: true, tools: [esLint(pattern: 'packages/**/eslint.xml,integrations/**/eslint.xml')], qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]
           }
+
+          withChecks('Test') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'packages/**/report.xml'
+          }
         }
       }
     }
