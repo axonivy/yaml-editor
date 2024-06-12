@@ -70,7 +70,7 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
               <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
             </Flex>
           </Toolbar>
-          <Flex direction='column' gap={4} className='content'>
+          <Flex direction='column' gap={4} className='content master-content'>
             {masterContent}
           </Flex>
         </Flex>
@@ -79,9 +79,9 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
         <>
           <ResizableHandle />
           <ResizablePanel defaultSize={25} minSize={10}>
-            <Flex direction='column'>
+            <Flex direction='column' className='details-container'>
               <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} />
-              <Flex direction='column' gap={4} className='content'>
+              <Flex direction='column' gap={4} className='content details-content'>
                 {detailContent}
               </Flex>
             </Flex>
