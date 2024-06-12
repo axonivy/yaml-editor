@@ -1,3 +1,4 @@
+import { IvyIcons } from '@axonivy/ui-icons';
 import { content, contentStringsOnly, rootVariable } from './test-utils/variables';
 import {
   contentEmpty,
@@ -19,7 +20,22 @@ import {
   rootVariableParsedFromContentWithWrongMetadataFormat,
   rootVariableWithMetadata
 } from './test-utils/variables-with-metadata';
-import { toContent, toVariables } from './variable-utils';
+import type { Variable } from './variable';
+import { toContent, toVariables, variableIcon } from './variable-utils';
+
+let variable: Variable;
+
+beforeEach(() => {
+  variable = {
+    description: '',
+    metadata: {
+      type: ''
+    },
+    name: '',
+    value: '',
+    children: []
+  };
+});
 
 describe('variable-utils', () => {
   describe('toVariables', () => {
@@ -105,6 +121,37 @@ describe('variable-utils', () => {
 
     test('empty', () => {
       expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
+    });
+  });
+
+  describe('variableIcon', () => {
+    test('default', () => {
+      expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
+    });
+
+    test('mapping', () => {
+      variable.children.push(variable);
+      expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
+    });
+
+    test('password', () => {
+      variable.metadata.type = 'password';
+      expect(variableIcon(variable)).toEqual(IvyIcons.PasswordUser);
+    });
+
+    test('daytime', () => {
+      variable.metadata.type = 'daytime';
+      expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
+    });
+
+    test('enum', () => {
+      variable.metadata.type = 'enum';
+      expect(variableIcon(variable)).toEqual(IvyIcons.List);
+    });
+
+    test('file', () => {
+      variable.metadata.type = 'file';
+      expect(variableIcon(variable)).toEqual(IvyIcons.Note);
     });
   });
 });

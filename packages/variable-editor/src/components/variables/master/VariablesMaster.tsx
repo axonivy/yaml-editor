@@ -15,11 +15,11 @@ import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-
 import type { ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { addChildToFirstSelectedRow, deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
-import { hasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
+import { variableIcon } from '../data/variable-utils';
 import { ValidationRow } from './ValidationRow';
 
 type VariablesProps = {
@@ -37,7 +37,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     {
       accessorKey: treeNodeNameAttribute,
       header: header => <ExpandableHeader name='Name' header={header} />,
-      cell: cell => <ExpandableCell cell={cell} icon={hasChildren(cell.row.original) ? IvyIcons.FolderOpen : IvyIcons.Note} />,
+      cell: cell => <ExpandableCell cell={cell} icon={variableIcon(cell.row.original)} />,
       minSize: 50
     },
     {

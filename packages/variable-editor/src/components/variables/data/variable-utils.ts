@@ -1,5 +1,7 @@
+import { IvyIcons } from '@axonivy/ui-icons';
 import { Pair, Scalar, YAMLMap, isMap, isPair, isScalar, parseDocument, stringify } from 'yaml';
 import { addSingleLeadingWhitespaceToEachLine, getLastLine, removeSingleLeadingWhitespaceFromEachLine } from '../../../utils/string/string';
+import { hasChildren } from '../../../utils/tree/tree-data';
 import {
   isEnumMetadata,
   isFileMetadata,
@@ -247,4 +249,22 @@ const parseMetadataComment = (metadata: Metadata) => {
       break;
   }
   return '[' + metadataComment + ']';
+};
+
+export const variableIcon = (variable: Variable) => {
+  if (hasChildren(variable)) {
+    return IvyIcons.FolderOpen;
+  }
+  switch (variable.metadata.type) {
+    case 'password':
+      return IvyIcons.PasswordUser;
+    case 'daytime':
+      return IvyIcons.CalendarTime;
+    case 'enum':
+      return IvyIcons.List;
+    case 'file':
+      return IvyIcons.Note;
+    default:
+      return IvyIcons.Quote;
+  }
 };
