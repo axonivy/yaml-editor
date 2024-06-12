@@ -21,6 +21,7 @@ import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
 import { ValidationRow } from './ValidationRow';
+import './VariablesMaster.css';
 
 type VariablesProps = {
   variables: Array<Variable>;
