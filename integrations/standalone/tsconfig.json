@@ -7,6 +7,7 @@
     "rootDirs": ["src"],
     "outDir": "lib"
   },
-  "include": ["src"],
+  "include": ["src", "tests"],
+  "exclude": ["**/playwright.config.ts"],
   "references": [{ "path": "../../packages/variable-editor/tsconfig.json" }]
 }
