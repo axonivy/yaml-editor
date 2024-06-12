@@ -8,7 +8,7 @@ type EmptyDetailProps = {
 
 export const EmptyDetail = ({ message }: EmptyDetailProps) => {
   return (
-    <Flex direction='column' className='empty-detail'>
+    <Flex direction='column' alignItems='center' justifyContent='center' className='empty-detail'>
       <IvyIcon icon={IvyIcons.MultiSelection} className='empty-detail-icon' />
       <Message className='empty-detail-message'>{message}</Message>
     </Flex>

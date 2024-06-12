@@ -1,7 +1,5 @@
 .empty-detail {
   flex: auto;
-  align-items: center;
-  justify-content: center;
   margin: 0 20%;
   color: var(--N800);
 }
