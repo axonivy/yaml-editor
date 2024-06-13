@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { Button } from './Button';
 
 export class Table {
   private readonly rows: Locator;
@@ -69,15 +70,29 @@ export class Row {
   async click() {
     await this.locator.click();
   }
+
+  async collapse() {
+    await this.click();
+    await this.column(0).collapse();
+  }
+
+  async expand() {
+    await this.click();
+    await this.column(0).expand();
+  }
 }
 
 export class Cell {
   private readonly locator: Locator;
   private readonly textbox: Locator;
+  private readonly collapseBtn: Button;
+  private readonly expandBtn: Button;
 
   constructor(readonly page: Page, rowLocator: Locator, column: number, readonly columnType: ColumnType) {
     this.locator = rowLocator.getByRole('cell').nth(column);
     this.textbox = this.locator.getByRole('textbox');
+    this.collapseBtn = new Button(this.locator, { name: 'Collapse row' });
+    this.expandBtn = new Button(this.locator, { name: 'Expand row' });
   }
 
   async fill(value: string) {
@@ -108,5 +123,13 @@ export class Cell {
     const input = this.textbox;
     await input.fill(value);
     await input.blur();
+  }
+
+  async collapse() {
+    this.collapseBtn.click();
+  }
+
+  async expand() {
+    this.expandBtn.click();
   }
 }

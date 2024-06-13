@@ -46,4 +46,31 @@ test.describe('VariableEditor', () => {
     await editor.add.click();
     await tree.expectRowCount(12);
   });
+
+  test('collapse', async () => {
+    const tree = editor.tree;
+    await tree.expectRowCount(11);
+    await tree.row(5).collapse();
+    await tree.expectRowCount(8);
+  });
+
+  test('expand', async () => {
+    const tree = editor.tree;
+    await tree.row(5).collapse();
+    await tree.expectRowCount(8);
+    await tree.row(5).expand();
+    await tree.expectRowCount(11);
+  });
+
+  test('theme', async () => {
+    const settings = editor.settings;
+    await settings.toggle();
+    await settings.theme.expectLight();
+    await settings.theme.toggle();
+    await settings.theme.expectDark();
+  });
+
+  test('password', async () => {
+    await editor.tree.row(2).expectValues(['secretKey', '***']);
+  });
 });
