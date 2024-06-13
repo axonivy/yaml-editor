@@ -3,6 +3,7 @@ import { TextArea } from './TextArea';
 import { Table } from './Table';
 import { Button } from './Button';
 import { Settings } from './Settings';
+import { Details } from './Details';
 
 export class VariableEditor {
   readonly page: Page;
@@ -12,6 +13,7 @@ export class VariableEditor {
   readonly add: Button;
   readonly locator: Locator;
   readonly settings: Settings;
+  readonly details: Details;
 
   constructor(page: Page) {
     this.page = page;
@@ -21,6 +23,7 @@ export class VariableEditor {
     this.delete = new Button(this.locator, { name: 'Delete variable' });
     this.add = new Button(this.locator, { name: 'Add variable' });
     this.settings = new Settings(this.locator);
+    this.details = new Details(this.page, this.locator);
   }
 
   static async open(page: Page) {

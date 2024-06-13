@@ -80,8 +80,8 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
         <>
           <ResizableHandle />
           <ResizablePanel defaultSize={25} minSize={10}>
-            <Flex direction='column' className='details-container'>
-              <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} />
+            <Flex direction='column' className='details-container' data-testid='details-container'>
+              <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title' />
               <Flex direction='column' gap={4} className='content details-content'>
                 {detailContent}
               </Flex>

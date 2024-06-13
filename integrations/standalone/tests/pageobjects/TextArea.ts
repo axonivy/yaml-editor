@@ -6,7 +6,7 @@ export class TextArea {
 
   constructor(parentLocator: Locator, options?: { label?: string; nth?: number }) {
     if (options?.label) {
-      this.locator = parentLocator.getByLabel(options.label);
+      this.locator = parentLocator.getByLabel(options.label, { exact: true });
     } else {
       this.locator = parentLocator.getByRole('textbox').nth(options?.nth ?? 0);
     }
@@ -34,5 +34,13 @@ export class TextArea {
 
   async expectDisabled() {
     await expect(this.locator).toBeDisabled();
+  }
+
+  async expectType(type: string) {
+    await expect(this.locator).toHaveAttribute('type', type);
+  }
+
+  async expectNoType() {
+    await expect(this.locator).not.toHaveAttribute('type');
   }
 }
