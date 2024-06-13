@@ -80,6 +80,22 @@ export class Row {
     await this.click();
     await this.column(0).expand();
   }
+
+  async expectSelected() {
+    await expect(this.locator).toHaveAttribute('data-state', 'selected');
+  }
+
+  async expectNotSelected() {
+    await expect(this.locator).not.toHaveAttribute('data-state', 'selected');
+  }
+
+  async expectCollapsed() {
+    await this.column(0).expectCollapsed();
+  }
+
+  async expectExpanded() {
+    await this.column(0).expectExpanded();
+  }
 }
 
 export class Cell {
@@ -117,6 +133,14 @@ export class Cell {
 
   async expectEmpty() {
     await expect(this.textbox).toBeEmpty();
+  }
+
+  async expectExpanded() {
+    await this.collapseBtn.expectDataState('expanded');
+  }
+
+  async expectCollapsed() {
+    await this.expandBtn.expectDataState('collapsed');
   }
 
   private async fillText(value: string) {

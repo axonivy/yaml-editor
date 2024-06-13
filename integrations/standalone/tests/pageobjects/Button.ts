@@ -1,4 +1,4 @@
-import type { Locator } from '@playwright/test';
+import { expect, type Locator } from '@playwright/test';
 
 export class Button {
   private readonly locator: Locator;
@@ -13,5 +13,9 @@ export class Button {
 
   async click() {
     await this.locator.click();
+  }
+
+  async expectDataState(dataState: string) {
+    await expect(this.locator).toHaveAttribute('data-state', dataState);
   }
 }
