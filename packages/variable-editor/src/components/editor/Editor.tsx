@@ -43,7 +43,7 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
               {theme !== 'system' && (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button icon={IvyIcons.Settings} size='large' />
+                    <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
                   </PopoverTrigger>
                   <PopoverContent sideOffset={12}>
                     <ReadonlyProvider readonly={false}>
@@ -59,6 +59,7 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
                             defaultChecked={theme === 'dark'}
                             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                             size='small'
+                            aria-label='Theme'
                           />
                         </Field>
                       </Flex>
