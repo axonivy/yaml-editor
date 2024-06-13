@@ -96,12 +96,13 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
   const controls = [];
   if (!readonly) {
     controls.push(
-      <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} />,
+      <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} aria-label='Add Variable' />,
       <Button
         key='deleteButton'
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
         disabled={!table.getIsSomeRowsSelected() && !isRowSelected(table)}
+        aria-label='Delete Variable'
       />
     );
   }

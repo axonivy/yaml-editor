@@ -1,13 +1,49 @@
-import { test, expect } from '@playwright/test';
+import { VariableEditor } from '../pageobjects/VariableEditor';
+import { test } from '@playwright/test';
 
-test('title', async ({ page }) => {
-  await page.goto('/mock.html');
-  await expect(page).toHaveTitle('Variables Editor Mock');
-});
+test.describe('VariableEditor', () => {
+  let editor: VariableEditor;
 
-test('search', async ({ page }) => {
-  await page.goto('/mock.html');
-  const search = page.locator('.ui-input');
-  await search.fill('Hello');
-  await expect(search).toHaveValue('Hello');
+  test.beforeEach(async ({ page }) => {
+    editor = await VariableEditor.open(page);
+  });
+
+  test('title', async () => {
+    await editor.expectTitle('Variables Editor Mock');
+  });
+
+  test('search', async () => {
+    const search = editor.search;
+    const tree = editor.tree;
+    await tree.expectRowCount(11);
+
+    await search.fill('Hello');
+    await search.expectValue('Hello');
+    await tree.expectRowCount(0);
+
+    await search.fill('useUser');
+    await search.expectValue('useUser');
+    await tree.expectRowCount(5);
+  });
+
+  test('delete', async () => {
+    const tree = editor.tree;
+    await tree.expectRowCount(11);
+
+    await tree.row(6).click();
+    await tree.row(6).expectValues(['enabled', 'false']);
+    await editor.delete.click();
+    await tree.expectRowCount(10);
+    await tree.row(6).expectValues(['user', 'MyUser']);
+  });
+
+  test('add', async () => {
+    const tree = editor.tree;
+    await tree.expectRowCount(11);
+
+    await tree.row(5).click();
+    await tree.row(5).expectValues(['useUserPassFlow', '']);
+    await editor.add.click();
+    await tree.expectRowCount(12);
+  });
 });
