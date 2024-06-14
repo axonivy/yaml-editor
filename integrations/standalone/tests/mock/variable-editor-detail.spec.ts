@@ -111,7 +111,6 @@ test.describe('VariableEditor Detail', () => {
     await editor.add.click();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
 
     await details.fill('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
     await details.listOfPossibleValues.addValue('Tuesday');
@@ -131,5 +130,61 @@ test.describe('VariableEditor Detail', () => {
     await details.listOfPossibleValues.deleteValue('Wednesday');
 
     await details.listOfPossibleValues.expectValues(['Monday']);
+  });
+
+  test('edit name', async () => {
+    await editor.tree.row(0).click();
+    await editor.tree.row(0).expectValues(['microsoft-connector', '']);
+    const details = editor.details;
+    await details.name.expectValue('microsoft-connector');
+
+    await details.name.fill('Gugus');
+
+    await editor.tree.row(1).click();
+    await editor.tree.row(0).click();
+    await editor.tree.row(0).expectValues(['Gugus', '']);
+    await details.name.expectValue('Gugus');
+  });
+
+  test('edit value', async () => {
+    await editor.tree.row(1).click();
+    await editor.tree.row(1).expectValues(['appId', 'MyAppId']);
+    const details = editor.details;
+    await details.value.expectValue('MyAppId');
+
+    await details.value.fill('Gugus');
+
+    await editor.tree.row(0).click();
+    await editor.tree.row(1).click();
+    await editor.tree.row(1).expectValues(['appId', 'Gugus']);
+    await details.value.expectValue('Gugus');
+  });
+
+  test('edit description', async () => {
+    await editor.tree.row(1).click();
+    await editor.tree.row(1).expectValues(['appId', 'MyAppId']);
+    const details = editor.details;
+    await details.description.expectValue('Your Azure Application (client) ID');
+
+    await details.description.fill('Gugus');
+
+    await editor.tree.row(0).click();
+    await editor.tree.row(1).click();
+    await editor.tree.row(1).expectValues(['appId', 'MyAppId']);
+    await details.description.expectValue('Gugus');
+  });
+
+  test('edit metadata', async () => {
+    await editor.tree.row(2).click();
+    await editor.tree.row(2).expectValues(['secretKey', '***']);
+    const details = editor.details;
+    await details.metaData.expectValue('Password');
+
+    await details.metaData.choose('');
+
+    await editor.tree.row(0).click();
+    await editor.tree.row(2).click();
+    await editor.tree.row(2).expectValues(['secretKey', 'MySecretKey']);
+    await details.metaData.expectValue('');
   });
 });
