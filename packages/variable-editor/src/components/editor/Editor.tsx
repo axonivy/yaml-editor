@@ -35,7 +35,7 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
 
   return (
     <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
-      <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
+      <ResizablePanel defaultSize={75} minSize={50} className='master-panel' data-testid='master-panel'>
         <Flex className='master-wrapper' direction='column'>
           <Toolbar className='master-toolbar'>
             <ToolbarTitle>{masterTitle}</ToolbarTitle>
@@ -68,7 +68,12 @@ export const Editor = ({ masterTitle, masterContent, detailTitle, detailContent 
                   </PopoverContent>
                 </Popover>
               )}
-              <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} />
+              <Button
+                icon={IvyIcons.LayoutSidebarRightCollapse}
+                size='large'
+                onClick={() => setSidebar(!sidebar)}
+                aria-label='Details toggle'
+              />
             </Flex>
           </Toolbar>
           <Flex direction='column' gap={4} className='content master-content'>

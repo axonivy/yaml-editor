@@ -1,5 +1,5 @@
 import { VariableEditor } from '../pageobjects/VariableEditor';
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('VariableEditor Detail', () => {
   let editor: VariableEditor;
@@ -186,5 +186,17 @@ test.describe('VariableEditor Detail', () => {
     await editor.tree.row(2).click();
     await editor.tree.row(2).expectValues(['secretKey', 'MySecretKey']);
     await details.metaData.expectValue('');
+  });
+
+  test('empty details', async () => {
+    await expect(editor.details.locator.locator('p')).toHaveText('Nothing there yet. Select a Variable to edit its properties.');
+  });
+
+  test('toogle details', async () => {
+    await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '75.0');
+    await editor.detailsToggle.click();
+    await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '1.0');
+    await editor.detailsToggle.click();
+    await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '75.0');
   });
 });
