@@ -32,6 +32,10 @@ export class Table {
   async expectRowCount(rows: number) {
     await expect(this.rows).toHaveCount(rows);
   }
+
+  async rowCount() {
+    return await this.rows.count();
+  }
 }
 
 export type ColumnType = 'label' | 'text';
@@ -121,6 +125,10 @@ export class Cell {
     }
   }
 
+  async value() {
+    return await this.textbox.inputValue();
+  }
+
   async expectValue(value: string) {
     switch (this.columnType) {
       case 'label':
@@ -145,6 +153,7 @@ export class Cell {
 
   private async fillText(value: string) {
     const input = this.textbox;
+    await input.click();
     await input.fill(value);
     await input.blur();
   }

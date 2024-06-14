@@ -85,4 +85,51 @@ test.describe('VariableEditor Detail', () => {
     await details.expectValues('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
     await details.fileNameExtension.expectValue('txt');
   });
+
+  test('new enum variable', async () => {
+    await editor.tree.row(0).click();
+    await editor.add.click();
+    await editor.tree.row(11).click();
+    const details = editor.details;
+    await details.expectTitle('Variables Editor - ');
+
+    await details.fill('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
+
+    await details.expectTitle('Variables Editor - myName');
+    await editor.tree.row(11).expectValues(['myName', 'Monday']);
+    await editor.tree.row(10).click();
+    await details.expectTitle('Variables Editor - connectorProvider');
+    await editor.tree.row(11).click();
+
+    await details.expectTitle('Variables Editor - myName');
+    await details.expectValues('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
+    await details.listOfPossibleValues.expectValues(['Monday']);
+  });
+
+  test('add/delete enum variable', async () => {
+    await editor.tree.row(0).click();
+    await editor.add.click();
+    await editor.tree.row(11).click();
+    const details = editor.details;
+    await details.expectTitle('Variables Editor - ');
+
+    await details.fill('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
+    await details.listOfPossibleValues.addValue('Tuesday');
+    await details.listOfPossibleValues.addValue('Wednesday');
+
+    await details.listOfPossibleValues.expectValues(['Monday', 'Tuesday', 'Wednesday']);
+
+    await details.enumValue.choose('Tuesday');
+    await details.enumValue.expectValue('Tuesday');
+
+    await details.enumValue.choose('Wednesday');
+    await details.enumValue.expectValue('Wednesday');
+
+    await details.enumValue.choose('Monday');
+
+    await details.listOfPossibleValues.deleteValue('Tuesday');
+    await details.listOfPossibleValues.deleteValue('Wednesday');
+
+    await details.listOfPossibleValues.expectValues(['Monday']);
+  });
 });
