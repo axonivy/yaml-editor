@@ -257,7 +257,7 @@ export const variableIcon = (variable: Variable) => {
   }
   switch (variable.metadata.type) {
     case 'password':
-      return IvyIcons.PasswordUser;
+      return IvyIcons.Password;
     case 'daytime':
       return IvyIcons.CalendarTime;
     case 'enum':
