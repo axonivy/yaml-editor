@@ -8,7 +8,7 @@ test.describe('VariableEditor Detail', () => {
     editor = await VariableEditor.open(page);
   });
 
-  test('new string variable', async () => {
+  test('new text variable', async () => {
     await editor.tree.row(0).click();
     await editor.add.click();
     await editor.tree.row(11).click();
@@ -17,6 +17,7 @@ test.describe('VariableEditor Detail', () => {
 
     await details.fill('myName', 'myValue', 'This is myName with a value of myValue');
 
+    await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', '');
     await details.expectTitle('Variables Editor - myName');
     await editor.tree.row(11).expectValues(['myName', 'myValue']);
     await editor.tree.row(10).click();
@@ -36,6 +37,7 @@ test.describe('VariableEditor Detail', () => {
 
     await details.fill('myName', 'myValue', 'This is myName with a value of myValue', 'Password');
 
+    await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', 'Password');
     await details.expectTitle('Variables Editor - myName');
     await editor.tree.row(11).expectValues(['myName', '***']);
     await editor.tree.row(10).click();
@@ -55,6 +57,7 @@ test.describe('VariableEditor Detail', () => {
 
     await details.fill('myName', '12:15', 'This is myName with a value of myValue', 'Daytime');
 
+    await details.expectValues('myName', '12:15', 'This is myName with a value of myValue', 'Daytime');
     await details.expectTitle('Variables Editor - myName');
     await editor.tree.row(11).expectValues(['myName', '12:15']);
     await editor.tree.row(10).click();
@@ -75,6 +78,8 @@ test.describe('VariableEditor Detail', () => {
     await details.fill('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
     await details.fileNameExtension.choose('txt');
 
+    await details.expectValues('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
+    await details.fileNameExtension.expectValue('txt');
     await details.expectTitle('Variables Editor - myName');
     await editor.tree.row(11).expectValues(['myName', 'test.txt']);
     await editor.tree.row(10).click();
@@ -95,6 +100,8 @@ test.describe('VariableEditor Detail', () => {
 
     await details.fill('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
 
+    await details.expectValues('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
+    await details.listOfPossibleValues.expectValues(['Monday']);
     await details.expectTitle('Variables Editor - myName');
     await editor.tree.row(11).expectValues(['myName', 'Monday']);
     await editor.tree.row(10).click();
@@ -198,5 +205,30 @@ test.describe('VariableEditor Detail', () => {
     await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '1.0');
     await editor.detailsToggle.click();
     await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '75.0');
+  });
+
+  test('delete selected', async () => {
+    await editor.tree.row(1).click();
+    await editor.tree.row(1).expectValues(['appId', 'MyAppId']);
+    const details = editor.details;
+    await details.expectTitle('Variables Editor - appId');
+    await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
+
+    await editor.delete.click();
+
+    await editor.tree.row(1).expectValues(['secretKey', '***']);
+    await details.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
+  });
+
+  test('add existing', async () => {
+    await editor.tree.row(0).click();
+    await editor.add.click();
+    await editor.tree.expectRowCount(12);
+
+    const details = editor.details;
+    details.name.fill('appId');
+
+    await editor.tree.expectRowCount(11);
+    await expect(editor.details.locator.locator('p')).toHaveText('Nothing there yet. Select a Variable to edit its properties.');
   });
 });
