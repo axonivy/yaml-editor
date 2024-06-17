@@ -1,0 +1,54 @@
+pipeline {
+  agent any
+
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '5'))
+    disableConcurrentBuilds()
+  }
+
+  triggers {
+    cron '@midnight'
+  }
+
+  parameters {
+    string(name: 'engineSource', defaultValue: 'https://product.ivyteam.io/', description: 'Engine page url')
+    choice(name: 'browser', choices: ['', 'all', 'chrome', 'firefox', 'webkit'], description: 'Browser used for integration tests (default: "all" on master/release, "chrome" on branch)')
+  }
+
+  stages {
+    stage('Integration Test') {
+      environment {
+        BROWSERS = browser()
+      }
+      steps {
+        script {
+          docker.build('node-webtest', '-f build/playwright/Dockerfile .').inside {
+            sh 'npm install'
+            dir ('integrations/standalone/tests/integration/project') {
+              maven cmd: "-ntp clean verify -Dengine.page.url=${params.engineSource}"
+            }
+          }
+          archiveArtifacts artifacts: 'integrations/standalone/test-results/**', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'integrations/standalone/**/target/**/ivy.log', allowEmptyArchive: true
+          withChecks('Integration WebTest') {
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'integrations/**/report.xml'
+          }
+        }
+      }
+    }
+  }
+}
+
+def isReleaseOrMasterBranch() {
+  return env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/') 
+}
+
+def browser() {
+  if (params.browser == '') {
+    if (isReleaseOrMasterBranch()) {
+      return 'all'
+    }
+    return 'chrome'
+  }
+  return params.browser;
+}

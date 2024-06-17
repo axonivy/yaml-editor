@@ -30,9 +30,22 @@ export class VariableEditor {
     this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
   }
 
-  static async open(page: Page) {
+  static async openEngine(page: Page) {
+    const server = process.env.BASE_URL ?? 'localhost:8081';
+    const app = process.env.TEST_APP ?? 'designer';
+    const serverUrl = server.replace(/^https?:\/\//, '');
+    const pmv = 'variable-integration';
+    const url = `?server=${serverUrl}&app=${app}&pmv=${pmv}&file=variables.yaml`;
+    return this.openUrl(page, url);
+  }
+
+  static async openMock(page: Page) {
+    return this.openUrl(page, '/mock.html');
+  }
+
+  private static async openUrl(page: Page, url: string) {
     const editor = new VariableEditor(page);
-    await page.goto('/mock.html');
+    await page.goto(url);
     return editor;
   }
 

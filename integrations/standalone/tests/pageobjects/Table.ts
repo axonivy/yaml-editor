@@ -6,6 +6,7 @@ export class Table {
   private readonly rows: Locator;
   private readonly header: Locator;
   private readonly locator: Locator;
+  private readonly validations: Locator;
 
   constructor(readonly page: Page, parentLocator: Locator, readonly columns: ColumnType[], label?: string) {
     if (label === undefined) {
@@ -14,6 +15,7 @@ export class Table {
       this.locator = parentLocator.getByLabel(label);
     }
     this.rows = this.locator.locator('tbody tr:not(.ui-message-row)');
+    this.validations = this.locator.locator('tbody tr.ui-message-row');
     this.header = this.locator.locator('thead tr');
   }
 
@@ -35,6 +37,14 @@ export class Table {
 
   async rowCount() {
     return await this.rows.count();
+  }
+
+  validation(index: number) {
+    return new Validation(this.validations.nth(index));
+  }
+
+  async expectValidationCount(count: number) {
+    await expect(this.validations).toHaveCount(count);
   }
 }
 
@@ -164,5 +174,16 @@ export class Cell {
 
   async expand() {
     this.expandBtn.click();
+  }
+}
+
+export class Validation {
+  locator: Locator;
+  constructor(locator: Locator) {
+    this.locator = locator;
+  }
+
+  async expectText(text: string) {
+    await expect(this.locator).toHaveText(text);
   }
 }

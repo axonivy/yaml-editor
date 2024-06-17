@@ -24,7 +24,8 @@
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
-    "webtest:mock": "npx playwright test -c ./tests/mock"
+    "webtest:mock": "npx playwright test -c ./tests/mock",
+    "webtest:engine": "npx playwright test -c ./tests/integration"
   },
   "type": "module"
 }

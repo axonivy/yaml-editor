@@ -5,7 +5,7 @@ test.describe('VariableEditor Detail', () => {
   let editor: VariableEditor;
 
   test.beforeEach(async ({ page }) => {
-    editor = await VariableEditor.open(page);
+    editor = await VariableEditor.openMock(page);
   });
 
   test('new text variable', async () => {
