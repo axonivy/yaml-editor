@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 
 export class TextArea {
   private readonly locator: Locator;
+  readonly showPassword: Locator;
 
   constructor(parentLocator: Locator, options?: { label?: string; nth?: number }) {
     if (options?.label) {
@@ -10,6 +11,7 @@ export class TextArea {
     } else {
       this.locator = parentLocator.getByRole('textbox').nth(options?.nth ?? 0);
     }
+    this.showPassword = parentLocator.getByLabel('Show password');
   }
 
   async fill(value: string) {

@@ -195,6 +195,17 @@ test.describe('VariableEditor Detail', () => {
     await details.metaData.expectValue('');
   });
 
+  test('show password', async () => {
+    await editor.tree.row(2).click();
+    await editor.tree.row(2).expectValues(['secretKey', '***']);
+    const details = editor.details;
+    await details.value.expectType('password');
+    await details.value.showPassword.click();
+    await details.value.expectType('text');
+    await details.value.showPassword.click();
+    await details.value.expectType('password');
+  });
+
   test('empty details', async () => {
     await expect(editor.details.locator.locator('p')).toHaveText('Nothing there yet. Select a Variable to edit its properties.');
   });
