@@ -63,8 +63,14 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
       control={
         <Control
           buttons={[
-            <Button key='addButton' icon={IvyIcons.Plus} onClick={addValue} />,
-            <Button key='deleteButton' icon={IvyIcons.Trash} onClick={deleteValue} disabled={!table.getIsSomeRowsSelected()} />
+            <Button key='addButton' icon={IvyIcons.Plus} onClick={addValue} aria-label='Add value' />,
+            <Button
+              key='deleteButton'
+              icon={IvyIcons.Trash}
+              onClick={deleteValue}
+              disabled={!table.getIsSomeRowsSelected()}
+              aria-label='Delete value'
+            />
           ]}
         />
       }

@@ -3,6 +3,7 @@ import { TextArea } from './TextArea';
 import { Table } from './Table';
 import { Button } from './Button';
 import { Settings } from './Settings';
+import { Details } from './Details';
 
 export class VariableEditor {
   readonly page: Page;
@@ -12,15 +13,21 @@ export class VariableEditor {
   readonly add: Button;
   readonly locator: Locator;
   readonly settings: Settings;
+  readonly details: Details;
+  readonly detailsToggle: Button;
+  readonly masterPanel: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.locator = page.locator(':root');
+    this.masterPanel = this.locator.getByTestId('master-panel');
     this.search = new TextArea(this.locator);
     this.tree = new Table(page, this.locator, ['label', 'label']);
     this.delete = new Button(this.locator, { name: 'Delete variable' });
     this.add = new Button(this.locator, { name: 'Add variable' });
     this.settings = new Settings(this.locator);
+    this.details = new Details(this.page, this.locator);
+    this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
   }
 
   static async open(page: Page) {
