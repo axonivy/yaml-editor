@@ -136,7 +136,7 @@ describe('variable-utils', () => {
 
     test('password', () => {
       variable.metadata.type = 'password';
-      expect(variableIcon(variable)).toEqual(IvyIcons.PasswordUser);
+      expect(variableIcon(variable)).toEqual(IvyIcons.Password);
     });
 
     test('daytime', () => {
