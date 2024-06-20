@@ -21,6 +21,7 @@
     "test:ci": "lerna run test:ci",
     "webtest:mock": "npm --prefix integrations/standalone run webtest:mock",
     "webtest:engine": "npm --prefix integrations/standalone run webtest:engine",
+    "webtest:screenshot": "npm --prefix integrations/standalone run webtest:screenshot",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
     "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
   },
