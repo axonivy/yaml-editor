@@ -52,4 +52,15 @@ export class VariableEditor {
   async expectTitle(title: string) {
     await expect(this.page).toHaveTitle(title);
   }
+
+  async takeScreenshot(fileName: string) {
+    await this.hideQuery();
+    const dir = process.env.SCREENSHOT_DIR ?? './target';
+    const buffer = await this.page.screenshot({ path: `${dir}/screenshots/${fileName}`, animations: 'disabled' });
+    expect(buffer.byteLength).toBeGreaterThan(3000);
+  }
+
+  async hideQuery() {
+    await this.page.addStyleTag({ content: `.tsqd-parent-container { display: none; }` });
+  }
 }
