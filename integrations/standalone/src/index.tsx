@@ -22,7 +22,7 @@ export async function start(): Promise<void> {
         <ClientContextProvider client={client}>
           <QueryProvider client={queryClient}>
             <ReadonlyProvider readonly={readonly}>
-              <VariableEditor app={app} pmv={pmv} file='/variables.yaml' />
+              <VariableEditor app={app} pmv={pmv} file='variables.yaml' />
             </ReadonlyProvider>
           </QueryProvider>
         </ClientContextProvider>

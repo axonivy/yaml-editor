@@ -7,7 +7,7 @@ test.describe('VariableEditor', () => {
   let tree: Table;
 
   test.beforeEach(async ({ page }) => {
-    editor = await VariableEditor.open(page);
+    editor = await VariableEditor.openMock(page);
     tree = editor.tree;
   });
 
