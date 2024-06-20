@@ -45,4 +45,8 @@ export class TextArea {
   async expectNoType() {
     await expect(this.locator).not.toHaveAttribute('type');
   }
+
+  async expectDoesNotExists() {
+    await expect(this.locator).toHaveCount(0);
+  }
 }
