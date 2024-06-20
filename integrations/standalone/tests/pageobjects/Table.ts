@@ -31,6 +31,10 @@ export class Table {
     await this.expectRowCount(0);
   }
 
+  async expectNotEmpty() {
+    await expect(this.rows).not.toHaveCount(0);
+  }
+
   async expectRowCount(rows: number) {
     await expect(this.rows).toHaveCount(rows);
   }

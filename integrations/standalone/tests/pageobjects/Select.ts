@@ -24,4 +24,8 @@ export class Select {
   async expectValue(value: string | RegExp) {
     await expect(this.locator).toHaveText(value);
   }
+
+  async expectDoesNotExists() {
+    await expect(this.locator).toHaveCount(0);
+  }
 }

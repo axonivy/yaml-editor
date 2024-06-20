@@ -1,6 +1,12 @@
 # == Variables ==
-# 
+#
 # You can define here your project Variables.
 #
 Variables:
-#  myVariable: value
+  microsoft:
+    connector:
+      # Your Azure Application (client) ID
+      appId: MyAppId
+      # Secret key from your applications "certificates & secrets"
+      # [password]
+      secretKey: ${decrypt:MySecretKey}

@@ -66,4 +66,11 @@ export class Details {
         await this.value.expectNoType();
     }
   }
+
+  async expectFolderValues(name: string, description: string) {
+    await this.name.expectValue(name);
+    await this.description.expectValue(description);
+    await this.value.expectDoesNotExists();
+    await this.metaData.expectDoesNotExists();
+  }
 }
