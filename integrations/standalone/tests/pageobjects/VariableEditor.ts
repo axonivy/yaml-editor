@@ -55,7 +55,7 @@ export class VariableEditor {
 
   async takeScreenshot(fileName: string) {
     await this.hideQuery();
-    const dir = process.env.SCREENSHOT_DIR ?? './target';
+    const dir = process.env.SCREENSHOT_DIR ?? 'tests/screenshots/target';
     const buffer = await this.page.screenshot({ path: `${dir}/screenshots/${fileName}`, animations: 'disabled' });
     expect(buffer.byteLength).toBeGreaterThan(3000);
   }

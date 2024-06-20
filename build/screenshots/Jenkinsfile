@@ -22,7 +22,6 @@ pipeline {
             }
           }
           archiveArtifacts artifacts: 'integrations/standalone/test-results/**', allowEmptyArchive: true
-          archiveArtifacts artifacts: 'integrations/standalone/**/target/**/ivy.log', allowEmptyArchive: true
           archiveArtifacts artifacts: 'integrations/standalone/**/target/screenshots/*.png', allowEmptyArchive: true
           withChecks('Screenshots') {
             junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'integrations/**/report.xml'
@@ -37,9 +36,9 @@ pipeline {
       steps {
         script {
           docker.image('maven:3.8.6-eclipse-temurin-17').inside {
-            maven cmd: '-ntp -f integrations/standalone/tests/screenshots clean deploy -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+            maven cmd: '-ntp -f integrations/standalone/tests/screenshots deploy -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
           }
-          archiveArtifacts 'integrations/standalone/**/target/inscription-view-screenshots-*.zip'
+          archiveArtifacts 'integrations/standalone/**/target/variable-editor-screenshots-*.zip'
         }
       }
     }
