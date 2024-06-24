@@ -1,7 +1,7 @@
 import type { RowSelectionState, Table, Updater } from '@tanstack/react-table';
 import { createRow, createTable, getCoreRowModel } from '@tanstack/react-table';
 import type { TestNode } from './test-utils/types';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, treeGlobalFilter } from './tree';
+import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, keyOfRow, treeGlobalFilter } from './tree';
 
 let data: Array<TestNode>;
 let newNode: TestNode;
@@ -232,6 +232,16 @@ describe('tree', () => {
       test('pathEmpty', () => {
         expect(treeGlobalFilter(data, [], 'pathEmpty')).toBeFalsy();
       });
+    });
+  });
+
+  describe('keyOfRow', () => {
+    test('withoutParents', () => {
+      expect(keyOfRow(table.getRowModel().rows[0])).toEqual('NameNode0');
+    });
+
+    test('withParents', () => {
+      expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
     });
   });
 });

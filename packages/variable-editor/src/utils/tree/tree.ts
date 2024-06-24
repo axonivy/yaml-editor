@@ -102,3 +102,18 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
   }
   return false;
 };
+
+export const keyOfRow = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
+  const parentKey = keyOfParentRows(row);
+  if (parentKey !== '') {
+    return parentKey + '.' + row.original.name;
+  }
+  return row.original.name;
+};
+
+const keyOfParentRows = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
+  return row
+    .getParentRows()
+    .map(parentRow => parentRow.original.name)
+    .join('.');
+};
