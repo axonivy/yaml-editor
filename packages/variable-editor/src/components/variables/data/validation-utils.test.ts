@@ -1,11 +1,12 @@
+import type { Row } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
-import { MockRow } from './test-utils/types';
+import { mockRow } from './test-utils/types';
 import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from './validation-utils';
 import type { Variable } from './variable';
 
 let validationMessages: ValidationMessages;
-let rowWithMessages: MockRow<Variable>;
-let rowWithoutMessages: MockRow<Variable>;
+const rowWithMessages = mockRow('key1', 'key0') as Row<Variable>;
+const rowWithoutMessages = mockRow('key2', 'key0') as Row<Variable>;
 
 beforeEach(() => {
   validationMessages = [
@@ -30,8 +31,6 @@ beforeEach(() => {
       severity: 0
     }
   ];
-  rowWithMessages = new MockRow({ name: 'key1' } as Variable, [new MockRow({ name: 'key0' } as Variable, [])]);
-  rowWithoutMessages = new MockRow({ name: 'key2' } as Variable, [new MockRow({ name: 'key0' } as Variable, [])]);
 });
 
 describe('validaton-utils', () => {
