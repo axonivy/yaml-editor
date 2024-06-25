@@ -1,16 +1,18 @@
+import { type Row } from '@tanstack/react-table';
 import type { ValidationMessage, ValidationMessages } from '../../../protocol/types';
+import { keyOfRow } from '../../../utils/tree/tree';
+import type { Variable } from './variable';
 
-export const validationMessagesOfRow = (rowId: string, validationMessages?: ValidationMessages) => {
+export const validationMessagesOfRow = (row: Row<Variable>, validationMessages?: ValidationMessages) => {
   if (!validationMessages) {
     return [];
   }
-  return validationMessages.filter(validationMessage => validationMessageBelongsToRow(rowId, validationMessage));
+  return validationMessages.filter(validationMessage => validationMessageBelongsToRow(row, validationMessage));
 };
 
-const validationMessageBelongsToRow = (rowId: string, validationMessage: ValidationMessage) => {
-  const path = JSON.parse(validationMessage.path);
-  path.shift();
-  return path.join('.') === rowId;
+const validationMessageBelongsToRow = (row: Row<Variable>, validationMessage: ValidationMessage) => {
+  const key = 'Variables.' + keyOfRow(row);
+  return key === validationMessage.path;
 };
 
 export const containsError = (validationMessages: ValidationMessages) => {

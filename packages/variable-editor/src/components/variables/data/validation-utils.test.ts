@@ -1,28 +1,33 @@
+import type { Row } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
+import { mockRow } from './test-utils/types';
 import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from './validation-utils';
+import type { Variable } from './variable';
 
 let validationMessages: ValidationMessages;
+const rowWithMessages = mockRow('key1', 'key0') as Row<Variable>;
+const rowWithoutMessages = mockRow('key2', 'key0') as Row<Variable>;
 
 beforeEach(() => {
   validationMessages = [
     {
       message: 'message0',
-      path: '[0, 0, 0]',
+      path: 'Variables.key0.key0',
       severity: 0
     },
     {
       message: 'message1',
-      path: '[0, 0, 1]',
+      path: 'Variables.key0.key1',
       severity: 0
     },
     {
       message: 'message2',
-      path: '[0, 0, 1]',
+      path: 'Variables.key0.key1',
       severity: 0
     },
     {
       message: 'message3',
-      path: '[0, 1, 0]',
+      path: 'Variables.key1.key0',
       severity: 0
     }
   ];
@@ -31,19 +36,19 @@ beforeEach(() => {
 describe('validaton-utils', () => {
   describe('validationMessagesOfRow', () => {
     test('default', () => {
-      const messages = validationMessagesOfRow('0.1', validationMessages);
+      const messages = validationMessagesOfRow(rowWithMessages, validationMessages);
       expect(messages).toHaveLength(2);
       expect(messages[0]).toEqual(validationMessages[1]);
       expect(messages[1]).toEqual(validationMessages[2]);
     });
 
     test('noMatches', () => {
-      const messages = validationMessagesOfRow('0.2', validationMessages);
+      const messages = validationMessagesOfRow(rowWithoutMessages, validationMessages);
       expect(messages).toHaveLength(0);
     });
 
     test('undefined', () => {
-      const messages = validationMessagesOfRow('0.1', undefined);
+      const messages = validationMessagesOfRow(rowWithMessages, undefined);
       expect(messages).toHaveLength(0);
     });
   });

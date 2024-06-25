@@ -119,7 +119,7 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
                 key={row.id}
                 row={row}
                 setSelectedVariablePath={setSelectedVariablePath}
-                validationMessages={validationMessagesOfRow(row.id, validationMessages)}
+                validationMessages={validationMessagesOfRow(row, validationMessages)}
               />
             ))}
           </TableBody>
