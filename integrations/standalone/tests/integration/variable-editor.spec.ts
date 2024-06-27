@@ -52,7 +52,7 @@ test.describe('VariableEditor', () => {
     await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
 
     await tree.row(3).click();
-    await details.expectValues('secretKey', '${decrypt:MySecretKey}', 'Secret key from your applications "certificates & secrets"', 'Password');
+    await details.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
   });
 
   test('save data', async () => {
@@ -65,7 +65,7 @@ test.describe('VariableEditor', () => {
     await details.fill('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', '');
 
     await tree.row(3).click();
-    await details.fill('secretKeyChanged', '${decrypt:MySecretKeyChanged}', 'Secret key from your applications "certificates & secrets changed"', 'Password');
+    await details.fill('secretKeyChanged', 'MySecretKeyChanged', 'Secret key from your applications "certificates & secrets changed"', 'Password');
 
     const editor2 = await VariableEditor.openEngine(editor.page);
     const tree2 = editor2.tree;
@@ -76,8 +76,8 @@ test.describe('VariableEditor', () => {
     await details2.fill('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
 
     await tree2.row(3).click();
-    await details2.expectValues('secretKeyChanged', '${decrypt:MySecretKeyChanged}', 'Secret key from your applications "certificates & secrets changed"', 'Password');
-    await details2.fill('secretKey', '${decrypt:MySecretKey}', 'Secret key from your applications "certificates & secrets"', 'Password');
+    await details2.expectValues('secretKeyChanged', 'MySecretKeyChanged', 'Secret key from your applications "certificates & secrets changed"', 'Password');
+    await details2.fill('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
 
     const editor3 = await VariableEditor.openEngine(editor.page);
     const tree3 = editor3.tree;
@@ -87,6 +87,6 @@ test.describe('VariableEditor', () => {
     await details3.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
 
     await tree3.row(3).click();
-    await details3.expectValues('secretKey', '${decrypt:MySecretKey}', 'Secret key from your applications "certificates & secrets"', 'Password');
+    await details3.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
   });
 });
