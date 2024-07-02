@@ -7,6 +7,7 @@ import {
   getPathOfRow,
   keyOfFirstSelectedNonLeafRow,
   keyOfRow,
+  keysOfAllNonLeafRows,
   treeGlobalFilter
 } from './tree';
 
@@ -272,5 +273,14 @@ describe('tree', () => {
       table.getState().rowSelection = { '1.1.0.0': true };
       expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
     });
+  });
+
+  test('keysOfAllNonLeafRows', () => {
+    expect(keysOfAllNonLeafRows(table)).toEqual([
+      'NameNode1',
+      'NameNode1.NameNode1.1',
+      'NameNode1.NameNode1.1.NameNode1.1.0',
+      'SearchForParentName'
+    ]);
   });
 });
