@@ -1,6 +1,6 @@
 import {
-  BasicSelect,
   Button,
+  Combobox,
   Dialog,
   DialogClose,
   DialogContent,
@@ -14,7 +14,8 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
-import { addChildToFirstSelectedRow } from '../../../utils/tree/tree';
+import { useState } from 'react';
+import { addChildToFirstSelectedRow, keyOfFirstSelectedNonLeafRow } from '../../../utils/tree/tree';
 import type { TreePath } from '../../../utils/tree/types';
 import type { Variable } from '../data/variable';
 import './AddVariableDialog.css';
@@ -27,6 +28,12 @@ type AddVariableDialogProps = {
 };
 
 export const AddVariableDialog = ({ table, variables, setVariables, setSelectedVariablePath }: AddVariableDialogProps) => {
+  const [selectedNamespace, setSelectedNamespace] = useState('');
+
+  const onAddVariableDialogOpen = () => {
+    setSelectedNamespace(keyOfFirstSelectedNonLeafRow(table));
+  };
+
   const addVariable = () => {
     const newVariable: Variable = {
       name: '',
@@ -50,7 +57,12 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label='Add variable' />
+        <Button
+          className='add-variable-dialog-trigger-button'
+          icon={IvyIcons.Plus}
+          onClick={onAddVariableDialogOpen}
+          aria-label='Add variable'
+        />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -61,7 +73,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
             <Input />
           </Fieldset>
           <Fieldset label='Namespace'>
-            <BasicSelect items={[]} />
+            <Combobox value={selectedNamespace} onChange={setSelectedNamespace} options={[]} />
           </Fieldset>
         </Flex>
         <DialogFooter>

@@ -103,6 +103,22 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
   return false;
 };
 
+export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
+  const selectedRow = getFirstSelectedRow(table);
+  if (!selectedRow) {
+    return '';
+  }
+  if (selectedRow.subRows.length !== 0) {
+    return keyOfRow(selectedRow);
+  }
+
+  const parentRow = selectedRow.getParentRow();
+  if (parentRow) {
+    return keyOfRow(parentRow);
+  }
+  return '';
+};
+
 export const keyOfRow = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
   const parentKey = keyOfParentRows(row);
   if (parentKey !== '') {

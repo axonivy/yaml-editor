@@ -1,6 +1,6 @@
+import { test } from '@playwright/test';
 import type { Table } from '../pageobjects/Table';
 import { VariableEditor } from '../pageobjects/VariableEditor';
-import { test } from '@playwright/test';
 
 test.describe('VariableEditor', () => {
   let editor: VariableEditor;
@@ -9,6 +9,7 @@ test.describe('VariableEditor', () => {
   test.beforeEach(async ({ page }) => {
     editor = await VariableEditor.openMock(page);
     tree = editor.tree;
+    await tree.expectRowCount(11);
   });
 
   test('title', async () => {
@@ -17,7 +18,6 @@ test.describe('VariableEditor', () => {
 
   test('search', async () => {
     const search = editor.search;
-    await tree.expectRowCount(11);
 
     await search.fill('Hello');
     await search.expectValue('Hello');
@@ -34,8 +34,6 @@ test.describe('VariableEditor', () => {
   });
 
   test('delete', async () => {
-    await tree.expectRowCount(11);
-
     const row = tree.row(6);
     await row.click();
     await row.expectValues(['enabled', 'false']);
@@ -49,8 +47,6 @@ test.describe('VariableEditor', () => {
   });
 
   test('delete last child', async () => {
-    await tree.expectRowCount(11);
-
     const row = tree.row(8);
     await row.click();
     await row.expectValues(['pass', '***']);
@@ -67,8 +63,6 @@ test.describe('VariableEditor', () => {
   });
 
   test('delete last remaining child', async () => {
-    await tree.expectRowCount(11);
-
     const row = tree.row(6);
     await row.click();
     await editor.delete.click();
@@ -86,16 +80,20 @@ test.describe('VariableEditor', () => {
   });
 
   test('add', async () => {
-    await tree.expectRowCount(11);
-
     await tree.row(5).click();
     await tree.row(5).expectValues(['useUserPassFlow', '']);
     await editor.addVariable();
     await tree.expectRowCount(12);
   });
 
+  test('addVariableDialogDefaultValues', async () => {
+    await tree.row(5).click();
+    await tree.row(5).expectValues(['useUserPassFlow', '']);
+    await editor.add.open();
+    await editor.add.expectValues('', 'microsoft-connector.useUserPassFlow');
+  });
+
   test('collapse', async () => {
-    await tree.expectRowCount(11);
     const row = tree.row(5);
     await row.expectExpanded();
     await row.collapse();

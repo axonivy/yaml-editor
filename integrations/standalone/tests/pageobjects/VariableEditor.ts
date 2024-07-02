@@ -1,16 +1,17 @@
 import { expect, type Locator, type Page } from '@playwright/test';
-import { TextArea } from './TextArea';
-import { Table } from './Table';
+import { AddVariableDialog } from './AddVariableDialog';
 import { Button } from './Button';
-import { Settings } from './Settings';
 import { Details } from './Details';
+import { Settings } from './Settings';
+import { Table } from './Table';
+import { TextArea } from './TextArea';
 
 export class VariableEditor {
   readonly page: Page;
   readonly search: TextArea;
   readonly tree: Table;
   readonly delete: Button;
-  readonly add: Button;
+  readonly add: AddVariableDialog;
   readonly locator: Locator;
   readonly settings: Settings;
   readonly details: Details;
@@ -24,7 +25,7 @@ export class VariableEditor {
     this.search = new TextArea(this.locator);
     this.tree = new Table(page, this.locator, ['label', 'label']);
     this.delete = new Button(this.locator, { name: 'Delete variable' });
-    this.add = new Button(this.locator, { name: 'Add variable' });
+    this.add = new AddVariableDialog(page, this.locator);
     this.settings = new Settings(this.locator);
     this.details = new Details(this.page, this.locator);
     this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
@@ -65,8 +66,7 @@ export class VariableEditor {
   }
 
   async addVariable() {
-    await this.add.click();
-    const createVariable = new Button(this.locator, { name: 'Create variable' });
-    await createVariable.click();
+    this.add.open();
+    this.add.createVariable();
   }
 }
