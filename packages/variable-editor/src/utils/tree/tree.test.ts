@@ -1,7 +1,14 @@
 import type { RowSelectionState, Table, Updater } from '@tanstack/react-table';
 import { createRow, createTable, getCoreRowModel } from '@tanstack/react-table';
 import type { TestNode } from './test-utils/types';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, getPathOfRow, keyOfRow, treeGlobalFilter } from './tree';
+import {
+  addChildToFirstSelectedRow,
+  deleteFirstSelectedRow,
+  getPathOfRow,
+  keyOfFirstSelectedNonLeafRow,
+  keyOfRow,
+  treeGlobalFilter
+} from './tree';
 
 let data: Array<TestNode>;
 let newNode: TestNode;
@@ -242,6 +249,28 @@ describe('tree', () => {
 
     test('withParents', () => {
       expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
+    });
+  });
+
+  describe('keyOfFirstSelectedNonLeafRow', () => {
+    test('noSelection', () => {
+      table.getState().rowSelection = {};
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
+    });
+
+    test('folderSelection', () => {
+      table.getState().rowSelection = { '1.1': true };
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode1.1');
+    });
+
+    test('rootLeafSelection', () => {
+      table.getState().rowSelection = { '0': true };
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
+    });
+
+    test('leafSelection', () => {
+      table.getState().rowSelection = { '1.1.0.0': true };
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
     });
   });
 });
