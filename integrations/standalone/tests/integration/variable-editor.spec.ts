@@ -27,7 +27,7 @@ test.describe('VariableEditor', () => {
     await tree.expectRowCount(4);
     await tree.expectValidationCount(0);
 
-    await editor.add.click();
+    await editor.addVariable();
     const details = editor.details;
     await details.name.fill('hello.world');
 
