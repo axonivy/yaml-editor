@@ -2,6 +2,7 @@ import {
   BasicSelect,
   Button,
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -13,7 +14,6 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
-import { useState } from 'react';
 import { addChildToFirstSelectedRow } from '../../../utils/tree/tree';
 import type { TreePath } from '../../../utils/tree/types';
 import type { Variable } from '../data/variable';
@@ -27,8 +27,6 @@ type AddVariableDialogProps = {
 };
 
 export const AddVariableDialog = ({ table, variables, setVariables, setSelectedVariablePath }: AddVariableDialogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
   const addVariable = () => {
     const newVariable: Variable = {
       name: '',
@@ -47,18 +45,12 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
 
     setSelectedVariablePath(addChildToFirstSelectedRowReturnValue.newChildPath);
     setVariables(addChildToFirstSelectedRowReturnValue.newData);
-    setIsOpen(false);
   };
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog>
       <DialogTrigger asChild>
-        <Button
-          className='add-variable-dialog-trigger-button'
-          icon={IvyIcons.Plus}
-          aria-label='Add variable'
-          onClick={() => setIsOpen(true)}
-        />
+        <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label='Add variable' />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -73,9 +65,11 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
           </Fieldset>
         </Flex>
         <DialogFooter>
-          <Button variant='primary' size='large' type='submit' aria-label='Create variable' onClick={addVariable}>
-            Create Variable
-          </Button>
+          <DialogClose asChild>
+            <Button variant='primary' size='large' type='submit' aria-label='Create variable' onClick={addVariable}>
+              Create Variable
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
