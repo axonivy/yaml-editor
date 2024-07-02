@@ -90,7 +90,7 @@ test.describe('VariableEditor', () => {
 
     await tree.row(5).click();
     await tree.row(5).expectValues(['useUserPassFlow', '']);
-    await editor.add.click();
+    await editor.addVariable();
     await tree.expectRowCount(12);
   });
 

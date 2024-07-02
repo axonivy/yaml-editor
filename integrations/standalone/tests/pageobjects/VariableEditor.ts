@@ -63,4 +63,10 @@ export class VariableEditor {
   async hideQuery() {
     await this.page.addStyleTag({ content: `.tsqd-parent-container { display: none; }` });
   }
+
+  async addVariable() {
+    await this.add.click();
+    const createVariable = new Button(this.locator, { name: 'Create variable' });
+    await createVariable.click();
+  }
 }

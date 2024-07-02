@@ -10,7 +10,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('new text variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
     await details.expectTitle('Variables Editor - ');
@@ -30,7 +30,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('new password variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
     await details.expectTitle('Variables Editor - ');
@@ -50,7 +50,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('new daytime variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
     await details.expectTitle('Variables Editor - ');
@@ -70,7 +70,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('new file variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
     await details.expectTitle('Variables Editor - ');
@@ -93,7 +93,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('new enum variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
     await details.expectTitle('Variables Editor - ');
@@ -115,7 +115,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('add/delete enum variable', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
 
@@ -233,7 +233,7 @@ test.describe('VariableEditor Detail', () => {
 
   test('add existing', async () => {
     await editor.tree.row(0).click();
-    await editor.add.click();
+    await editor.addVariable();
     await editor.tree.expectRowCount(12);
 
     const details = editor.details;

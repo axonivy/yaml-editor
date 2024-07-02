@@ -14,12 +14,13 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
-import { addChildToFirstSelectedRow, deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
+import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
+import { AddVariableDialog } from './AddVariableDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMaster.css';
 
@@ -61,26 +62,6 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     }
   });
 
-  const addVariable = () => {
-    const newVariable: Variable = {
-      name: '',
-      value: '',
-      description: '',
-      metadata: { type: '' },
-      children: []
-    };
-
-    const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, variables, newVariable);
-    const parentNode = addChildToFirstSelectedRowReturnValue.selectedNode;
-    if (parentNode) {
-      parentNode.value = '';
-      parentNode.metadata = { type: '' };
-    }
-
-    setSelectedVariablePath(addChildToFirstSelectedRowReturnValue.newChildPath);
-    setVariables(addChildToFirstSelectedRowReturnValue.newData);
-  };
-
   const deleteVariable = () => {
     const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, variables);
     setSelectedVariablePath(deleteFirstSelectedRowReturnValue.selectedVariablePath);
@@ -96,7 +77,13 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
   const controls = [];
   if (!readonly) {
     controls.push(
-      <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} aria-label='Add variable' />,
+      <AddVariableDialog
+        key='addButton'
+        table={table}
+        variables={variables}
+        setVariables={setVariables}
+        setSelectedVariablePath={setSelectedVariablePath}
+      />,
       <Button
         key='deleteButton'
         icon={IvyIcons.Trash}
