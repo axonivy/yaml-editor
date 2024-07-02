@@ -66,7 +66,7 @@ export class VariableEditor {
   }
 
   async addVariable() {
-    this.add.open();
-    this.add.createVariable();
+    await this.add.open();
+    await this.add.createVariable();
   }
 }
