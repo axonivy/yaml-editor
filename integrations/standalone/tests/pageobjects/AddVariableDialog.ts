@@ -20,9 +20,10 @@ export class AddVariableDialog {
     await this.add.click();
   }
 
-  async expectValues(name: string, namespace: string) {
+  async expectValues(name: string, namespaceValue: string, ...namespaceOptions: Array<string>) {
     await this.name.expectValue(name);
-    await this.namespace.expectValue(namespace);
+    await this.namespace.expectValue(namespaceValue);
+    await this.namespace.expectOptions(...namespaceOptions);
   }
 
   async createVariable() {

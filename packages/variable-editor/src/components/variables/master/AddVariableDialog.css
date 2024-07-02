@@ -1,3 +1,11 @@
 .add-variable-dialog-trigger-button {
   margin-left: auto;
 }
+
+.ui-combobox-menu {
+  z-index: 50;
+}
+
+.ui-combobox-menu:empty {
+  display: none;
+}

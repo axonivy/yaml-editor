@@ -108,7 +108,7 @@ export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(tabl
   if (!selectedRow) {
     return '';
   }
-  if (selectedRow.subRows.length !== 0) {
+  if (hasChildren(selectedRow)) {
     return keyOfRow(selectedRow);
   }
 
@@ -117,6 +117,14 @@ export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(tabl
     return keyOfRow(parentRow);
   }
   return '';
+};
+
+export const keysOfAllNonLeafRows = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
+  return table.getRowModel().flatRows.filter(hasChildren).map(keyOfRow);
+};
+
+const hasChildren = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
+  return row.subRows.length !== 0;
 };
 
 export const keyOfRow = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
