@@ -9,6 +9,7 @@ import {
   keyOfRow,
   keysOfAllNonLeafRows,
   newNodeName,
+  subRowNamesOfRow,
   treeGlobalFilter
 } from './tree';
 
@@ -25,15 +26,15 @@ beforeEach(() => {
       name: 'NameNode1',
       value: '',
       children: [
-        { name: 'NameNode1.0', value: 'ValueNode1.0', children: [] },
+        { name: 'NameNode10', value: 'ValueNode10', children: [] },
         {
-          name: 'NameNode1.1',
+          name: 'NameNode11',
           value: '',
           children: [
             {
-              name: 'NameNode1.1.0',
+              name: 'NameNode110',
               value: '',
-              children: [{ name: 'NameNode1.1.0.0', value: 'ValueNode1.1.0.0', children: [] }]
+              children: [{ name: 'NameNode1100', value: 'ValueNode1100', children: [] }]
             }
           ]
         }
@@ -250,7 +251,7 @@ describe('tree', () => {
     });
 
     test('withParents', () => {
-      expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
+      expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode11.NameNode110');
     });
   });
 
@@ -294,7 +295,7 @@ describe('tree', () => {
 
     test('folderSelection', () => {
       table.getState().rowSelection = { '1.1': true };
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode1.1');
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11');
     });
 
     test('rootLeafSelection', () => {
@@ -304,16 +305,34 @@ describe('tree', () => {
 
     test('leafSelection', () => {
       table.getState().rowSelection = { '1.1.0.0': true };
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
+      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11.NameNode110');
     });
   });
 
   test('keysOfAllNonLeafRows', () => {
     expect(keysOfAllNonLeafRows(table)).toEqual([
       'NameNode1',
-      'NameNode1.NameNode1.1',
-      'NameNode1.NameNode1.1.NameNode1.1.0',
+      'NameNode1.NameNode11',
+      'NameNode1.NameNode11.NameNode110',
       'SearchForParentName'
     ]);
+  });
+
+  describe('subRowNamesOfRow', () => {
+    test('root', () => {
+      expect(subRowNamesOfRow('', table)).toEqual(['NameNode0', 'NameNode1', 'SearchForParentName']);
+    });
+
+    test('singlePart', () => {
+      expect(subRowNamesOfRow('NameNode1', table)).toEqual(['NameNode10', 'NameNode11']);
+    });
+
+    test('multipleParts', () => {
+      expect(subRowNamesOfRow('NameNode1.NameNode11.NameNode110', table)).toEqual(['NameNode1100']);
+    });
+
+    test('notPresent', () => {
+      expect(subRowNamesOfRow('This.Key.Is.Not.Present', table)).toEqual([]);
+    });
   });
 });

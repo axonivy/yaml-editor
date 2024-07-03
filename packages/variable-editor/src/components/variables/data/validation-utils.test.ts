@@ -1,7 +1,7 @@
 import type { Row } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
 import { mockRow } from './test-utils/types';
-import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from './validation-utils';
+import { containsError, containsWarning, toValidationMessageVariant, validateName, validationMessagesOfRow } from './validation-utils';
 import type { Variable } from './variable';
 
 let validationMessages: ValidationMessages;
@@ -86,6 +86,26 @@ describe('validaton-utils', () => {
 
     test('default', () => {
       expect(toValidationMessageVariant(42)).toEqual('info');
+    });
+  });
+
+  describe('validateName', () => {
+    test('valid', () => {
+      expect(validateName('Name', ['AnotherName'])).toBeUndefined();
+    });
+
+    describe('blank', () => {
+      test('empty', () => {
+        expect(validateName('', [])).toEqual('Name cannot be empty.');
+      });
+
+      test('whitespace', () => {
+        expect(validateName('   ', [])).toEqual('Name cannot be empty.');
+      });
+    });
+
+    test('taken', () => {
+      expect(validateName('Name', ['Name'])).toEqual('Name is already present in this Namespace.');
     });
   });
 });

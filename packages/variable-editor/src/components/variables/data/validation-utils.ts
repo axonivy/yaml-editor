@@ -33,3 +33,13 @@ export const toValidationMessageVariant = (severity: number) => {
       return 'info';
   }
 };
+
+export const validateName = (name: string, takenNames: Array<string>) => {
+  if (name.trim() === '') {
+    return 'Name cannot be empty.';
+  }
+  if (takenNames.includes(name)) {
+    return 'Name is already present in this Namespace.';
+  }
+  return;
+};
