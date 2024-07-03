@@ -26,11 +26,11 @@ function VariableEditor(props: DataContext) {
 
   const queryKeys = useMemo(() => {
     return {
-      data: () => ['data'],
+      data: () => ['variable-editor', 'data', context],
       saveData: () => ['saveData'],
       validate: () => ['validate']
     };
-  }, []);
+  }, [context]);
 
   const { data, isPending, isError, error } = useQuery({
     queryKey: queryKeys.data(),
