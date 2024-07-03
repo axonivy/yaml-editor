@@ -103,20 +103,47 @@ export const treeGlobalFilter = <TNode extends TreeNode<TNode>>(data: Array<TNod
   return false;
 };
 
+export const newNodeName = <TNode extends TreeNode<TNode>>(table: Table<TNode>, baseName: string) => {
+  const takenNames = subRowsOfFirstSelectedNonLeafRow(table).map(row => row.original.name);
+  let newName = baseName;
+  let index = 2;
+  while (takenNames.includes(newName)) {
+    newName = `${baseName}${index}`;
+    index++;
+  }
+  return newName;
+};
+
+const subRowsOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
+  const row = firstSelectedNonLeafRow(table);
+  if (!row) {
+    return table.getRowModel().rows;
+  }
+  return row.subRows;
+};
+
 export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
-  const selectedRow = getFirstSelectedRow(table);
-  if (!selectedRow) {
+  const row = firstSelectedNonLeafRow(table);
+  if (!row) {
     return '';
   }
+  return keyOfRow(row);
+};
+
+const firstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
+  const selectedRow = getFirstSelectedRow(table);
+  if (!selectedRow) {
+    return;
+  }
   if (hasChildren(selectedRow)) {
-    return keyOfRow(selectedRow);
+    return selectedRow;
   }
 
   const parentRow = selectedRow.getParentRow();
-  if (parentRow) {
-    return keyOfRow(parentRow);
+  if (!parentRow) {
+    return;
   }
-  return '';
+  return parentRow;
 };
 
 export const keysOfAllNonLeafRows = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {

@@ -15,7 +15,7 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
 import { useState } from 'react';
-import { addChildToFirstSelectedRow, keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows } from '../../../utils/tree/tree';
+import { addChildToFirstSelectedRow, keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName } from '../../../utils/tree/tree';
 import type { TreePath } from '../../../utils/tree/types';
 import type { Variable } from '../data/variable';
 import './AddVariableDialog.css';
@@ -32,6 +32,10 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
 
   const onAddVariableDialogOpen = () => {
     setSelectedNamespace(keyOfFirstSelectedNonLeafRow(table));
+  };
+
+  const newVariableName = () => {
+    return newNodeName(table, 'NewVariable');
   };
 
   const namespaceOptions = () => {
@@ -76,7 +80,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
         </DialogHeader>
         <Flex direction='column' gap={2}>
           <Fieldset label='Name'>
-            <Input />
+            <Input defaultValue={newVariableName()} />
           </Fieldset>
           <Fieldset label='Namespace'>
             <Combobox value={selectedNamespace} onChange={setSelectedNamespace} options={namespaceOptions()} />

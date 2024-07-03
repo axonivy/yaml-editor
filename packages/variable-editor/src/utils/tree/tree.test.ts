@@ -8,6 +8,7 @@ import {
   keyOfFirstSelectedNonLeafRow,
   keyOfRow,
   keysOfAllNonLeafRows,
+  newNodeName,
   treeGlobalFilter
 } from './tree';
 
@@ -250,6 +251,38 @@ describe('tree', () => {
 
     test('withParents', () => {
       expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode1.1.NameNode1.1.0');
+    });
+  });
+
+  describe('newNodeName', () => {
+    test('noSelection', () => {
+      table.getState().rowSelection = {};
+      expect(newNodeName(table, 'NewName')).toEqual('NewName');
+      table.getRowModel().rows[0].original.name = 'NewName';
+      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+      table.getRowModel().rows[1].original.name = 'NewName2';
+      expect(newNodeName(table, 'NewName')).toEqual('NewName3');
+    });
+
+    test('folderSelection', () => {
+      table.getState().rowSelection = { '1.1': true };
+      expect(newNodeName(table, 'NewName')).toEqual('NewName');
+      table.getRowModel().rows[1].subRows[1].subRows[0].original.name = 'NewName';
+      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+    });
+
+    test('rootLeafSelection', () => {
+      table.getState().rowSelection = { '0': true };
+      expect(newNodeName(table, 'NewName')).toEqual('NewName');
+      table.getRowModel().rows[0].original.name = 'NewName';
+      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+    });
+
+    test('leafSelection', () => {
+      table.getState().rowSelection = { '1.1.0.0': true };
+      expect(newNodeName(table, 'NewName')).toEqual('NewName');
+      table.getRowModel().rows[1].subRows[1].subRows[0].subRows[0].original.name = 'NewName';
+      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
     });
   });
 
