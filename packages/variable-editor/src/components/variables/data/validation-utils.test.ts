@@ -146,21 +146,21 @@ describe('validaton-utils', () => {
     describe('invalid', () => {
       test('firstPartIsNotAFolder', () => {
         expect(validateNamespace('NameNode0.New.Namespace', variables)).toEqual({
-          message: "Namespace 'NameNode0' is already present but not a folder.",
+          message: "Namespace 'NameNode0' is not a folder, you cannot add a child to it.",
           variant: 'error'
         });
       });
 
       test('middlePartIsNotAFolder', () => {
         expect(validateNamespace('NameNode1.NameNode10.New.Namespace', variables)).toEqual({
-          message: "Namespace 'NameNode1.NameNode10' is already present but not a folder.",
+          message: "Namespace 'NameNode1.NameNode10' is not a folder, you cannot add a child to it.",
           variant: 'error'
         });
       });
 
       test('lastPartIsNotAFolder', () => {
         expect(validateNamespace('NameNode1.NameNode11.NameNode110', variables)).toEqual({
-          message: "Namespace 'NameNode1.NameNode11.NameNode110' is already present but not a folder.",
+          message: "Namespace 'NameNode1.NameNode11.NameNode110' is not a folder, you cannot add a child to it.",
           variant: 'error'
         });
       });

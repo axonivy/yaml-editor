@@ -54,7 +54,7 @@ export const validateNamespace = (namespace: string, variables: Array<Variable>)
       return;
     }
     if (!hasChildren(nextVariable)) {
-      return toErrorMessage("Namespace '" + keyParts.slice(0, index + 1).join('.') + "' is already present but not a folder.");
+      return toErrorMessage("Namespace '" + keyParts.slice(0, index + 1).join('.') + "' is not a folder, you cannot add a child to it.");
     }
     currentVariables = nextVariable.children;
   }

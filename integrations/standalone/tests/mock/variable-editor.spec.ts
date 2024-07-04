@@ -137,7 +137,7 @@ test.describe('VariableEditor', () => {
       await add.namespaceMessage.expectToBeHidden();
       await add.expectCreateEnabled();
       await add.namespace.fill('microsoft-connector.appId.New.Namespace');
-      await add.namespaceMessage.expectErrorMessage("Namespace 'microsoft-connector.appId' is already present but not a folder.");
+      await add.namespaceMessage.expectErrorMessage("Namespace 'microsoft-connector.appId' is not a folder, you cannot add a child to it.");
       await add.expectCreateDisabled();
     });
   });
