@@ -17,6 +17,15 @@ export class Combobox {
     this.toggleMenu = new Button(parentLocator, { name: 'toggle menu' });
   }
 
+  async fill(value: string) {
+    await this.locator.fill(value);
+  }
+
+  async choose(value: string) {
+    await this.toggleMenu.click();
+    await this.page.getByRole('option', { name: value }).first().click();
+  }
+
   async expectValue(value: string | RegExp) {
     await expect(this.locator).toHaveValue(value);
   }

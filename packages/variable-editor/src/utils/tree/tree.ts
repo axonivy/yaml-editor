@@ -168,3 +168,23 @@ const keyOfParentRows = <TNode extends TreeNode<TNode>>(row: Row<TNode>) => {
     .map(parentRow => parentRow.original.name)
     .join('.');
 };
+
+export const subRowNamesOfRow = <TNode extends TreeNode<TNode>>(key: string, table: Table<TNode>) => {
+  return subRowsOfRow(key, table).map(row => row.original.name);
+};
+
+const subRowsOfRow = <TNode extends TreeNode<TNode>>(key: string, table: Table<TNode>) => {
+  let currentSubRows = table.getCoreRowModel().rows;
+  if (key === '') {
+    return currentSubRows;
+  }
+
+  for (const keyPart of key.split('.')) {
+    const nextRow = currentSubRows.find(row => row.original.name === keyPart);
+    if (nextRow === undefined) {
+      return [];
+    }
+    currentSubRows = nextRow.subRows;
+  }
+  return currentSubRows;
+};

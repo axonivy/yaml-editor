@@ -18,4 +18,12 @@ export class Button {
   async expectDataState(dataState: string) {
     await expect(this.locator).toHaveAttribute('data-state', dataState);
   }
+
+  async expectEnabled() {
+    await expect(this.locator).toBeEnabled();
+  }
+
+  async expectDisabled() {
+    await expect(this.locator).toBeDisabled();
+  }
 }

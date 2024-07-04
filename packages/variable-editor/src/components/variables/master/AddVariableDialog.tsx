@@ -10,13 +10,21 @@ import {
   DialogTrigger,
   Fieldset,
   Flex,
-  Input
+  Input,
+  type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
-import { useState } from 'react';
-import { addChildToFirstSelectedRow, keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName } from '../../../utils/tree/tree';
+import { useMemo, useState } from 'react';
+import {
+  addChildToFirstSelectedRow,
+  keyOfFirstSelectedNonLeafRow,
+  keysOfAllNonLeafRows,
+  newNodeName,
+  subRowNamesOfRow
+} from '../../../utils/tree/tree';
 import type { TreePath } from '../../../utils/tree/types';
+import { validateName } from '../data/validation-utils';
 import type { Variable } from '../data/variable';
 import './AddVariableDialog.css';
 
@@ -28,14 +36,20 @@ type AddVariableDialogProps = {
 };
 
 export const AddVariableDialog = ({ table, variables, setVariables, setSelectedVariablePath }: AddVariableDialogProps) => {
-  const [selectedNamespace, setSelectedNamespace] = useState('');
+  const [name, setName] = useState('');
+  const [namespace, setNamespace] = useState('');
 
-  const onAddVariableDialogOpen = () => {
-    setSelectedNamespace(keyOfFirstSelectedNonLeafRow(table));
-  };
+  const nameValidationMessage = useMemo((): MessageData => {
+    const validationMessage = validateName(name, subRowNamesOfRow(namespace, table));
+    if (!validationMessage) {
+      return;
+    }
+    return { message: validationMessage, variant: 'error' };
+  }, [name, namespace, table]);
 
-  const newVariableName = () => {
-    return newNodeName(table, 'NewVariable');
+  const initializeVariableDialog = () => {
+    setName(newNodeName(table, 'NewVariable'));
+    setNamespace(keyOfFirstSelectedNonLeafRow(table));
   };
 
   const namespaceOptions = () => {
@@ -64,13 +78,17 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
     setVariables(addChildToFirstSelectedRowReturnValue.newData);
   };
 
+  const allInputsValid = () => {
+    return !nameValidationMessage;
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
           className='add-variable-dialog-trigger-button'
           icon={IvyIcons.Plus}
-          onClick={onAddVariableDialogOpen}
+          onClick={initializeVariableDialog}
           aria-label='Add variable'
         />
       </DialogTrigger>
@@ -79,16 +97,35 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
           <DialogTitle>New Variable</DialogTitle>
         </DialogHeader>
         <Flex direction='column' gap={2}>
-          <Fieldset label='Name'>
-            <Input defaultValue={newVariableName()} />
+          <Fieldset label='Name' message={nameValidationMessage} aria-label='Name'>
+            <Input
+              value={name}
+              onChange={event => {
+                setName(event.target.value);
+              }}
+            />
           </Fieldset>
           <Fieldset label='Namespace'>
-            <Combobox value={selectedNamespace} onChange={setSelectedNamespace} options={namespaceOptions()} />
+            <Combobox
+              value={namespace}
+              onChange={setNamespace}
+              onInput={event => {
+                setNamespace(event.currentTarget.value);
+              }}
+              options={namespaceOptions()}
+            />
           </Fieldset>
         </Flex>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant='primary' size='large' type='submit' aria-label='Create variable' onClick={addVariable}>
+            <Button
+              variant='primary'
+              size='large'
+              type='submit'
+              aria-label='Create variable'
+              disabled={!allInputsValid()}
+              onClick={addVariable}
+            >
               Create Variable
             </Button>
           </DialogClose>
