@@ -10,8 +10,7 @@ import {
   DialogTrigger,
   Fieldset,
   Flex,
-  Input,
-  type MessageData
+  Input
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
@@ -24,7 +23,7 @@ import {
   subRowNamesOfRow
 } from '../../../utils/tree/tree';
 import type { TreePath } from '../../../utils/tree/types';
-import { validateName } from '../data/validation-utils';
+import { validateName, validateNamespace } from '../data/validation-utils';
 import type { Variable } from '../data/variable';
 import './AddVariableDialog.css';
 
@@ -39,13 +38,13 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
 
-  const nameValidationMessage = useMemo((): MessageData => {
-    const validationMessage = validateName(name, subRowNamesOfRow(namespace, table));
-    if (!validationMessage) {
-      return;
-    }
-    return { message: validationMessage, variant: 'error' };
+  const nameValidationMessage = useMemo(() => {
+    return validateName(name, subRowNamesOfRow(namespace, table));
   }, [name, namespace, table]);
+
+  const namespaceValidationMessage = useMemo(() => {
+    return validateNamespace(namespace, variables);
+  }, [namespace, variables]);
 
   const initializeVariableDialog = () => {
     setName(newNodeName(table, 'NewVariable'));
@@ -79,7 +78,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
   };
 
   const allInputsValid = () => {
-    return !nameValidationMessage;
+    return !nameValidationMessage && !namespaceValidationMessage;
   };
 
   return (
@@ -105,7 +104,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
               }}
             />
           </Fieldset>
-          <Fieldset label='Namespace'>
+          <Fieldset label='Namespace' message={namespaceValidationMessage} aria-label='Namespace'>
             <Combobox
               value={namespace}
               onChange={setNamespace}

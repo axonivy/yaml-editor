@@ -7,8 +7,9 @@ import { TextArea } from './TextArea';
 export class AddVariableDialog {
   private readonly add: Button;
   readonly name: TextArea;
-  private readonly nameMessage: FieldsetMessage;
+  readonly nameMessage: FieldsetMessage;
   readonly namespace: Combobox;
+  readonly namespaceMessage: FieldsetMessage;
   private readonly create: Button;
 
   constructor(page: Page, parent: Locator) {
@@ -16,6 +17,7 @@ export class AddVariableDialog {
     this.name = new TextArea(parent);
     this.nameMessage = new FieldsetMessage(parent, { label: 'Name' });
     this.namespace = new Combobox(page, parent);
+    this.namespaceMessage = new FieldsetMessage(parent, { label: 'Namespace' });
     this.create = new Button(parent, { name: 'Create variable' });
   }
 
@@ -27,15 +29,6 @@ export class AddVariableDialog {
     await this.name.expectValue(name);
     await this.namespace.expectValue(namespaceValue);
     await this.namespace.expectOptions(...namespaceOptions);
-  }
-
-  async expectNoNameMessage() {
-    await this.nameMessage.expectToBeHidden();
-  }
-
-  async expectNameMessage(message: string, variant: string) {
-    await this.nameMessage.expectMessage(message);
-    await this.nameMessage.expectVariant(variant);
   }
 
   async createVariable() {
