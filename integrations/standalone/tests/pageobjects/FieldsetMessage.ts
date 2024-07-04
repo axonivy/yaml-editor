@@ -7,8 +7,8 @@ export class FieldsetMessage {
     this.locator = parentLocator.getByLabel(options.label, { exact: true }).locator('.ui-message');
   }
 
-  async expectDoesNotExist() {
-    await expect(this.locator).toHaveCount(0);
+  async expectToBeHidden() {
+    await expect(this.locator).toBeHidden();
   }
 
   async expectMessage(message: string) {

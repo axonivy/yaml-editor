@@ -15,7 +15,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
-import { useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useMemo, useState } from 'react';
 import {
   addChildToFirstSelectedRow,
   keyOfFirstSelectedNonLeafRow,
@@ -47,21 +47,9 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
     return { message: validationMessage, variant: 'error' };
   }, [name, namespace, table]);
 
-  const handleAddVariableDialogOpen = () => {
+  const initializeVariableDialog = () => {
     setName(newNodeName(table, 'NewVariable'));
     setNamespace(keyOfFirstSelectedNonLeafRow(table));
-  };
-
-  const handleNameInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-
-  const handleNamespaceComboboxChange = (value: string) => {
-    setNamespace(value);
-  };
-
-  const handleNamespaceComboboxInput = (event: FormEvent<HTMLInputElement>) => {
-    setNamespace(event.currentTarget.value);
   };
 
   const namespaceOptions = () => {
@@ -100,7 +88,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
         <Button
           className='add-variable-dialog-trigger-button'
           icon={IvyIcons.Plus}
-          onClick={handleAddVariableDialogOpen}
+          onClick={initializeVariableDialog}
           aria-label='Add variable'
         />
       </DialogTrigger>
@@ -110,13 +98,20 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
         </DialogHeader>
         <Flex direction='column' gap={2}>
           <Fieldset label='Name' message={nameValidationMessage} aria-label='Name'>
-            <Input defaultValue={name} onChange={handleNameInputChange} />
+            <Input
+              value={name}
+              onChange={event => {
+                setName(event.target.value);
+              }}
+            />
           </Fieldset>
           <Fieldset label='Namespace'>
             <Combobox
               value={namespace}
-              onChange={handleNamespaceComboboxChange}
-              onInput={handleNamespaceComboboxInput}
+              onChange={setNamespace}
+              onInput={event => {
+                setNamespace(event.currentTarget.value);
+              }}
               options={namespaceOptions()}
             />
           </Fieldset>
