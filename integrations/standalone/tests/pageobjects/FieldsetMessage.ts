@@ -11,11 +11,8 @@ export class FieldsetMessage {
     await expect(this.locator).toBeHidden();
   }
 
-  async expectMessage(message: string) {
+  async expectErrorMessage(message: string) {
     await expect(this.locator).toHaveText(message);
-  }
-
-  async expectVariant(variant: string) {
-    await expect(this.locator).toHaveAttribute('data-state', variant);
+    await expect(this.locator).toHaveAttribute('data-state', 'error');
   }
 }

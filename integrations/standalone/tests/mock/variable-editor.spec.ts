@@ -93,39 +93,51 @@ test.describe('VariableEditor', () => {
     await editor.add.expectValues('NewVariable', 'microsoft-connector.useUserPassFlow', 'microsoft-connector', 'microsoft-connector.useUserPassFlow');
   });
 
-  test.describe('addVariableDialogNameValidation', async () => {
-    test('onNameChange', async () => {
-      const add = editor.add;
-      await add.open();
-      await add.expectNoNameMessage();
-      await add.expectCreateEnabled();
-      await add.name.fill('');
-      await add.expectNameMessage('Name cannot be empty.', 'error');
-      await add.expectCreateDisabled();
-      await add.name.fill('microsoft-connector');
-      await add.expectNameMessage('Name is already present in this Namespace.', 'error');
-      await add.expectCreateDisabled();
+  test.describe('addVariableDialogValidation', async () => {
+    test.describe('name', async () => {
+      test('onNameChange', async () => {
+        const add = editor.add;
+        await add.open();
+        await add.nameMessage.expectToBeHidden();
+        await add.expectCreateEnabled();
+        await add.name.fill('');
+        await add.nameMessage.expectErrorMessage('Name cannot be empty.');
+        await add.expectCreateDisabled();
+        await add.name.fill('microsoft-connector');
+        await add.nameMessage.expectErrorMessage('Name is already present in this Namespace.');
+        await add.expectCreateDisabled();
+      });
+
+      test('onNamespaceChange', async () => {
+        const add = editor.add;
+        await add.open();
+        await add.name.fill('appId');
+        await add.nameMessage.expectToBeHidden();
+        await add.expectCreateEnabled();
+        await add.namespace.choose('microsoft-connector');
+        await add.nameMessage.expectErrorMessage('Name is already present in this Namespace.');
+        await add.expectCreateDisabled();
+      });
+
+      test('onNamespaceInput', async () => {
+        const add = editor.add;
+        await add.open();
+        await add.name.fill('appId');
+        await add.nameMessage.expectToBeHidden();
+        await add.expectCreateEnabled();
+        await add.namespace.fill('microsoft-connector');
+        await add.nameMessage.expectErrorMessage('Name is already present in this Namespace.');
+        await add.expectCreateDisabled();
+      });
     });
 
-    test('onNamespaceChange', async () => {
+    test('namespace', async () => {
       const add = editor.add;
       await add.open();
-      await add.name.fill('appId');
-      await add.expectNoNameMessage();
+      await add.namespaceMessage.expectToBeHidden();
       await add.expectCreateEnabled();
-      await add.namespace.choose('microsoft-connector');
-      await add.expectNameMessage('Name is already present in this Namespace.', 'error');
-      await add.expectCreateDisabled();
-    });
-
-    test('onNamespaceInput', async () => {
-      const add = editor.add;
-      await add.open();
-      await add.name.fill('appId');
-      await add.expectNoNameMessage();
-      await add.expectCreateEnabled();
-      await add.namespace.fill('microsoft-connector');
-      await add.expectNameMessage('Name is already present in this Namespace.', 'error');
+      await add.namespace.fill('microsoft-connector.appId.New.Namespace');
+      await add.namespaceMessage.expectErrorMessage("Namespace 'microsoft-connector.appId' is already present but not a folder.");
       await add.expectCreateDisabled();
     });
   });

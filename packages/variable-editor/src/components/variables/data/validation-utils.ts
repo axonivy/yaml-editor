@@ -1,6 +1,8 @@
+import type { MessageData } from '@axonivy/ui-components';
 import { type Row } from '@tanstack/react-table';
 import type { ValidationMessage, ValidationMessages } from '../../../protocol/types';
 import { keyOfRow } from '../../../utils/tree/tree';
+import { hasChildren } from '../../../utils/tree/tree-data';
 import type { Variable } from './variable';
 
 export const validationMessagesOfRow = (row: Row<Variable>, validationMessages?: ValidationMessages) => {
@@ -34,12 +36,30 @@ export const toValidationMessageVariant = (severity: number) => {
   }
 };
 
-export const validateName = (name: string, takenNames: Array<string>) => {
+export const validateName = (name: string, takenNames: Array<string>): MessageData => {
   if (name.trim() === '') {
-    return 'Name cannot be empty.';
+    return toErrorMessage('Name cannot be empty.');
   }
   if (takenNames.includes(name)) {
-    return 'Name is already present in this Namespace.';
+    return toErrorMessage('Name is already present in this Namespace.');
   }
-  return;
+};
+
+export const validateNamespace = (namespace: string, variables: Array<Variable>): MessageData => {
+  const keyParts = namespace.split('.');
+  let currentVariables = variables;
+  for (const [index, keyPart] of keyParts.entries()) {
+    const nextVariable = currentVariables.find(variable => variable.name === keyPart);
+    if (nextVariable === undefined) {
+      return;
+    }
+    if (!hasChildren(nextVariable)) {
+      return toErrorMessage("Namespace '" + keyParts.slice(0, index + 1).join('.') + "' is already present but not a folder.");
+    }
+    currentVariables = nextVariable.children;
+  }
+};
+
+const toErrorMessage = (message: string) => {
+  return { message: message, variant: 'error' };
 };

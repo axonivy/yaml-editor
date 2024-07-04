@@ -17,3 +17,7 @@ export const mockRow = (name: string, parentName: string): DeepPartial<Row<Varia
     ]
   };
 };
+
+export const variable = (name: string, children: Array<Variable>) => {
+  return { name: name, children: children } as Variable;
+};

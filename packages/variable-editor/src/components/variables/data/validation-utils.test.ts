@@ -1,12 +1,29 @@
 import type { Row } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
-import { mockRow } from './test-utils/types';
-import { containsError, containsWarning, toValidationMessageVariant, validateName, validationMessagesOfRow } from './validation-utils';
+import { mockRow, variable } from './test-utils/types';
+import {
+  containsError,
+  containsWarning,
+  toValidationMessageVariant,
+  validateName,
+  validateNamespace,
+  validationMessagesOfRow
+} from './validation-utils';
 import type { Variable } from './variable';
 
 let validationMessages: ValidationMessages;
 const rowWithMessages = mockRow('key1', 'key0') as Row<Variable>;
 const rowWithoutMessages = mockRow('key2', 'key0') as Row<Variable>;
+
+const variables = [
+  variable('NameNode0', []),
+  variable('NameNode1', [
+    variable('NameNode10', []),
+    variable('NameNode11', [
+      variable('NameNode110', [])
+    ])
+  ])
+];
 
 beforeEach(() => {
   validationMessages = [
@@ -94,18 +111,59 @@ describe('validaton-utils', () => {
       expect(validateName('Name', ['AnotherName'])).toBeUndefined();
     });
 
-    describe('blank', () => {
-      test('empty', () => {
-        expect(validateName('', [])).toEqual('Name cannot be empty.');
+    describe('invalid', () => {
+      describe('blank', () => {
+        test('empty', () => {
+          expect(validateName('', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
+        });
+
+        test('whitespace', () => {
+          expect(validateName('   ', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
+        });
       });
 
-      test('whitespace', () => {
-        expect(validateName('   ', [])).toEqual('Name cannot be empty.');
+      test('taken', () => {
+        expect(validateName('Name', ['Name'])).toEqual({ message: 'Name is already present in this Namespace.', variant: 'error' });
+      });
+    });
+  });
+
+  describe('validateNamespace', () => {
+    describe('valid', () => {
+      test('empty', () => {
+        expect(validateNamespace('', variables)).toBeUndefined();
+      });
+
+      test('completelyNew', () => {
+        expect(validateNamespace('New.Namespace', variables)).toBeUndefined();
+      });
+
+      test('partiallyNew', () => {
+        expect(validateNamespace('NameNode1.New.Namespace', variables)).toBeUndefined();
       });
     });
 
-    test('taken', () => {
-      expect(validateName('Name', ['Name'])).toEqual('Name is already present in this Namespace.');
+    describe('invalid', () => {
+      test('firstPartIsNotAFolder', () => {
+        expect(validateNamespace('NameNode0.New.Namespace', variables)).toEqual({
+          message: "Namespace 'NameNode0' is already present but not a folder.",
+          variant: 'error'
+        });
+      });
+
+      test('middlePartIsNotAFolder', () => {
+        expect(validateNamespace('NameNode1.NameNode10.New.Namespace', variables)).toEqual({
+          message: "Namespace 'NameNode1.NameNode10' is already present but not a folder.",
+          variant: 'error'
+        });
+      });
+
+      test('lastPartIsNotAFolder', () => {
+        expect(validateNamespace('NameNode1.NameNode11.NameNode110', variables)).toEqual({
+          message: "Namespace 'NameNode1.NameNode11.NameNode110' is already present but not a folder.",
+          variant: 'error'
+        });
+      });
     });
   });
 });
