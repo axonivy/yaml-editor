@@ -2,7 +2,6 @@ import type { RowSelectionState, Table, Updater } from '@tanstack/react-table';
 import { createRow, createTable, getCoreRowModel } from '@tanstack/react-table';
 import type { TestNode } from './test-utils/types';
 import {
-  addChildToFirstSelectedRow,
   deleteFirstSelectedRow,
   getPathOfRow,
   keyOfFirstSelectedNonLeafRow,
@@ -10,6 +9,7 @@ import {
   keysOfAllNonLeafRows,
   newNodeName,
   subRowNamesOfRow,
+  toRowId,
   treeGlobalFilter
 } from './tree';
 
@@ -64,40 +64,6 @@ beforeEach(() => {
 });
 
 describe('tree', () => {
-  describe('addChildToFirstSelectedRow', () => {
-    test('selection', () => {
-      const originalData = structuredClone(data);
-      table.getState().rowSelection = { '1.1': true };
-      const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, data, newNode);
-      const newData = addChildToFirstSelectedRowReturnValue.newData;
-      const selectedNode = addChildToFirstSelectedRowReturnValue.selectedNode;
-      const newChildPath = addChildToFirstSelectedRowReturnValue.newChildPath;
-      expect(data).toEqual(originalData);
-      expect(newData).not.toBe(data);
-      expect(selectedNode).toEqual(newData[1].children[1]);
-      expect(newChildPath).toEqual([1, 1, 1]);
-      expect(newData[1].children[1].children).toHaveLength(2);
-      expect(newData[1].children[1].children[1]).toEqual(newNode);
-      expect(onRowSelectionChangeValue).toEqual({ '1.1.1': true });
-    });
-
-    test('noSelection', () => {
-      const originalData = structuredClone(data);
-      table.getState().rowSelection = {};
-      const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, data, newNode);
-      const newData = addChildToFirstSelectedRowReturnValue.newData;
-      const selectedNode = addChildToFirstSelectedRowReturnValue.selectedNode;
-      const newChildPath = addChildToFirstSelectedRowReturnValue.newChildPath;
-      expect(data).toEqual(originalData);
-      expect(newData).not.toBe(data);
-      expect(selectedNode).toBeUndefined();
-      expect(newChildPath).toEqual([3]);
-      expect(newData).toHaveLength(4);
-      expect(newData[3]).toEqual(newNode);
-      expect(onRowSelectionChangeValue).toEqual({ '3': true });
-    });
-  });
-
   describe('deleteFirstSelectedRow', () => {
     describe('selection', () => {
       describe('root', () => {
@@ -216,6 +182,16 @@ describe('tree', () => {
 
     test('missing', () => {
       expect(getPathOfRow(undefined)).toEqual([]);
+    });
+  });
+
+  describe('toRowId', () => {
+    test('default', () => {
+      expect(toRowId([1, 3, 3, 7])).toEqual('1.3.3.7');
+    });
+
+    test('empty', () => {
+      expect(toRowId([])).toEqual('');
     });
   });
 

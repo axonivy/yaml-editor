@@ -26,6 +26,10 @@ export class Combobox {
     await this.page.getByRole('option', { name: value }).first().click();
   }
 
+  async blur() {
+    this.locator.blur();
+  }
+
   async expectValue(value: string | RegExp) {
     await expect(this.locator).toHaveValue(value);
   }

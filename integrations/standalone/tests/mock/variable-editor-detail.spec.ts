@@ -1,5 +1,5 @@
-import { VariableEditor } from '../pageobjects/VariableEditor';
 import { expect, test } from '@playwright/test';
+import { VariableEditor } from '../pageobjects/VariableEditor';
 
 test.describe('VariableEditor Detail', () => {
   let editor: VariableEditor;
@@ -13,7 +13,7 @@ test.describe('VariableEditor Detail', () => {
     await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
+    await details.expectTitle('Variables Editor - NewVariable');
 
     await details.fill('myName', 'myValue', 'This is myName with a value of myValue');
 
@@ -33,7 +33,7 @@ test.describe('VariableEditor Detail', () => {
     await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
+    await details.expectTitle('Variables Editor - NewVariable');
 
     await details.fill('myName', 'myValue', 'This is myName with a value of myValue', 'Password');
 
@@ -53,7 +53,7 @@ test.describe('VariableEditor Detail', () => {
     await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
+    await details.expectTitle('Variables Editor - NewVariable');
 
     await details.fill('myName', '12:15', 'This is myName with a value of myValue', 'Daytime');
 
@@ -73,7 +73,7 @@ test.describe('VariableEditor Detail', () => {
     await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
+    await details.expectTitle('Variables Editor - NewVariable');
 
     await details.fill('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
     await details.fileNameExtension.choose('txt');
@@ -96,7 +96,7 @@ test.describe('VariableEditor Detail', () => {
     await editor.addVariable();
     await editor.tree.row(11).click();
     const details = editor.details;
-    await details.expectTitle('Variables Editor - ');
+    await details.expectTitle('Variables Editor - NewVariable');
 
     await details.fill('myName', 'Monday', 'This is myName with a value of Monday', 'Enum');
 

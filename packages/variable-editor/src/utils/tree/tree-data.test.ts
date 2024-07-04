@@ -1,10 +1,9 @@
-import type { TestNode } from './test-utils/types';
+import { TestNodeFactory, type TestNode } from './test-utils/types';
 import { addNode, getNode, getNodesOnPath, hasChildren, removeNode, updateNode } from './tree-data';
 import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from './types';
 
 let data: Array<TestNode>;
 let nodeUpdates: TreeNodeUpdates<TestNode>;
-let newNode: TestNode;
 
 beforeEach(() => {
   data = [
@@ -13,15 +12,15 @@ beforeEach(() => {
       name: 'NameNode1',
       value: 'ValueNode1',
       children: [
-        { name: 'NameNode1.0', value: 'ValueNode1.0', children: [] },
+        { name: 'NameNode10', value: 'ValueNode10', children: [] },
         {
-          name: 'NameNode1.1',
-          value: 'ValueNode1.1',
+          name: 'NameNode11',
+          value: 'ValueNode11',
           children: [
             {
-              name: 'NameNode1.1.0',
-              value: 'ValueNode1.1.0',
-              children: [{ name: 'NameNode1.1.0.0', value: 'ValueNode1.1.0.0', children: [] }]
+              name: 'NameNode110',
+              value: 'ValueNode110',
+              children: [{ name: 'NameNode1100', value: 'ValueNode1100', children: [] }]
             }
           ]
         }
@@ -32,11 +31,6 @@ beforeEach(() => {
     { key: treeNodeNameAttribute, value: 'newName' },
     { key: treeNodeValueAttribute, value: 'newValue' }
   ];
-  newNode = {
-    name: 'newNodeName',
-    value: 'newNodeValue',
-    children: []
-  };
 });
 
 describe('tree-data', () => {
@@ -119,42 +113,60 @@ describe('tree-data', () => {
   });
 
   describe('addNode', () => {
-    describe('present', () => {
-      test('root', () => {
-        const originalData = structuredClone(data);
-        const addNodeReturnValue = addNode(data, [], newNode);
-        const newData = addNodeReturnValue.newData;
-        const newChildIndex = addNodeReturnValue.newChildIndex;
-        expect(data).toEqual(originalData);
-        expect(newData).not.toBe(data);
-        expect(newChildIndex).toEqual(2);
-        expect(newData).toHaveLength(3);
-        expect(newData[2]).toEqual(newNode);
-      });
-
-      test('deep', () => {
-        const originalData = structuredClone(data);
-        const addNodeReturnValue = addNode(data, [1, 1], newNode);
-        const newData = addNodeReturnValue.newData;
-        const newChildIndex = addNodeReturnValue.newChildIndex;
-        expect(data).toEqual(originalData);
-        expect(newData).not.toBe(data);
-        expect(newChildIndex).toEqual(1);
-        expect(newData[1].children[1].children).toHaveLength(2);
-        expect(newData[1].children[1].children[1]).toEqual(newNode);
-      });
-    });
-
-    test('missing', () => {
+    test('addToRoot', () => {
       const originalData = structuredClone(data);
-      const addNodeReturnValue = addNode(data, [42], newNode);
+      const addNodeReturnValue = addNode('NewNode', '', data, TestNodeFactory);
       const newData = addNodeReturnValue.newData;
-      const newChildIndex = addNodeReturnValue.newChildIndex;
+      const newNodePath = addNodeReturnValue.newNodePath;
       expect(data).toEqual(originalData);
       expect(newData).not.toBe(data);
-      expect(newChildIndex).toEqual(2);
+      expect(newNodePath).toEqual([2]);
       expect(newData).toHaveLength(3);
-      expect(newData[2]).toEqual(newNode);
+      expect(newData[2].name).toEqual('NewNode');
+    });
+
+    test('addToExisting', () => {
+      const originalData = structuredClone(data);
+      const addNodeReturnValue = addNode('NewNode', 'NameNode1.NameNode11', data, TestNodeFactory);
+      const newData = addNodeReturnValue.newData;
+      const newNodePath = addNodeReturnValue.newNodePath;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newNodePath).toEqual([1, 1, 1]);
+      expect(newData[1].children[1].children).toHaveLength(2);
+      expect(newData[1].children[1].children[1].name).toEqual('NewNode');
+    });
+
+    test('completelyNew', () => {
+      const originalData = structuredClone(data);
+      const addNodeReturnValue = addNode('NewNode', 'New.Namespace', data, TestNodeFactory);
+      const newData = addNodeReturnValue.newData;
+      const newNodePath = addNodeReturnValue.newNodePath;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newNodePath).toEqual([2, 0, 0]);
+      expect(newData).toHaveLength(3);
+      expect(newData[2].name).toEqual('New');
+      expect(newData[2].children).toHaveLength(1);
+      expect(newData[2].children[0].name).toEqual('Namespace');
+      expect(newData[2].children[0].children).toHaveLength(1);
+      expect(newData[2].children[0].children[0].name).toEqual('NewNode');
+    });
+
+    test('partiallyNew', () => {
+      const originalData = structuredClone(data);
+      const addNodeReturnValue = addNode('NewNode', 'NameNode1.NameNode11.New.Namespace', data, TestNodeFactory);
+      const newData = addNodeReturnValue.newData;
+      const newNodePath = addNodeReturnValue.newNodePath;
+      expect(data).toEqual(originalData);
+      expect(newData).not.toBe(data);
+      expect(newNodePath).toEqual([1, 1, 1, 0, 0]);
+      expect(newData[1].children[1].children).toHaveLength(2);
+      expect(newData[1].children[1].children[1].name).toEqual('New');
+      expect(newData[1].children[1].children[1].children).toHaveLength(1);
+      expect(newData[1].children[1].children[1].children[0].name).toEqual('Namespace');
+      expect(newData[1].children[1].children[1].children[0].children).toHaveLength(1);
+      expect(newData[1].children[1].children[1].children[0].children[0].name).toEqual('NewNode');
     });
   });
 
