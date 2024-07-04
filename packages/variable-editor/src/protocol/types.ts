@@ -1,5 +1,5 @@
 export type Data = { context: DataContext; data: string };
-export type DataContext = { app: string; pmv: string; file: string };
+export type DataContext = { app: string; pmv: string; file: string; directSave?: boolean };
 
 export type ValidationMessage = { message: string; path: string; severity: number };
 export type ValidationMessages = Array<ValidationMessage>;
