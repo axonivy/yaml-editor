@@ -8,12 +8,12 @@ import { toContent, toVariables } from './components/variables/data/variable-uti
 import { VariablesDetail } from './components/variables/detail/VariablesDetail';
 import { VariablesMaster } from './components/variables/master/VariablesMaster';
 import { useClient } from './protocol/ClientContextProvider';
-import type { Data, DataContext, ValidationMessages } from './protocol/types';
+import type { Data, EditorProps, ValidationMessages } from './protocol/types';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 
-function VariableEditor(props: { context: DataContext; directSave?: boolean }) {
+function VariableEditor(props: EditorProps) {
   const [context, setContext] = useState(props.context);
   const [directSave, setDirectSave] = useState(props.directSave);
   useEffect(() => {

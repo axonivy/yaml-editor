@@ -1,5 +1,6 @@
 export type Data = { context: DataContext; data: string };
 export type DataContext = { app: string; pmv: string; file: string };
+export type EditorProps = { context: DataContext; directSave?: boolean };
 export type SaveArgs = Data & { directSave?: boolean };
 
 export type ValidationMessage = { message: string; path: string; severity: number };
