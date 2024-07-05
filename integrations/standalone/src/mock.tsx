@@ -14,7 +14,7 @@ root.render(
     <ThemeProvider defaultTheme={'light'}>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
-          <VariableEditor app={''} pmv={''} file={''} />
+          <VariableEditor context={{ app: '', pmv: '', file: '' }} />
         </QueryProvider>
       </ClientContextProvider>
     </ThemeProvider>
