@@ -19,15 +19,12 @@ export class Combobox {
 
   async fill(value: string) {
     await this.locator.fill(value);
+    await this.locator.blur();
   }
 
   async choose(value: string) {
     await this.toggleMenu.click();
     await this.page.getByRole('option', { name: value }).first().click();
-  }
-
-  async blur() {
-    this.locator.blur();
   }
 
   async expectValue(value: string | RegExp) {

@@ -72,7 +72,6 @@ export class VariableEditor {
     }
     if (namespace) {
       await this.add.namespace.fill(namespace);
-      await this.add.namespace.blur();
     }
     await this.add.createVariable();
   }
