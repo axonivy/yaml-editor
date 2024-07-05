@@ -80,10 +80,11 @@ test.describe('VariableEditor', () => {
   });
 
   test('add', async () => {
-    await tree.row(5).click();
-    await tree.row(5).expectValues(['useUserPassFlow', '']);
-    await editor.addVariable();
-    await tree.expectRowCount(12);
+    await editor.addVariable('NewVariable', 'microsoft-connector.New.Namespace');
+    await tree.expectRowCount(14);
+    await tree.row(11).expectValues(['New', '']);
+    await tree.row(12).expectValues(['Namespace', '']);
+    await tree.row(13).expectValues(['NewVariable', '']);
   });
 
   test('addVariableDialogDefaultValues', async () => {

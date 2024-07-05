@@ -15,16 +15,12 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
-import {
-  addChildToFirstSelectedRow,
-  keyOfFirstSelectedNonLeafRow,
-  keysOfAllNonLeafRows,
-  newNodeName,
-  subRowNamesOfRow
-} from '../../../utils/tree/tree';
+import { selectRow } from '../../../utils/table/table';
+import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
+import { addNode } from '../../../utils/tree/tree-data';
 import type { TreePath } from '../../../utils/tree/types';
 import { validateName, validateNamespace } from '../data/validation-utils';
-import type { Variable } from '../data/variable';
+import { VariableFactory, type Variable } from '../data/variable';
 import './AddVariableDialog.css';
 
 type AddVariableDialogProps = {
@@ -58,23 +54,10 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
   };
 
   const addVariable = () => {
-    const newVariable: Variable = {
-      name: '',
-      value: '',
-      description: '',
-      metadata: { type: '' },
-      children: []
-    };
-
-    const addChildToFirstSelectedRowReturnValue = addChildToFirstSelectedRow(table, variables, newVariable);
-    const parentNode = addChildToFirstSelectedRowReturnValue.selectedNode;
-    if (parentNode) {
-      parentNode.value = '';
-      parentNode.metadata = { type: '' };
-    }
-
-    setSelectedVariablePath(addChildToFirstSelectedRowReturnValue.newChildPath);
-    setVariables(addChildToFirstSelectedRowReturnValue.newData);
+    const addNodeReturnValue = addNode(name, namespace, variables, VariableFactory);
+    selectRow(table, toRowId(addNodeReturnValue.newNodePath));
+    setSelectedVariablePath(addNodeReturnValue.newNodePath);
+    setVariables(addNodeReturnValue.newData);
   };
 
   const allInputsValid = () => {

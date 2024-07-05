@@ -1,4 +1,4 @@
-import type { AddNodeReturnType, TreeNode, TreeNodeUpdates, TreePath } from './types';
+import type { AddNodeReturnType, TreeNode, TreeNodeFactory, TreeNodeUpdates, TreePath } from './types';
 
 export const getNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path?: TreePath) => {
   const nodes = getNodesOnPath(data, path);
@@ -38,19 +38,36 @@ export const updateNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, pa
   return newData;
 };
 
-export const addNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath, newNode: TNode): AddNodeReturnType<TNode> => {
+export const addNode = <TNode extends TreeNode<TNode>>(
+  name: string,
+  key: string,
+  data: Array<TNode>,
+  treeNodeFactory: TreeNodeFactory<TNode>
+): AddNodeReturnType<TNode> => {
   const newData = structuredClone(data);
-  const node = getNode(newData, path);
-  let newChildIndex;
-  if (!node) {
-    newData.push(newNode);
-    newChildIndex = newData.length - 1;
-  } else {
-    const children = node.children;
-    children.push(newNode);
-    newChildIndex = children.length - 1;
+  let currentChildren = newData;
+  const newNodePath: TreePath = [];
+
+  if (key !== '') {
+    for (const keyPart of key.split('.')) {
+      const nextNodeIndex = currentChildren.findIndex(node => node.name === keyPart);
+      if (nextNodeIndex === -1) {
+        currentChildren = pushNewNode(currentChildren, treeNodeFactory(keyPart), newNodePath);
+      } else {
+        newNodePath.push(nextNodeIndex);
+        currentChildren = currentChildren[nextNodeIndex].children;
+      }
+    }
   }
-  return { newData: newData, newChildIndex: newChildIndex };
+
+  pushNewNode(currentChildren, treeNodeFactory(name), newNodePath);
+  return { newData: newData, newNodePath: newNodePath };
+};
+
+const pushNewNode = <TNode extends TreeNode<TNode>>(nodes: Array<TNode>, newNode: TNode, newNodePath: TreePath) => {
+  newNodePath.push(nodes.length);
+  nodes.push(newNode);
+  return newNode.children;
 };
 
 export const removeNode = <TNode extends TreeNode<TNode>>(data: Array<TNode>, path: TreePath) => {

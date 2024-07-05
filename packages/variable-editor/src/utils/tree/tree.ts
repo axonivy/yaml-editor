@@ -1,23 +1,8 @@
 import { useTableGlobalFilter } from '@axonivy/ui-components';
 import type { Row, Table } from '@tanstack/react-table';
 import { getFirstSelectedRow, selectRow } from '../table/table';
-import { addNode, getNode, getNodesOnPath, removeNode } from './tree-data';
-import type { AddChildToFirstSelectedRowReturnType, DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from './types';
-
-export const addChildToFirstSelectedRow = <TNode extends TreeNode<TNode>>(
-  table: Table<TNode>,
-  data: Array<TNode>,
-  newNode: TNode
-): AddChildToFirstSelectedRowReturnType<TNode> => {
-  const row = getFirstSelectedRow(table);
-  const path = getPathOfRow(row);
-  const addNodeReturnValue = addNode(data, path, newNode);
-  const newData = addNodeReturnValue.newData;
-  const newChildIndex = addNodeReturnValue.newChildIndex;
-  const newChildId = toRowId([...path, newChildIndex]);
-  selectRow(table, newChildId);
-  return { newData: newData, selectedNode: getNode(newData, path), newChildPath: [...path, newChildIndex] };
-};
+import { getNode, getNodesOnPath, removeNode } from './tree-data';
+import type { DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from './types';
 
 export const deleteFirstSelectedRow = <TNode extends TreeNode<TNode>>(
   table: Table<TNode>,
@@ -77,7 +62,7 @@ const toTreePath = (rowId: string) => {
   return rowId.split('.').map(index => Number(index));
 };
 
-const toRowId = (path: TreePath) => {
+export const toRowId = (path: TreePath) => {
   return path.join('.');
 };
 

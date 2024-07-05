@@ -65,8 +65,14 @@ export class VariableEditor {
     await this.page.addStyleTag({ content: `.tsqd-parent-container { display: none; }` });
   }
 
-  async addVariable() {
+  async addVariable(name?: string, namespace?: string) {
     await this.add.open();
+    if (name) {
+      await this.add.name.fill(name);
+    }
+    if (namespace) {
+      await this.add.namespace.fill(namespace);
+    }
     await this.add.createVariable();
   }
 }

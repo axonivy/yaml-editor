@@ -7,6 +7,8 @@ export type TreeNode<TNode extends TreeNode<TNode>> = {
   value: string;
   children: Array<TNode>;
 };
+export type TreeNodeFactory<TreeNode> = (name: string) => TreeNode;
+
 export type TreeNodeUpdate<TNode extends TreeNode<TNode>> = {
   [TKey in keyof TNode]: {
     key: TKey;
@@ -21,5 +23,5 @@ export type AddChildToFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> 
   selectedNode?: TNode;
   newChildPath: TreePath;
 };
-export type AddNodeReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; newChildIndex: number };
+export type AddNodeReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; newNodePath: TreePath };
 export type DeleteFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; selectedVariablePath: TreePath };

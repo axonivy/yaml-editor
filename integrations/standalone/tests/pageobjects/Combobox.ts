@@ -19,6 +19,7 @@ export class Combobox {
 
   async fill(value: string) {
     await this.locator.fill(value);
+    await this.locator.blur();
   }
 
   async choose(value: string) {
