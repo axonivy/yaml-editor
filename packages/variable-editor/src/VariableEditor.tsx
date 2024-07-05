@@ -8,15 +8,17 @@ import { toContent, toVariables } from './components/variables/data/variable-uti
 import { VariablesDetail } from './components/variables/detail/VariablesDetail';
 import { VariablesMaster } from './components/variables/master/VariablesMaster';
 import { useClient } from './protocol/ClientContextProvider';
-import type { Data, DataContext, ValidationMessages } from './protocol/types';
+import type { Data, EditorProps, ValidationMessages } from './protocol/types';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 
-function VariableEditor(props: DataContext) {
-  const [context, setContext] = useState(props);
+function VariableEditor(props: EditorProps) {
+  const [context, setContext] = useState(props.context);
+  const [directSave, setDirectSave] = useState(props.directSave);
   useEffect(() => {
-    setContext(props);
+    setContext(props.context);
+    setDirectSave(props.directSave);
   }, [props]);
   const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
   const [validationMessages, setValidationMessages] = useState<ValidationMessages>();
@@ -57,7 +59,7 @@ function VariableEditor(props: DataContext) {
         return undefined;
       });
       if (saveData) {
-        const data = await client.saveData({ context, data: saveData.data });
+        const data = await client.saveData({ context, data: saveData.data, directSave });
         return setValidationMessages(data);
       }
       return Promise.resolve();
