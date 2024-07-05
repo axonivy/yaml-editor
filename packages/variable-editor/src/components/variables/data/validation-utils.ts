@@ -43,6 +43,9 @@ export const validateName = (name: string, takenNames: Array<string>): MessageDa
   if (takenNames.includes(name)) {
     return toErrorMessage('Name is already present in this Namespace.');
   }
+  if (name.includes('.')) {
+    return toErrorMessage("Character '.' is not allowed.");
+  }
 };
 
 export const validateNamespace = (namespace: string, variables: Array<Variable>): MessageData => {

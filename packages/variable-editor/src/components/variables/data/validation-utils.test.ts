@@ -125,6 +125,10 @@ describe('validaton-utils', () => {
       test('taken', () => {
         expect(validateName('Name', ['Name'])).toEqual({ message: 'Name is already present in this Namespace.', variant: 'error' });
       });
+
+      test('containsDot', () => {
+        expect(validateName('New.Name', [])).toEqual({ message: "Character '.' is not allowed.", variant: 'error' });
+      });
     });
   });
 
