@@ -36,6 +36,25 @@ test.describe('VariableEditor', () => {
     await tree.validation(0).expectText('Not ivy.var field compliant: Invalid character . at position 6 in hello.world.');
   });
 
+  test('overwritables', async () => {
+    const tree = editor.tree;
+    await tree.expectRowCount(4);
+
+    const overwrite = editor.overwrite;
+    await overwrite.open();
+    const variables = overwrite.variables;
+    await variables.cell(0, 0).expectValue('Amazon');
+    await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
+    await variables.cell(1, 0).expand();
+    await variables.cell(2, 0).expectValue('SecretKeySecret key to access amazon comprehend');
+    await variables.row(2).click();
+    await overwrite.applyBtn.click();
+    await overwrite.expectClosed();
+
+    const details = editor.details;
+    await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+  });
+
   test('load data', async () => {
     const tree = editor.tree;
     const details = editor.details;

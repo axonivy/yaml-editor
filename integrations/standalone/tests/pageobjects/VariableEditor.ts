@@ -5,6 +5,7 @@ import { Details } from './Details';
 import { Settings } from './Settings';
 import { Table } from './Table';
 import { TextArea } from './TextArea';
+import { OverwriteDialog } from './OverwriteDialog';
 
 export class VariableEditor {
   readonly page: Page;
@@ -17,6 +18,7 @@ export class VariableEditor {
   readonly details: Details;
   readonly detailsToggle: Button;
   readonly masterPanel: Locator;
+  readonly overwrite: OverwriteDialog;
 
   constructor(page: Page) {
     this.page = page;
@@ -26,6 +28,7 @@ export class VariableEditor {
     this.tree = new Table(page, this.locator, ['label', 'label']);
     this.delete = new Button(this.locator, { name: 'Delete variable' });
     this.add = new AddVariableDialog(page, this.locator);
+    this.overwrite = new OverwriteDialog(page, this.locator);
     this.settings = new Settings(this.locator);
     this.details = new Details(this.page, this.locator);
     this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
