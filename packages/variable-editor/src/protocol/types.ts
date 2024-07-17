@@ -1,7 +1,12 @@
 export type Data = { context: DataContext; data: string };
-export type VarType = { format: number };
-export type VarMeta = { type: VarType; description: string };
-export type ProjectVarNode = { name: string; value: string; meta: VarMeta; children: Array<ProjectVarNode> };
+export type ProjectVarNode = {
+  key: string;
+  name: string;
+  value: string;
+  description: string;
+  type: string;
+  children: Array<ProjectVarNode>;
+};
 export type DataContext = { app: string; pmv: string; file: string };
 export type EditorProps = { context: DataContext; directSave?: boolean };
 export type SaveArgs = Data & { directSave?: boolean };

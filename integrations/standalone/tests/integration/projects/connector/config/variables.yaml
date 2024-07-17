@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://json-schema.axonivy.com/app/11.4.1/variables.json
+Variables:
+
+  Amazon:
+    # Amazon comprehend connector settings
+    Comprehend:
+
+      # Secret key to access amazon comprehend 
+      # [password]    
+      SecretKey: <YOUR_SECRET_KEY>
+    
+      # Access key to access amazon comprehend
+      AccessKey: <YOUR_ACCESS_KEY>

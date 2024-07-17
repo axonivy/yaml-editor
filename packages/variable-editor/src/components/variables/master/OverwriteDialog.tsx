@@ -11,7 +11,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import type { ProjectVarNode } from '../../../protocol/types';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { nodeIcon } from '../data/variable-utils';
 
 type OverwriteProps = {
@@ -28,22 +28,40 @@ const toNodes = (overwritables?: ProjectVarNode): Array<BrowserNode> => {
 const toNode = (node: ProjectVarNode): BrowserNode => {
   const c = node.children.map(child => toNode(child));
   const icon = nodeIcon(node);
-  let value = node.value;
-  if (node.meta?.type?.format === 3) {
-    value = '***';
-  }
-  const info = value === '' ? node.meta.description : value + ' - ' + node.meta.description;
+  const info = node.description;
   return {
     value: node.name,
     info: info,
     icon: icon,
+    data: node,
     children: c
   };
 };
 
+const insertVariable = (node?: ProjectVarNode): void => {
+  console.log(node);
+};
+
+const info = (node?: ProjectVarNode): ReactNode => {
+  let value = node?.value;
+  if (value !== undefined && node?.type == 'password') {
+    value = '***';
+  }
+  if (value !== undefined && value !== '') {
+    value = node?.name + ' = ' + value;
+  }
+  return (
+    <div>
+      <div>{node?.key}</div>
+      <div>{node?.description}</div>
+      <div>{value}</div>
+    </div>
+  );
+};
+
 export const OverwriteDialog = ({ overwritables }: OverwriteProps) => {
   const nodes = toNodes(overwritables);
-  const VariableBrowser = ({ applyFn }: { applyFn?: (value?: string) => void }) => {
+  const VariableBrowser = ({ applyFn }: { applyFn: (node?: ProjectVarNode) => void }) => {
     const variableBrowser = useBrowser(nodes);
     return (
       <BrowsersView
@@ -53,13 +71,12 @@ export const OverwriteDialog = ({ overwritables }: OverwriteProps) => {
             icon: IvyIcons.Bend,
             browser: variableBrowser,
             infoProvider: row => {
-              return row?.original.value + ' - ' + row?.original.info;
+              return info(row?.original.data as ProjectVarNode);
             }
           }
         ]}
-        apply={(value, type) => {
-          console.log('apply', value, type);
-          if (applyFn) applyFn(value?.cursor);
+        apply={value => {
+          applyFn(value?.data as ProjectVarNode);
         }}
       />
     );
@@ -77,7 +94,8 @@ export const OverwriteDialog = ({ overwritables }: OverwriteProps) => {
           <DialogTitle>Overwrite variable from dependent projects</DialogTitle>
         </DialogHeader>
         <VariableBrowser
-          applyFn={() => {
+          applyFn={node => {
+            insertVariable(node);
             setDialogState(false);
           }}
         />

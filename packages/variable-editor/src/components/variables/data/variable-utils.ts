@@ -256,8 +256,17 @@ export const variableIcon = (variable: Variable) => {
   if (hasChildren(variable)) {
     return IvyIcons.FolderOpen;
   }
+  return icon(variable.metadata.type);
+};
 
-  switch (variable.metadata.type) {
+export const nodeIcon = (variableNode: ProjectVarNode) => {
+  return icon(variableNode.type);
+};
+
+const icon = (type: string) => {
+  switch (type) {
+    case 'folder':
+      return IvyIcons.FolderOpen;
     case 'password':
       return IvyIcons.Password;
     case 'daytime':
@@ -265,24 +274,6 @@ export const variableIcon = (variable: Variable) => {
     case 'enum':
       return IvyIcons.List;
     case 'file':
-      return IvyIcons.Note;
-    default:
-      return IvyIcons.Quote;
-  }
-};
-
-export const nodeIcon = (variableNode: ProjectVarNode) => {
-  if (variableNode.children.length > 0) {
-    return IvyIcons.FolderOpen;
-  }
-  switch (variableNode.meta.type.format) {
-    case 3:
-      return IvyIcons.Password;
-    case 4:
-      return IvyIcons.CalendarTime;
-    case 5:
-      return IvyIcons.List;
-    case 6:
       return IvyIcons.Note;
     default:
       return IvyIcons.Quote;

@@ -24,7 +24,7 @@ pipeline {
         script {
           docker.build('node-webtest', '-f build/playwright/Dockerfile .').inside {
             sh 'npm install'
-            dir ('integrations/standalone/tests/integration/project') {
+            dir ('integrations/standalone/tests/integration/projects/variables') {
               maven cmd: "-ntp clean verify -Dengine.page.url=${params.engineSource}"
             }
           }
