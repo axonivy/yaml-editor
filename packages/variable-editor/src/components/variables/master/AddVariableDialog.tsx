@@ -74,7 +74,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
           aria-label='Add variable'
         />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>New Variable</DialogTitle>
         </DialogHeader>

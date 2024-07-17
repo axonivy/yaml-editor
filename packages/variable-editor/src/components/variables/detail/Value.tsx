@@ -1,4 +1,4 @@
-import { Fieldset, Input, SimpleSelect } from '@axonivy/ui-components';
+import { BasicSelect, Fieldset, Input } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { PasswordInput } from '../../input/PasswordInput';
@@ -38,7 +38,7 @@ export const Value = ({ variable, onChange }: ValueFieldsetProps) => {
         );
       case 'enum':
         return (
-          <SimpleSelect
+          <BasicSelect
             value={variable.value}
             items={enumSelectItems}
             emptyItem={true}
@@ -46,7 +46,13 @@ export const Value = ({ variable, onChange }: ValueFieldsetProps) => {
           />
         );
       default:
-        return <Input value={variable.value} onChange={event => onChange([{ key: treeNodeValueAttribute, value: event.target.value }])} />;
+        return (
+          <Input
+            value={variable.value}
+            onChange={event => onChange([{ key: treeNodeValueAttribute, value: event.target.value }])}
+            autoFocus={variable.value.length === 0}
+          />
+        );
     }
   };
 

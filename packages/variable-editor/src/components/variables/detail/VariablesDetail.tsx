@@ -31,7 +31,6 @@ export const VariablesDetail = ({ variables, variablePath, setVariables }: Varia
         <Input
           value={variable.name}
           onChange={event => handleVariableAttributeChange([{ key: treeNodeNameAttribute, value: event.target.value }])}
-          autoFocus={variable.name.length === 0}
         />
       </Fieldset>
       {!hasChildren && <Value variable={variable} onChange={handleVariableAttributeChange} />}
