@@ -22,14 +22,14 @@ import { toRowId } from '../../../utils/tree/tree';
 import { isMetadataType, type MetadataType } from '../data/metadata';
 
 type OverwriteProps = {
-  overwritables?: ProjectVarNode;
+  knownVariables?: ProjectVarNode;
   table: Table<Variable>;
   variables: Array<Variable>;
   setVariables: (variables: Array<Variable>) => void;
   setSelectedVariablePath: (path: TreePath) => void;
 };
 
-export const OverwriteDialog = ({ overwritables, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
+export const OverwriteDialog = ({ knownVariables, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
   const toNode = (node: ProjectVarNode): BrowserNode => {
     const c = node.children.map(child => toNode(child));
     const icon = nodeIcon(node);
@@ -44,10 +44,10 @@ export const OverwriteDialog = ({ overwritables, table, variables, setVariables,
   };
 
   const toNodes = (): Array<BrowserNode> => {
-    if (!overwritables) {
+    if (!knownVariables) {
       return [];
     }
-    return overwritables.children.map(varNode => toNode(varNode));
+    return knownVariables.children.map(varNode => toNode(varNode));
   };
 
   const nodes = toNodes();

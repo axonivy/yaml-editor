@@ -30,7 +30,7 @@ type VariablesProps = {
   setVariables: (variables: Array<Variable>) => void;
   setSelectedVariablePath: (path: TreePath) => void;
   validationMessages?: ValidationMessages;
-  overwritables?: ProjectVarNode;
+  knownVariables?: ProjectVarNode;
 };
 
 export const VariablesMaster = ({
@@ -38,7 +38,7 @@ export const VariablesMaster = ({
   setVariables,
   setSelectedVariablePath,
   validationMessages,
-  overwritables
+  knownVariables
 }: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
@@ -93,7 +93,7 @@ export const VariablesMaster = ({
         setSelectedVariablePath={setSelectedVariablePath}
       />,
       <OverwriteDialog
-        overwritables={overwritables}
+        knownVariables={knownVariables}
         table={table}
         variables={variables}
         setVariables={setVariables}

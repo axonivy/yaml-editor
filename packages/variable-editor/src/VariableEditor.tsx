@@ -31,7 +31,7 @@ function VariableEditor(props: EditorProps) {
       data: () => ['variable-editor', 'data', context],
       saveData: () => ['saveData'],
       validate: () => ['validate'],
-      overwritables: () => ['overwritables']
+      knownVariables: () => ['meta/knownVariables']
     };
   }, [context]);
 
@@ -41,9 +41,9 @@ function VariableEditor(props: EditorProps) {
     structuralSharing: false
   });
 
-  const { data: overwritables } = useQuery({
-    queryKey: queryKeys.overwritables(),
-    queryFn: () => client.overwritables(context)
+  const { data: knownVariables } = useQuery({
+    queryKey: queryKeys.knownVariables(),
+    queryFn: () => client.meta('meta/knownVariables', context)
   });
 
   useQuery({
@@ -103,7 +103,7 @@ function VariableEditor(props: EditorProps) {
           setVariables={setVariables}
           setSelectedVariablePath={setSelectedVariablePath}
           validationMessages={validationMessages}
-          overwritables={overwritables}
+          knownVariables={knownVariables}
         />
       }
       detailTitle={detailTitle}
