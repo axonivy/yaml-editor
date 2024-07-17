@@ -125,7 +125,7 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
       </DialogTrigger>
       <DialogContent style={{ height: '40vh', gridTemplateRows: 'auto 1fr auto' }}>
         <DialogHeader>
-          <DialogTitle>Overwrite variable from dependent projects</DialogTitle>
+          <DialogTitle>Import and overwrite variable from required projects</DialogTitle>
         </DialogHeader>
         <VariableBrowser
           applyFn={node => {

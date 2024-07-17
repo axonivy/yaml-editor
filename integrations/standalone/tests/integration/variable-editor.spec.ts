@@ -36,7 +36,7 @@ test.describe('VariableEditor', () => {
     await tree.validation(0).expectText('Not ivy.var field compliant: Invalid character . at position 6 in hello.world.');
   });
 
-  test('overwritables', async () => {
+  test('importAndOverwrite', async () => {
     const tree = editor.tree;
     await tree.expectRowCount(4);
 
