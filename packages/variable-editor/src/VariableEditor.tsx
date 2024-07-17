@@ -30,7 +30,8 @@ function VariableEditor(props: EditorProps) {
     return {
       data: () => ['variable-editor', 'data', context],
       saveData: () => ['saveData'],
-      validate: () => ['validate']
+      validate: () => ['validate'],
+      overwritables: () => ['overwritables']
     };
   }, [context]);
 
@@ -38,6 +39,11 @@ function VariableEditor(props: EditorProps) {
     queryKey: queryKeys.data(),
     queryFn: () => client.data(context),
     structuralSharing: false
+  });
+
+  const { data: overwritables } = useQuery({
+    queryKey: queryKeys.overwritables(),
+    queryFn: () => client.overwritables(context)
   });
 
   useQuery({
@@ -97,6 +103,7 @@ function VariableEditor(props: EditorProps) {
           setVariables={setVariables}
           setSelectedVariablePath={setSelectedVariablePath}
           validationMessages={validationMessages}
+          overwritables={overwritables}
         />
       }
       detailTitle={detailTitle}
