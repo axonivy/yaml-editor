@@ -92,8 +92,13 @@ export const VariablesMaster = ({
         setVariables={setVariables}
         setSelectedVariablePath={setSelectedVariablePath}
       />,
-      <Button key='addButton' icon={IvyIcons.Plus} onClick={addVariable} aria-label='Add variable' />,
-      <OverwriteDialog overwritables={overwritables} />,
+      <OverwriteDialog
+        overwritables={overwritables}
+        table={table}
+        variables={variables}
+        setVariables={setVariables}
+        setSelectedVariablePath={setSelectedVariablePath}
+      />,
       <Button
         key='deleteButton'
         icon={IvyIcons.Trash}
