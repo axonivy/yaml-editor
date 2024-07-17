@@ -5,9 +5,8 @@
   <groupId>ch.ivyteam.variable</groupId>
   <artifactId>integration</artifactId>
   <version>11.4.0-SNAPSHOT</version>
-  <packaging>iar-integration-test</packaging>
+  <packaging>iar</packaging>
   <properties>
-    <engine.test.app>variable-test</engine.test.app>
     <project.build.plugin.version>11.4.0-SNAPSHOT</project.build.plugin.version>
     <engine.page.url>https://product.ivyteam.io/</engine.page.url>
   </properties>
@@ -41,39 +40,7 @@
         <configuration>
           <useLatestMinor>true</useLatestMinor>
           <engineListPageUrl>${engine.page.url}</engineListPageUrl>
-          <deployToEngineApplication>${engine.test.app}</deployToEngineApplication>
-          <additionalVmOptions>-Dglsp.test.mode=true -Ddev.mode=true</additionalVmOptions>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>npm</executable>
-              <arguments>
-                <argument>--prefix</argument>
-                <argument>../../..</argument>
-                <argument>run</argument>
-                <argument>webtest:engine</argument>
-              </arguments>
-              <environmentVariables>
-                <BASE_URL>${test.engine.url}</BASE_URL>
-                <TEST_APP>${engine.test.app}</TEST_APP>
-              </environmentVariables>
-              <successCodes>
-                <successCode>0</successCode>
-                <successCode>1</successCode>
-              </successCodes>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

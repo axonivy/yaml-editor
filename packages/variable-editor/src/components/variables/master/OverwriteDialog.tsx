@@ -85,7 +85,7 @@ export const OverwriteDialog = ({ overwritables, table, variables, setVariables,
         browsers={[
           {
             name: 'Variables',
-            icon: IvyIcons.Bend,
+            icon: IvyIcons.Tool,
             browser: variableBrowser,
             infoProvider: row => {
               return info(row?.original.data as ProjectVarNode);
@@ -123,7 +123,7 @@ export const OverwriteDialog = ({ overwritables, table, variables, setVariables,
       <DialogTrigger asChild>
         <Button icon={IvyIcons.FileImport} aria-label='Overwrite variable' />
       </DialogTrigger>
-      <DialogContent style={{ height: '80vh' }}>
+      <DialogContent style={{ height: '40vh', gridTemplateRows: 'auto 1fr auto' }}>
         <DialogHeader>
           <DialogTitle>Overwrite variable from dependent projects</DialogTitle>
         </DialogHeader>
