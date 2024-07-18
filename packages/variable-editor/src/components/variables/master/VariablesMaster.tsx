@@ -12,7 +12,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import type { ValidationMessages } from '../../../protocol/types';
+import type { ProjectVarNode, ValidationMessages } from '../../../protocol/types';
 import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
@@ -23,15 +23,23 @@ import { variableIcon } from '../data/variable-utils';
 import { AddVariableDialog } from './AddVariableDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMaster.css';
+import { OverwriteDialog } from './OverwriteDialog';
 
 type VariablesProps = {
   variables: Array<Variable>;
   setVariables: (variables: Array<Variable>) => void;
   setSelectedVariablePath: (path: TreePath) => void;
   validationMessages?: ValidationMessages;
+  knownVariables?: ProjectVarNode;
 };
 
-export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePath, validationMessages }: VariablesProps) => {
+export const VariablesMaster = ({
+  variables,
+  setVariables,
+  setSelectedVariablePath,
+  validationMessages,
+  knownVariables
+}: VariablesProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const globalFilter = useTreeGlobalFilter(variables);
@@ -79,6 +87,13 @@ export const VariablesMaster = ({ variables, setVariables, setSelectedVariablePa
     controls.push(
       <AddVariableDialog
         key='addButton'
+        table={table}
+        variables={variables}
+        setVariables={setVariables}
+        setSelectedVariablePath={setSelectedVariablePath}
+      />,
+      <OverwriteDialog
+        knownVariables={knownVariables}
         table={table}
         variables={variables}
         setVariables={setVariables}

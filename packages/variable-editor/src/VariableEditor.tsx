@@ -30,7 +30,8 @@ function VariableEditor(props: EditorProps) {
     return {
       data: () => ['variable-editor', 'data', context],
       saveData: () => ['saveData'],
-      validate: () => ['validate']
+      validate: () => ['validate'],
+      knownVariables: () => ['meta/knownVariables']
     };
   }, [context]);
 
@@ -38,6 +39,11 @@ function VariableEditor(props: EditorProps) {
     queryKey: queryKeys.data(),
     queryFn: () => client.data(context),
     structuralSharing: false
+  });
+
+  const { data: knownVariables } = useQuery({
+    queryKey: queryKeys.knownVariables(),
+    queryFn: () => client.meta('meta/knownVariables', context)
   });
 
   useQuery({
@@ -97,6 +103,7 @@ function VariableEditor(props: EditorProps) {
           setVariables={setVariables}
           setSelectedVariablePath={setSelectedVariablePath}
           validationMessages={validationMessages}
+          knownVariables={knownVariables}
         />
       }
       detailTitle={detailTitle}

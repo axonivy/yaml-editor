@@ -13,6 +13,7 @@ import {
   type MetadataType
 } from './metadata';
 import type { RootVariable, Variable } from './variable';
+import type { ProjectVarNode } from '../../../protocol/types';
 
 export const toVariables = (content: string) => {
   const rootVariable: RootVariable = {
@@ -255,7 +256,17 @@ export const variableIcon = (variable: Variable) => {
   if (hasChildren(variable)) {
     return IvyIcons.FolderOpen;
   }
-  switch (variable.metadata.type) {
+  return icon(variable.metadata.type);
+};
+
+export const nodeIcon = (variableNode: ProjectVarNode) => {
+  return icon(variableNode.type);
+};
+
+const icon = (type: string) => {
+  switch (type) {
+    case 'folder':
+      return IvyIcons.FolderOpen;
     case 'password':
       return IvyIcons.Password;
     case 'daytime':
