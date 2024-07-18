@@ -36,8 +36,8 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
     const info = node.description;
     return {
       value: node.name,
-      info: info,
-      icon: icon,
+      info,
+      icon,
       data: node,
       children: c
     };
@@ -63,7 +63,7 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
       const addNodeReturnValue = addNode(node?.name, namespace, variables, name => {
         if (name === node?.name) {
           return {
-            name: name,
+            name,
             value: node?.value,
             children: [],
             description: node?.description,
