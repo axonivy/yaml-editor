@@ -1,4 +1,4 @@
-import type { Client, Data, Event, ValidationMessages } from '@axonivy/variable-editor/src/protocol/types';
+import type { Client, Data, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor/src/protocol/types';
 
 export class VariablesClientMock implements Client {
   private variablesData: Data = {
@@ -50,6 +50,14 @@ export class VariablesClientMock implements Client {
 
   validate(): Promise<ValidationMessages> {
     return Promise.resolve([]);
+  }
+
+  meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {
+    switch (path) {
+      case 'meta/knownVariables':
+      default:
+        throw Error('mock meta path not programmed');
+    }
   }
 
   onDataChanged: Event<void>;

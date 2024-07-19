@@ -92,8 +92,8 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
             }
           }
         ]}
-        apply={value => {
-          applyFn(value?.data as ProjectVarNode);
+        apply={(type, result) => {
+          applyFn(result?.data as ProjectVarNode);
         }}
       />
     );
