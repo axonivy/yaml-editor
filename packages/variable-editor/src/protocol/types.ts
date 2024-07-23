@@ -22,7 +22,6 @@ export interface RequestTypes extends MetaRequestTypes {
   data: [any, any];
   saveData: [any, any];
   validate: [any, any];
-  overwritables: [any, any];
 }
 
 export interface NotificationTypes {
