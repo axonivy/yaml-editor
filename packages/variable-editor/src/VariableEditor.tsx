@@ -12,6 +12,7 @@ import type { Data, EditorProps, ValidationMessages } from './protocol/types';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
+import { genQueryKey } from './query/query-client';
 
 function VariableEditor(props: EditorProps) {
   const [context, setContext] = useState(props.context);
@@ -28,10 +29,10 @@ function VariableEditor(props: EditorProps) {
 
   const queryKeys = useMemo(() => {
     return {
-      data: () => ['variable-editor', 'data', context],
-      saveData: () => ['saveData'],
-      validate: () => ['validate'],
-      knownVariables: () => ['meta/knownVariables']
+      data: () => genQueryKey('data', context),
+      saveData: () => genQueryKey('saveData', context),
+      validate: () => genQueryKey('validate', context),
+      knownVariables: () => genQueryKey('meta/knownVariables', context)
     };
   }, [context]);
 
