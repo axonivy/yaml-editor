@@ -31,8 +31,7 @@ function VariableEditor(props: EditorProps) {
     return {
       data: () => genQueryKey('data', context),
       saveData: () => genQueryKey('saveData', context),
-      validate: () => genQueryKey('validate', context),
-      knownVariables: () => genQueryKey('meta/knownVariables', context)
+      validate: () => genQueryKey('validate', context)
     };
   }, [context]);
 
@@ -40,11 +39,6 @@ function VariableEditor(props: EditorProps) {
     queryKey: queryKeys.data(),
     queryFn: () => client.data(context),
     structuralSharing: false
-  });
-
-  const { data: knownVariables } = useQuery({
-    queryKey: queryKeys.knownVariables(),
-    queryFn: () => client.meta('meta/knownVariables', context)
   });
 
   useQuery({
@@ -100,11 +94,11 @@ function VariableEditor(props: EditorProps) {
       masterTitle={title}
       masterContent={
         <VariablesMaster
+          context={context}
           variables={rootVariable.children}
           setVariables={setVariables}
           setSelectedVariablePath={setSelectedVariablePath}
           validationMessages={validationMessages}
-          knownVariables={knownVariables}
         />
       }
       detailTitle={detailTitle}
