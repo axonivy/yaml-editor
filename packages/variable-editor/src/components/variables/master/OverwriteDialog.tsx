@@ -68,38 +68,21 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
       };
     }, [context]);
 
-    const { data: knownVariables } = useQuery({
+    const { data: knownVars } = useQuery({
       queryKey: queryKeys.knownVariables(),
       queryFn: () => client.meta('meta/knownVariables', context)
     });
 
+    const [knownVariables, setKnownVariables] = useState<ProjectVarNode>();
+    useEffect(() => {
+      setKnownVariables(knownVars);
+    }, [knownVars]);
+
     const [nodes, setNodes] = useState<BrowserNode[]>([]);
 
-    const toNode = (node: ProjectVarNode): BrowserNode => {
-      const c = node.children.map(child => toNode(child));
-      const icon = nodeIcon(node);
-      const info = node.description;
-      return {
-        value: node.name,
-        info,
-        icon,
-        data: node,
-        children: c
-      };
-    };
-
-    const toNodes = (): Array<BrowserNode> => {
-      if (!knownVariables) {
-        return [];
-      }
-      return knownVariables.children.map(varNode => toNode(varNode));
-    };
-
-    const n = toNodes();
-
     useEffect(() => {
-      setNodes(n);
-    }, [n]);
+      setNodes(toNodes(knownVariables));
+    }, [knownVariables]);
 
     const variableBrowser = useBrowser(nodes);
     return (
@@ -145,7 +128,7 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
       <DialogTrigger asChild>
         <Button icon={IvyIcons.FileImport} aria-label='Overwrite variable' />
       </DialogTrigger>
-      <DialogContent style={{ height: '40vh', gridTemplateRows: 'auto 1fr auto' }}>
+      <DialogContent style={{ height: '60vh', width: '500px', gridTemplateRows: 'auto 1fr auto' }}>
         <DialogHeader>
           <DialogTitle>Import and overwrite variable from required projects</DialogTitle>
         </DialogHeader>
@@ -159,4 +142,24 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
       </DialogContent>
     </Dialog>
   );
+};
+
+const toNode = (node: ProjectVarNode): BrowserNode => {
+  const c = node.children.map(child => toNode(child));
+  const icon = nodeIcon(node);
+  const info = node.description;
+  return {
+    value: node.name,
+    info,
+    icon,
+    data: node,
+    children: c
+  };
+};
+
+const toNodes = (root?: ProjectVarNode): Array<BrowserNode> => {
+  if (!root) {
+    return [];
+  }
+  return root.children.map(varNode => toNode(varNode));
 };
