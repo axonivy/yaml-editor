@@ -10,48 +10,29 @@ import {
   type BrowserNode
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { useState, type ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { type Table } from '@tanstack/react-table';
-import type { ProjectVarNode } from '../../../protocol/types';
-import { addNode } from '../../../utils/tree/tree-data';
-import { VariableFactory, type Variable } from '../data/variable';
-import { nodeIcon } from '../data/variable-utils';
-import type { TreePath } from '../../../utils/tree/types';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useClient } from '../../../protocol';
+import type { DataContext, ProjectVarNode } from '../../../protocol/types';
+import { genQueryKey } from '../../../query';
 import { selectRow } from '../../../utils/table/table';
 import { toRowId } from '../../../utils/tree/tree';
+import { addNode } from '../../../utils/tree/tree-data';
+import type { TreePath } from '../../../utils/tree/types';
 import { isMetadataType, type MetadataType } from '../data/metadata';
+import { VariableFactory, type Variable } from '../data/variable';
+import { nodeIcon } from '../data/variable-utils';
 
 type OverwriteProps = {
-  knownVariables?: ProjectVarNode;
+  context: DataContext;
   table: Table<Variable>;
   variables: Array<Variable>;
   setVariables: (variables: Array<Variable>) => void;
   setSelectedVariablePath: (path: TreePath) => void;
 };
 
-export const OverwriteDialog = ({ knownVariables, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
-  const toNode = (node: ProjectVarNode): BrowserNode => {
-    const c = node.children.map(child => toNode(child));
-    const icon = nodeIcon(node);
-    const info = node.description;
-    return {
-      value: node.name,
-      info,
-      icon,
-      data: node,
-      children: c
-    };
-  };
-
-  const toNodes = (): Array<BrowserNode> => {
-    if (!knownVariables) {
-      return [];
-    }
-    return knownVariables.children.map(varNode => toNode(varNode));
-  };
-
-  const nodes = toNodes();
-
+export const OverwriteDialog = ({ context, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
   const insertVariable = (node?: ProjectVarNode): void => {
     if (node) {
       const lastDot = node?.key.lastIndexOf('.');
@@ -78,7 +59,22 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
     }
   };
 
-  const VariableBrowser = ({ applyFn }: { applyFn: (node?: ProjectVarNode) => void }) => {
+  const VariableBrowser = ({ applyFn, context }: { applyFn: (node?: ProjectVarNode) => void; context: DataContext }) => {
+    const client = useClient();
+
+    const queryKeys = useMemo(() => ({ knownVariables: () => genQueryKey('meta/knownVariables', context) }), [context]);
+
+    const { data: knownVariables } = useQuery({
+      queryKey: queryKeys.knownVariables(),
+      queryFn: () => client.meta('meta/knownVariables', context)
+    });
+
+    const [nodes, setNodes] = useState<BrowserNode[]>([]);
+
+    useEffect(() => {
+      setNodes(toNodes(knownVariables));
+    }, [knownVariables]);
+
     const variableBrowser = useBrowser(nodes);
     return (
       <BrowsersView
@@ -123,7 +119,7 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
       <DialogTrigger asChild>
         <Button icon={IvyIcons.FileImport} aria-label='Overwrite variable' />
       </DialogTrigger>
-      <DialogContent style={{ height: '40vh', gridTemplateRows: 'auto 1fr auto' }}>
+      <DialogContent style={{ height: '60vh', width: '500px', gridTemplateRows: 'auto 1fr auto' }}>
         <DialogHeader>
           <DialogTitle>Import and overwrite variable from required projects</DialogTitle>
         </DialogHeader>
@@ -132,8 +128,29 @@ export const OverwriteDialog = ({ knownVariables, table, variables, setVariables
             insertVariable(node);
             setDialogState(false);
           }}
+          context={context}
         />
       </DialogContent>
     </Dialog>
   );
+};
+
+const toNode = (node: ProjectVarNode): BrowserNode => {
+  const c = node.children.map(child => toNode(child));
+  const icon = nodeIcon(node);
+  const info = node.description;
+  return {
+    value: node.name,
+    info,
+    icon,
+    data: node,
+    children: c
+  };
+};
+
+const toNodes = (root?: ProjectVarNode): Array<BrowserNode> => {
+  if (!root) {
+    return [];
+  }
+  return root.children.map(varNode => toNode(varNode));
 };
