@@ -55,6 +55,30 @@ test.describe('VariableEditor', () => {
     await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   });
 
+  test('importAndOverwriteWholeSubTree', async () => {
+    const tree = editor.tree;
+    await tree.expectRowCount(4);
+
+    const overwrite = editor.overwrite;
+    await overwrite.open();
+    const variables = overwrite.variables;
+    await variables.cell(0, 0).expectValue('Amazon');
+    await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
+    await variables.row(1).click();
+    await overwrite.applyBtn.click();
+    await overwrite.expectClosed();
+
+    const details = editor.details;
+    await details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
+    await tree.expectRowCount(8);
+    await tree.row(4).click();
+    await details.expectFolderValues('Amazon', '');
+    await tree.row(6).click();
+    await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+    await tree.row(7).click();
+    await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', '');
+  });
+
   test('load data', async () => {
     const tree = editor.tree;
     const details = editor.details;

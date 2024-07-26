@@ -139,19 +139,19 @@ const toNodes = (root?: ProjectVarNode): Array<BrowserNode> => {
 };
 
 const addVariable = (variables: Variable[], node: ProjectVarNode): AddNodeReturnType<Variable> => {
-  const lastDot = node?.key.lastIndexOf('.');
-  const namespace = node?.key.substring(0, lastDot);
+  const lastDot = node.key.lastIndexOf('.');
+  const namespace = node.key.substring(0, lastDot);
   let metadataType: MetadataType = '';
   if (isMetadataType(node.type)) {
     metadataType = node.type;
   }
   const returnValue = addNode(node.name, namespace, variables, name => {
-    if (name === node?.name) {
+    if (name === node.name) {
       return {
         name,
-        value: node?.value,
+        value: node.value,
         children: [],
-        description: node?.description,
+        description: node.description,
         metadata: { type: metadataType }
       };
     }
