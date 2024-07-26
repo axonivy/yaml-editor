@@ -19,7 +19,7 @@ import { genQueryKey } from '../../../query';
 import { selectRow } from '../../../utils/table/table';
 import { toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
-import type { TreePath } from '../../../utils/tree/types';
+import type { AddNodeReturnType, TreePath } from '../../../utils/tree/types';
 import { isMetadataType, type MetadataType } from '../data/metadata';
 import { VariableFactory, type Variable } from '../data/variable';
 import { nodeIcon } from '../data/variable-utils';
@@ -35,27 +35,10 @@ type OverwriteProps = {
 export const OverwriteDialog = ({ context, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
   const insertVariable = (node?: ProjectVarNode): void => {
     if (node) {
-      const lastDot = node?.key.lastIndexOf('.');
-      const namespace = node?.key.substring(0, lastDot);
-      let metadataType: MetadataType = '';
-      if (isMetadataType(node?.type)) {
-        metadataType = node?.type;
-      }
-      const addNodeReturnValue = addNode(node?.name, namespace, variables, name => {
-        if (name === node?.name) {
-          return {
-            name,
-            value: node?.value,
-            children: [],
-            description: node?.description,
-            metadata: { type: metadataType }
-          };
-        }
-        return VariableFactory(name);
-      });
+      const addNodeReturnValue = addVariable(variables, node);
+      setVariables(addNodeReturnValue.newData);
       selectRow(table, toRowId(addNodeReturnValue.newNodePath));
       setSelectedVariablePath(addNodeReturnValue.newNodePath);
-      setVariables(addNodeReturnValue.newData);
     }
   };
 
@@ -153,4 +136,31 @@ const toNodes = (root?: ProjectVarNode): Array<BrowserNode> => {
     return [];
   }
   return root.children.map(varNode => toNode(varNode));
+};
+
+const addVariable = (variables: Variable[], node: ProjectVarNode): AddNodeReturnType<Variable> => {
+  const lastDot = node?.key.lastIndexOf('.');
+  const namespace = node?.key.substring(0, lastDot);
+  let metadataType: MetadataType = '';
+  if (isMetadataType(node.type)) {
+    metadataType = node.type;
+  }
+  const returnValue = addNode(node.name, namespace, variables, name => {
+    if (name === node?.name) {
+      return {
+        name,
+        value: node?.value,
+        children: [],
+        description: node?.description,
+        metadata: { type: metadataType }
+      };
+    }
+    return VariableFactory(name);
+  });
+  let childReturnValue = returnValue;
+  for (const child of node.children) {
+    childReturnValue = addVariable(childReturnValue.newData, child);
+  }
+  returnValue.newData = childReturnValue.newData;
+  return returnValue;
 };
