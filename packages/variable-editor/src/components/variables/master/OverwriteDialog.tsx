@@ -62,21 +62,12 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
   const VariableBrowser = ({ applyFn, context }: { applyFn: (node?: ProjectVarNode) => void; context: DataContext }) => {
     const client = useClient();
 
-    const queryKeys = useMemo(() => {
-      return {
-        knownVariables: () => genQueryKey('meta/knownVariables', context)
-      };
-    }, [context]);
+    const queryKeys = useMemo(() => ({ knownVariables: () => genQueryKey('meta/knownVariables', context) }), [context]);
 
-    const { data: knownVars } = useQuery({
+    const { data: knownVariables } = useQuery({
       queryKey: queryKeys.knownVariables(),
       queryFn: () => client.meta('meta/knownVariables', context)
     });
-
-    const [knownVariables, setKnownVariables] = useState<ProjectVarNode>();
-    useEffect(() => {
-      setKnownVariables(knownVars);
-    }, [knownVars]);
 
     const [nodes, setNodes] = useState<BrowserNode[]>([]);
 
