@@ -207,7 +207,7 @@ test.describe('VariableEditor Detail', () => {
   });
 
   test('empty details', async () => {
-    await expect(editor.details.locator.locator('p')).toHaveText('Nothing there yet. Select a Variable to edit its properties.');
+    await expect(editor.details.locator.locator('p')).toHaveText('Select a variable to edit its properties.');
   });
 
   test('toogle details', async () => {
@@ -240,6 +240,6 @@ test.describe('VariableEditor Detail', () => {
     details.name.fill('appId');
 
     await editor.tree.expectRowCount(11);
-    await expect(editor.details.locator.locator('p')).toHaveText('Nothing there yet. Select a Variable to edit its properties.');
+    await expect(editor.details.locator.locator('p')).toHaveText('Select a variable to edit its properties.');
   });
 });
