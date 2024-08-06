@@ -1,7 +1,6 @@
-import { Fieldset, Input, Textarea } from '@axonivy/ui-components';
+import { Fieldset, Input, PanelMessage, Textarea } from '@axonivy/ui-components';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
-import { EmptyDetail } from '../../detail/EmptyDetail';
 import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../data/variable';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
@@ -15,7 +14,7 @@ type VariableProps = {
 export const VariablesDetail = ({ variables, variablePath, setVariables }: VariableProps) => {
   const variable = getNode(variables, variablePath);
   if (!variable) {
-    return <EmptyDetail message='Nothing there yet. Select a Variable to edit its properties.' />;
+    return <PanelMessage message='Select a variable to edit its properties.' />;
   }
 
   const hasChildren = variableHasChildren(variable);

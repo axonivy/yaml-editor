@@ -1,5 +1,5 @@
-import '@axonivy/ui-components/lib/style.css';
 import '@axonivy/ui-icons/lib/ivy-icons.css';
+import '@axonivy/ui-components/lib/style.css';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { Editor } from './components/editor/Editor';
@@ -13,6 +13,8 @@ import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 import { genQueryKey } from './query/query-client';
+import { Flex, PanelMessage, Spinner } from '@axonivy/ui-components';
+import { IvyIcons } from '@axonivy/ui-icons';
 
 function VariableEditor(props: EditorProps) {
   const [context, setContext] = useState(props.context);
@@ -68,11 +70,15 @@ function VariableEditor(props: EditorProps) {
   });
 
   if (isPending) {
-    return <p>Loading...</p>;
+    return (
+      <Flex alignItems='center' justifyContent='center' style={{ width: '100%', height: '100%' }}>
+        <Spinner />
+      </Flex>
+    );
   }
 
   if (isError) {
-    return <p>{'An error has occurred: ' + error}</p>;
+    return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
   }
 
   const rootVariable = toVariables(data.data);
