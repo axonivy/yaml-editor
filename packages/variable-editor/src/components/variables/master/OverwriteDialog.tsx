@@ -74,6 +74,7 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
         apply={(type, result) => {
           applyFn(result?.data as ProjectVarNode);
         }}
+        applyBtn={{ label: 'Import', icon: IvyIcons.FileImport }}
       />
     );
   };
@@ -102,7 +103,7 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
       <DialogTrigger asChild>
         <Button icon={IvyIcons.FileImport} aria-label='Overwrite variable' />
       </DialogTrigger>
-      <DialogContent style={{ height: '60vh', width: '500px', gridTemplateRows: 'auto 1fr auto' }}>
+      <DialogContent style={{ height: '80vh', width: '500px', gridTemplateRows: 'auto 1fr auto' }}>
         <DialogHeader>
           <DialogTitle>Import and overwrite variable from required projects</DialogTitle>
         </DialogHeader>

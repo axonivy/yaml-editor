@@ -5,14 +5,14 @@ import { Table } from './Table';
 export class OverwriteDialog {
   private readonly overwrite: Button;
   public readonly variables: Table;
-  public readonly applyBtn: Button;
+  public readonly importBtn: Button;
   private readonly dialog: Locator;
 
   constructor(page: Page, parent: Locator) {
     this.overwrite = new Button(parent, { name: 'Overwrite variable' });
     this.dialog = parent.getByRole('dialog');
     this.variables = new Table(page, this.dialog, ['label', 'label']);
-    this.applyBtn = new Button(this.dialog, { name: 'Apply' });
+    this.importBtn = new Button(this.dialog, { name: 'Import' });
   }
 
   async open() {
