@@ -48,7 +48,7 @@ test.describe('VariableEditor', () => {
     await variables.cell(1, 0).expand();
     await variables.cell(2, 0).expectValue('SecretKeySecret key to access amazon comprehend');
     await variables.row(2).click();
-    await overwrite.applyBtn.click();
+    await overwrite.importBtn.click();
     await overwrite.expectClosed();
 
     const details = editor.details;
@@ -65,7 +65,7 @@ test.describe('VariableEditor', () => {
     await variables.cell(0, 0).expectValue('Amazon');
     await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
     await variables.row(1).click();
-    await overwrite.applyBtn.click();
+    await overwrite.importBtn.click();
     await overwrite.expectClosed();
 
     const details = editor.details;
