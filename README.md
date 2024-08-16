@@ -1,14 +1,35 @@
-# Variables Editor (Prototype)
+# Variables Editor
 
-## Build the sample extension
+This repo contains the web-based variables editor client.
 
-```bash
-npm i
-```
+### Available Scripts
 
-## Run the standalone editor
+`npm install`: Install all packages
 
-Run the editor by doing the following (VS code):
+`npm run package`: Build the lib output
 
-1. Press `F5` to open the standalone editor in chrome
-2. Edit variable keys and values, delete lines via the tail icon (🗑️) and add new lines via the tail icon (➕). The value fields try to guess the value type (i.e. string, float, integer or boolean).
+`npm run dev`: Start the dev server
+
+#### Run tests
+
+`npm run test`: Run unit tests
+
+`npm run webtest:mock`: Run Playwright tests against mock environment
+
+`npm run webtest:engine`: Run Playwright tests against designer engine
+
+### VsCode dev environment
+
+#### Debug
+
+Simply start the `Launch Standalone` or `Launch Standalone Mock` launch config to get debug and breakpoint support.
+
+> [!NOTE]
+> The `Launch Standalone` launch config connects to a real designer and therefore requires a running designer engine on port 8081 with a project called `variables`. These attributes can be changed via URL parameters.
+
+> [!NOTE]
+> The `Launch Standalone Mock` launch config only receives mock data and therefore does not work with features for which a real engine is needed (e.g. data validation).
+
+#### Run tests
+
+To run tests you can either start a script above or start Playwright or Vitest with the recommended workspace extensions.
