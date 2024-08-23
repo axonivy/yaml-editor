@@ -4,15 +4,15 @@
   "version": "11.4.0-next",
   "dependencies": {
     "@axonivy/variable-editor": "*",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.13",
-    "@types/react-dom": "^18.2.6",
-    "@vitejs/plugin-react": "4.2.1",
-    "vite": "^5.3.5",
-    "@playwright/test": "1.45.3"
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2",
+    "@playwright/test": "1.46.0"
   },
   "scripts": {
     "clean": "rimraf build",

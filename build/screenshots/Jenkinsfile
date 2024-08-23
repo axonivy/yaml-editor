@@ -16,7 +16,7 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            docker.image('mcr.microsoft.com/playwright:v1.45.3-jammy').inside {
+            docker.image('mcr.microsoft.com/playwright:v1.46.0-jammy').inside {
               sh 'npm install'
               sh 'npm run webtest:screenshot'
             }
