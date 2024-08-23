@@ -1,5 +1,4 @@
-import '@axonivy/ui-icons/lib/ivy-icons.css';
-import '@axonivy/ui-components/lib/style.css';
+import './VariableEditor.css';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { Editor } from './components/editor/Editor';
