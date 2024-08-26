@@ -118,7 +118,10 @@ const enrichVariableWithChildren = (variable: Variable, node: Pair<Scalar, YAMLM
 const enrichVariableWithoutChildren = (variable: Variable, node: Pair<Scalar, Scalar>) => {
   const nodeValue = node.value;
   if (nodeValue) {
-    variable.value = String(nodeValue.value);
+    const nodeValueValue = nodeValue.value;
+    if (nodeValueValue !== null) {
+      variable.value = String(nodeValueValue);
+    }
   }
   return enrichVariableDescriptionAndMetadata(variable, node);
 };

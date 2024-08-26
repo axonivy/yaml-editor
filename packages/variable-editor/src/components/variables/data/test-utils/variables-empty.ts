@@ -26,3 +26,24 @@ export const rootVariableParsedFromContentWithCommentOnly: RootVariable = {
   metadata: { type: '' },
   children: []
 };
+
+export const contentWithEmptyValue = `Variables:
+  EmptyValue:
+`;
+
+export const rootVariableWithEmptyValue: RootVariable = {
+  name: 'Variables',
+  value: '',
+  description: '',
+  commentAfter: '',
+  metadata: { type: '' },
+  children: [
+    {
+      name: 'EmptyValue',
+      value: '',
+      description: '',
+      metadata: { type: '' },
+      children: []
+    }
+  ]
+};
