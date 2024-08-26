@@ -3,10 +3,12 @@ import { content, contentStringsOnly, rootVariable } from './test-utils/variable
 import {
   contentEmpty,
   contentWithCommentOnly,
+  contentWithEmptyValue,
   contentWithEmptyVariables,
   contentWithEmptyVariablesMapping,
   rootVariableEmpty,
-  rootVariableParsedFromContentWithCommentOnly
+  rootVariableParsedFromContentWithCommentOnly,
+  rootVariableWithEmptyValue
 } from './test-utils/variables-empty';
 import { contentNotYAML, contentWithMultipleTopLevelNodes, contentWithWrongNameOfTopLevelNode } from './test-utils/variables-malformed';
 import { contentMixed, rootVariableMixed } from './test-utils/variables-mixed';
@@ -80,6 +82,10 @@ describe('variable-utils', () => {
 
       test('commentOnly', () => {
         expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
+      });
+
+      test('emptyValue', () => {
+        expect(toVariables(contentWithEmptyValue)).toEqual(rootVariableWithEmptyValue);
       });
     });
 
