@@ -3,7 +3,9 @@ import {
   Button,
   ExpandableCell,
   ExpandableHeader,
+  Flex,
   selectRow,
+  Separator,
   Table,
   TableBody,
   TableResizableHeader,
@@ -16,7 +18,6 @@ import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-
 import type { DataContext, ValidationMessages } from '../../../protocol/types';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
-import { Control } from '../../control/Control';
 import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
@@ -76,51 +77,50 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
   };
 
   const readonly = useReadonly();
-  const controls = [];
-  if (!readonly) {
-    controls.push(
+  const control = readonly ? null : (
+    <Flex gap={2}>
       <AddVariableDialog
         key='addButton'
         table={table}
         variables={variables}
         setVariables={setVariables}
         setSelectedVariablePath={setSelectedVariablePath}
-      />,
+      />
+      <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
       <OverwriteDialog
         context={context}
         table={table}
         variables={variables}
         setVariables={setVariables}
         setSelectedVariablePath={setSelectedVariablePath}
-      />,
+      />
+      <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
       <Button
         key='deleteButton'
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
-        disabled={table.getSelectedRowModel().flatRows.length === 0}
+        disabled={table.getSelectedRowModel().rows.length === 0}
         aria-label='Delete variable'
       />
-    );
-  }
+    </Flex>
+  );
 
   return (
-    <>
-      <BasicField className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
-        {globalFilter.filter}
-        <Table>
-          <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
-          <TableBody>
-            {table.getRowModel().rows.map(row => (
-              <ValidationRow
-                key={row.id}
-                row={row}
-                setSelectedVariablePath={setSelectedVariablePath}
-                validationMessages={validationMessagesOfRow(row, validationMessages)}
-              />
-            ))}
-          </TableBody>
-        </Table>
-      </BasicField>
-    </>
+    <BasicField className='variable-wrapper' label='List of variables' control={control}>
+      {globalFilter.filter}
+      <Table>
+        <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
+        <TableBody>
+          {table.getRowModel().rows.map(row => (
+            <ValidationRow
+              key={row.id}
+              row={row}
+              setSelectedVariablePath={setSelectedVariablePath}
+              validationMessages={validationMessagesOfRow(row, validationMessages)}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </BasicField>
   );
 };
