@@ -99,7 +99,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
         key='deleteButton'
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
-        disabled={table.getSelectedRowModel().rows.length === 0}
+        disabled={table.getSelectedRowModel().flatRows.length === 0}
         aria-label='Delete variable'
       />
     </Flex>
