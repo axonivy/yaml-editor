@@ -24,4 +24,4 @@ export type AddChildToFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> 
   newChildPath: TreePath;
 };
 export type AddNodeReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; newNodePath: TreePath };
-export type DeleteFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; selectedVariablePath: TreePath };
+export type DeleteFirstSelectedRowReturnType<TNode extends TreeNode<TNode>> = { newData: Array<TNode>; selectedPath: TreePath };

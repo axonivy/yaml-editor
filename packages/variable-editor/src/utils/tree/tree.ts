@@ -15,7 +15,7 @@ export const deleteFirstSelectedRow = <TNode extends TreeNode<TNode>>(
   } else {
     selectedVariablePath = adjustSelectionAfterDeletionOfRow(newData, table, selectedRow);
   }
-  return { newData: newData, selectedVariablePath: selectedVariablePath };
+  return { newData: newData, selectedPath: selectedVariablePath };
 };
 
 export const getPathOfRow = <TNode extends TreeNode<TNode>>(row?: Row<TNode>) => {

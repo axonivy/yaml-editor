@@ -25,20 +25,6 @@ import {
 import type { Variable } from './variable';
 import { toContent, toVariables, variableIcon } from './variable-utils';
 
-let variable: Variable;
-
-beforeEach(() => {
-  variable = {
-    description: '',
-    metadata: {
-      type: ''
-    },
-    name: '',
-    value: '',
-    children: []
-  };
-});
-
 describe('toVariables', () => {
   test('default', () => {
     expect(toVariables(content)).toEqual(rootVariable);
@@ -131,31 +117,32 @@ describe('toContent', () => {
 
 describe('variableIcon', () => {
   test('default', () => {
+    const variable = { metadata: {}, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
   });
 
   test('mapping', () => {
-    variable.children.push(variable);
+    const variable = { metadata: { type: 'password' }, children: [{}] } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
   });
 
   test('password', () => {
-    variable.metadata.type = 'password';
+    const variable = { metadata: { type: 'password' }, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.Password);
   });
 
   test('daytime', () => {
-    variable.metadata.type = 'daytime';
+    const variable = { metadata: { type: 'daytime' }, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
   });
 
   test('enum', () => {
-    variable.metadata.type = 'enum';
+    const variable = { metadata: { type: 'enum' }, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.List);
   });
 
   test('file', () => {
-    variable.metadata.type = 'file';
+    const variable = { metadata: { type: 'file' }, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.Note);
   });
 });

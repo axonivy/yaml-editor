@@ -3,7 +3,7 @@ import type { Variable } from '../variable';
 
 type DeepPartial<T> = T extends Array<infer U> ? Array<DeepPartial<U>> : { [A in keyof T]?: DeepPartial<T[A]> };
 
-export const mockRow = (name: string, parentName: string): DeepPartial<Row<Variable>> => {
+export const setupRow = (name: string, parentName: string): DeepPartial<Row<Variable>> => {
   return {
     original: {
       name: name
@@ -18,6 +18,6 @@ export const mockRow = (name: string, parentName: string): DeepPartial<Row<Varia
   };
 };
 
-export const variable = (name: string, children: Array<Variable>) => {
+export const setupVariable = (name: string, children: Array<Variable>) => {
   return { name: name, children: children } as Variable;
 };

@@ -1,6 +1,5 @@
 import type { Row } from '@tanstack/react-table';
-import type { ValidationMessages } from '../../../protocol/types';
-import { mockRow, variable } from './test-utils/types';
+import { setupRow, setupVariable } from './test-utils/setup';
 import {
   containsError,
   containsWarning,
@@ -11,39 +10,35 @@ import {
 } from './validation-utils';
 import type { Variable } from './variable';
 
-let validationMessages: ValidationMessages;
-const rowWithMessages = mockRow('key1', 'key0') as Row<Variable>;
-const rowWithoutMessages = mockRow('key2', 'key0') as Row<Variable>;
+const validationMessages = [
+  {
+    message: 'message0',
+    path: 'Variables.key0.key0',
+    severity: 0
+  },
+  {
+    message: 'message1',
+    path: 'Variables.key0.key1',
+    severity: 0
+  },
+  {
+    message: 'message2',
+    path: 'Variables.key0.key1',
+    severity: 0
+  },
+  {
+    message: 'message3',
+    path: 'Variables.key1.key0',
+    severity: 0
+  }
+];
+const rowWithMessages = setupRow('key1', 'key0') as Row<Variable>;
+const rowWithoutMessages = setupRow('key2', 'key0') as Row<Variable>;
 
 const variables = [
-  variable('NameNode0', []),
-  variable('NameNode1', [variable('NameNode10', []), variable('NameNode11', [variable('NameNode110', [])])])
+  setupVariable('NameNode0', []),
+  setupVariable('NameNode1', [setupVariable('NameNode10', []), setupVariable('NameNode11', [setupVariable('NameNode110', [])])])
 ];
-
-beforeEach(() => {
-  validationMessages = [
-    {
-      message: 'message0',
-      path: 'Variables.key0.key0',
-      severity: 0
-    },
-    {
-      message: 'message1',
-      path: 'Variables.key0.key1',
-      severity: 0
-    },
-    {
-      message: 'message2',
-      path: 'Variables.key0.key1',
-      severity: 0
-    },
-    {
-      message: 'message3',
-      path: 'Variables.key1.key0',
-      severity: 0
-    }
-  ];
-});
 
 describe('validationMessagesOfRow', () => {
   test('default', () => {
@@ -66,8 +61,9 @@ describe('validationMessagesOfRow', () => {
 
 describe('containsError', () => {
   test('true', () => {
-    validationMessages[1].severity = 2;
-    expect(containsError(validationMessages)).toBeTruthy();
+    const validationMessagesWithError = structuredClone(validationMessages);
+    validationMessagesWithError[1].severity = 2;
+    expect(containsError(validationMessagesWithError)).toBeTruthy();
   });
 
   test('false', () => {
@@ -77,8 +73,9 @@ describe('containsError', () => {
 
 describe('containsWarning', () => {
   test('true', () => {
-    validationMessages[1].severity = 1;
-    expect(containsWarning(validationMessages)).toBeTruthy();
+    const validationMessagesWithWarning = structuredClone(validationMessages);
+    validationMessagesWithWarning[1].severity = 1;
+    expect(containsWarning(validationMessagesWithWarning)).toBeTruthy();
   });
 
   test('false', () => {
