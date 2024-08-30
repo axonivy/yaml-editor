@@ -1,4 +1,4 @@
-import { Fieldset, Input, PanelMessage, Textarea } from '@axonivy/ui-components';
+import { BasicField, Input, PanelMessage, Textarea } from '@axonivy/ui-components';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../data/variable';
@@ -26,19 +26,19 @@ export const VariablesDetail = ({ variables, variablePath, setVariables }: Varia
 
   return (
     <>
-      <Fieldset label='Name'>
+      <BasicField label='Name'>
         <Input
           value={variable.name}
           onChange={event => handleVariableAttributeChange([{ key: treeNodeNameAttribute, value: event.target.value }])}
         />
-      </Fieldset>
+      </BasicField>
       {!hasChildren && <Value variable={variable} onChange={handleVariableAttributeChange} />}
-      <Fieldset label='Description'>
+      <BasicField label='Description'>
         <Textarea
           value={variable.description}
           onChange={event => handleVariableAttributeChange([{ key: variableDescriptionAttribute, value: event.target.value }])}
         />
-      </Fieldset>
+      </BasicField>
       {!hasChildren && <Metadata variable={variable} onChange={handleVariableAttributeChange} />}
     </>
   );

@@ -1,8 +1,18 @@
-import { Button, Fieldset, InputCell, SelectRow, Table, TableBody, TableCell, useTableSelect } from '@axonivy/ui-components';
+import {
+  addRow,
+  BasicField,
+  Button,
+  deleteFirstSelectedRow,
+  InputCell,
+  SelectRow,
+  Table,
+  TableBody,
+  TableCell,
+  updateRowData,
+  useTableSelect
+} from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { addRow, deleteFirstSelectedRow } from '../../../utils/table/table';
-import { updateRowData } from '../../../utils/table/table-data';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
 import { toEnumMetadataUpdate } from '../data/metadata';
@@ -58,7 +68,7 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
   };
 
   return (
-    <Fieldset
+    <BasicField
       label='List of possible values'
       control={
         <Control
@@ -86,6 +96,6 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
           ))}
         </TableBody>
       </Table>
-    </Fieldset>
+    </BasicField>
   );
 };

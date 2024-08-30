@@ -1,8 +1,9 @@
 import {
+  BasicField,
   Button,
   ExpandableCell,
   ExpandableHeader,
-  Fieldset,
+  selectRow,
   Table,
   TableBody,
   TableResizableHeader,
@@ -13,7 +14,6 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import type { DataContext, ValidationMessages } from '../../../protocol/types';
-import { isRowSelected, selectRow } from '../../../utils/table/table';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
 import { Control } from '../../control/Control';
@@ -97,7 +97,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
         key='deleteButton'
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
-        disabled={!table.getIsSomeRowsSelected() && !isRowSelected(table)}
+        disabled={table.getSelectedRowModel().rows.length === 0}
         aria-label='Delete variable'
       />
     );
@@ -105,7 +105,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
 
   return (
     <>
-      <Fieldset className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
+      <BasicField className='variable-wrapper' label='List of variables' control={<Control buttons={controls} />}>
         {globalFilter.filter}
         <Table>
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
@@ -120,7 +120,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
             ))}
           </TableBody>
         </Table>
-      </Fieldset>
+      </BasicField>
     </>
   );
 };

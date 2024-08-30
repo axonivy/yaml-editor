@@ -1,4 +1,4 @@
-import { Fieldset, SimpleSelect } from '@axonivy/ui-components';
+import { BasicField, BasicSelect } from '@axonivy/ui-components';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import {
   fileMetadataFilenameExtensionOptions,
@@ -12,12 +12,12 @@ import {
 import { variableMetadataAttribute, type Variable, type VariableUpdates } from '../data/variable';
 import { EnumValues } from './EnumValues';
 
-type MetadataFieldsetProps = {
+type MetadataProps = {
   variable: Variable;
   onChange: (updates: VariableUpdates) => void;
 };
 
-export const Metadata = ({ variable, onChange }: MetadataFieldsetProps) => {
+export const Metadata = ({ variable, onChange }: MetadataProps) => {
   const metadata = variable.metadata;
 
   const onValueChange = (value: MetadataType) => {
@@ -44,18 +44,18 @@ export const Metadata = ({ variable, onChange }: MetadataFieldsetProps) => {
 
   return (
     <>
-      <Fieldset label='Metadata'>
-        <SimpleSelect value={metadata.type} items={metadataOptions} emptyItem={true} onValueChange={onValueChange} />
-      </Fieldset>
+      <BasicField label='Metadata'>
+        <BasicSelect value={metadata.type} items={metadataOptions} emptyItem={true} onValueChange={onValueChange} />
+      </BasicField>
       {isEnumMetadata(metadata) && <EnumValues selectedValue={variable.value} values={metadata.values} onChange={onChange} />}
       {isFileMetadata(metadata) && (
-        <Fieldset label='Filename extension'>
-          <SimpleSelect
+        <BasicField label='Filename extension'>
+          <BasicSelect
             value={metadata.filenameExtension}
             items={fileMetadataFilenameExtensionOptions}
             onValueChange={(filenameExtension: FileMetadataFilenameExtension) => onChange([toFileMetadataUpdate(filenameExtension)])}
           />
-        </Fieldset>
+        </BasicField>
       )}
     </>
   );

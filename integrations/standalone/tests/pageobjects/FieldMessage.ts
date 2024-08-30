@@ -1,6 +1,6 @@
 import { expect, type Locator } from '@playwright/test';
 
-export class FieldsetMessage {
+export class FieldMessage {
   private readonly locator: Locator;
 
   constructor(parentLocator: Locator, options: { label: string }) {

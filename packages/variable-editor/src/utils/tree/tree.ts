@@ -1,6 +1,5 @@
-import { useTableGlobalFilter } from '@axonivy/ui-components';
+import { selectRow, useTableGlobalFilter } from '@axonivy/ui-components';
 import type { Row, Table } from '@tanstack/react-table';
-import { getFirstSelectedRow, selectRow } from '../table/table';
 import { getNode, getNodesOnPath, removeNode } from './tree-data';
 import type { DeleteFirstSelectedRowReturnType, TreeNode, TreePath } from './types';
 
@@ -8,7 +7,7 @@ export const deleteFirstSelectedRow = <TNode extends TreeNode<TNode>>(
   table: Table<TNode>,
   data: Array<TNode>
 ): DeleteFirstSelectedRowReturnType<TNode> => {
-  const selectedRow = getFirstSelectedRow(table);
+  const selectedRow = table.getSelectedRowModel().flatRows[0];
   const newData = removeNode(data, getPathOfRow(selectedRow));
   let selectedVariablePath: TreePath;
   if (!selectedRow) {
@@ -116,7 +115,7 @@ export const keyOfFirstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(tabl
 };
 
 const firstSelectedNonLeafRow = <TNode extends TreeNode<TNode>>(table: Table<TNode>) => {
-  const selectedRow = getFirstSelectedRow(table);
+  const selectedRow = table.getSelectedRowModel().flatRows[0];
   if (!selectedRow) {
     return;
   }
