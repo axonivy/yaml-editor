@@ -39,125 +39,123 @@ beforeEach(() => {
   };
 });
 
-describe('variable-utils', () => {
-  describe('toVariables', () => {
+describe('toVariables', () => {
+  test('default', () => {
+    expect(toVariables(content)).toEqual(rootVariable);
+  });
+
+  test('comments', () => {
+    expect(toVariables(contentWithComments)).toEqual(rootVariableWithComments);
+  });
+
+  describe('metadata', () => {
     test('default', () => {
-      expect(toVariables(content)).toEqual(rootVariable);
+      expect(toVariables(contentWithMetadata)).toEqual(rootVariableWithMetadata);
     });
 
-    test('comments', () => {
-      expect(toVariables(contentWithComments)).toEqual(rootVariableWithComments);
+    test('weirdFormat', () => {
+      expect(toVariables(contentWithWeirdMetadataFormat)).toEqual(rootVariableParsedFromContentWithWeirdMetadataFormat);
     });
 
-    describe('metadata', () => {
-      test('default', () => {
-        expect(toVariables(contentWithMetadata)).toEqual(rootVariableWithMetadata);
-      });
-
-      test('weirdFormat', () => {
-        expect(toVariables(contentWithWeirdMetadataFormat)).toEqual(rootVariableParsedFromContentWithWeirdMetadataFormat);
-      });
-
-      test('wrongFormat', () => {
-        expect(toVariables(contentWithWrongMetadataFormat)).toEqual(rootVariableParsedFromContentWithWrongMetadataFormat);
-      });
-    });
-
-    test('mixed', () => {
-      expect(toVariables(contentMixed)).toEqual(rootVariableMixed);
-    });
-
-    describe('empty', () => {
-      test('empty', () => {
-        expect(toVariables(contentEmpty)).toEqual(rootVariableEmpty);
-      });
-
-      test('emptyVariables', () => {
-        expect(toVariables(contentWithEmptyVariables)).toEqual(rootVariableEmpty);
-      });
-
-      test('emptyVariablesMapping', () => {
-        expect(toVariables(contentWithEmptyVariablesMapping)).toEqual(rootVariableEmpty);
-      });
-
-      test('commentOnly', () => {
-        expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
-      });
-
-      test('emptyValue', () => {
-        expect(toVariables(contentWithEmptyValue)).toEqual(rootVariableWithEmptyValue);
-      });
-    });
-
-    describe('malformed', () => {
-      test('wrongNameOfTopLevelNode', () => {
-        expect(toVariables(contentWithWrongNameOfTopLevelNode)).toEqual(rootVariableEmpty);
-      });
-
-      test('multipleTopLevelNodes', () => {
-        expect(toVariables(contentWithMultipleTopLevelNodes)).toEqual(rootVariableEmpty);
-      });
-
-      test('notYAML', () => {
-        expect(toVariables(contentNotYAML)).toEqual(rootVariableEmpty);
-      });
+    test('wrongFormat', () => {
+      expect(toVariables(contentWithWrongMetadataFormat)).toEqual(rootVariableParsedFromContentWithWrongMetadataFormat);
     });
   });
 
-  describe('toContent', () => {
-    test('default', () => {
-      expect(toContent(rootVariable)).toEqual(contentStringsOnly);
-    });
+  test('mixed', () => {
+    expect(toVariables(contentMixed)).toEqual(rootVariableMixed);
+  });
 
-    test('comments', () => {
-      expect(toContent(rootVariableWithComments)).toEqual(contentWithComments);
-    });
-
-    test('metadata', () => {
-      expect(toContent(rootVariableWithMetadata)).toEqual(contentWithMetadata);
-    });
-
-    test('mixed', () => {
-      expect(toContent(rootVariableMixed)).toEqual(contentMixed);
-    });
-
-    test('ignoreDuplicateKeys', () => {
-      expect(toContent(rootVariableWithDuplicates)).toEqual(contentParsedFromRootVariableWithDuplicates);
-    });
-
+  describe('empty', () => {
     test('empty', () => {
-      expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
+      expect(toVariables(contentEmpty)).toEqual(rootVariableEmpty);
+    });
+
+    test('emptyVariables', () => {
+      expect(toVariables(contentWithEmptyVariables)).toEqual(rootVariableEmpty);
+    });
+
+    test('emptyVariablesMapping', () => {
+      expect(toVariables(contentWithEmptyVariablesMapping)).toEqual(rootVariableEmpty);
+    });
+
+    test('commentOnly', () => {
+      expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
+    });
+
+    test('emptyValue', () => {
+      expect(toVariables(contentWithEmptyValue)).toEqual(rootVariableWithEmptyValue);
     });
   });
 
-  describe('variableIcon', () => {
-    test('default', () => {
-      expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
+  describe('malformed', () => {
+    test('wrongNameOfTopLevelNode', () => {
+      expect(toVariables(contentWithWrongNameOfTopLevelNode)).toEqual(rootVariableEmpty);
     });
 
-    test('mapping', () => {
-      variable.children.push(variable);
-      expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
+    test('multipleTopLevelNodes', () => {
+      expect(toVariables(contentWithMultipleTopLevelNodes)).toEqual(rootVariableEmpty);
     });
 
-    test('password', () => {
-      variable.metadata.type = 'password';
-      expect(variableIcon(variable)).toEqual(IvyIcons.Password);
+    test('notYAML', () => {
+      expect(toVariables(contentNotYAML)).toEqual(rootVariableEmpty);
     });
+  });
+});
 
-    test('daytime', () => {
-      variable.metadata.type = 'daytime';
-      expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
-    });
+describe('toContent', () => {
+  test('default', () => {
+    expect(toContent(rootVariable)).toEqual(contentStringsOnly);
+  });
 
-    test('enum', () => {
-      variable.metadata.type = 'enum';
-      expect(variableIcon(variable)).toEqual(IvyIcons.List);
-    });
+  test('comments', () => {
+    expect(toContent(rootVariableWithComments)).toEqual(contentWithComments);
+  });
 
-    test('file', () => {
-      variable.metadata.type = 'file';
-      expect(variableIcon(variable)).toEqual(IvyIcons.Note);
-    });
+  test('metadata', () => {
+    expect(toContent(rootVariableWithMetadata)).toEqual(contentWithMetadata);
+  });
+
+  test('mixed', () => {
+    expect(toContent(rootVariableMixed)).toEqual(contentMixed);
+  });
+
+  test('ignoreDuplicateKeys', () => {
+    expect(toContent(rootVariableWithDuplicates)).toEqual(contentParsedFromRootVariableWithDuplicates);
+  });
+
+  test('empty', () => {
+    expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
+  });
+});
+
+describe('variableIcon', () => {
+  test('default', () => {
+    expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
+  });
+
+  test('mapping', () => {
+    variable.children.push(variable);
+    expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
+  });
+
+  test('password', () => {
+    variable.metadata.type = 'password';
+    expect(variableIcon(variable)).toEqual(IvyIcons.Password);
+  });
+
+  test('daytime', () => {
+    variable.metadata.type = 'daytime';
+    expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
+  });
+
+  test('enum', () => {
+    variable.metadata.type = 'enum';
+    expect(variableIcon(variable)).toEqual(IvyIcons.List);
+  });
+
+  test('file', () => {
+    variable.metadata.type = 'file';
+    expect(variableIcon(variable)).toEqual(IvyIcons.Note);
   });
 });

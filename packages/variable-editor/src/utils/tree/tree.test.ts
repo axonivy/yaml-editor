@@ -63,252 +63,250 @@ beforeEach(() => {
   onRowSelectionChangeValue = {};
 });
 
-describe('tree', () => {
-  describe('deleteFirstSelectedRow', () => {
-    describe('selection', () => {
-      describe('root', () => {
-        test('default', () => {
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '0': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([0]);
-          expect(newData).toHaveLength(2);
-          expect(newData[0]).toEqual(originalData[1]);
-          expect(newData[1]).toEqual(originalData[2]);
-          expect(onRowSelectionChangeValue).toEqual({ '0': true });
-        });
-
-        test('lastChildInListOfChildren', () => {
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '2': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([1]);
-          expect(newData).toHaveLength(2);
-          expect(newData[0]).toEqual(originalData[0]);
-          expect(newData[1]).toEqual(originalData[1]);
-          expect(onRowSelectionChangeValue).toEqual({ '1': true });
-        });
-
-        test('lastRemainingChild', () => {
-          data = [{ name: 'NameNode0', value: 'ValueNode0', children: [] }];
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '0': true };
-          onRowSelectionChangeValue = { '0': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([]);
-          expect(newData).toHaveLength(0);
-          expect(onRowSelectionChangeValue).toEqual({});
-        });
+describe('deleteFirstSelectedRow', () => {
+  describe('selection', () => {
+    describe('root', () => {
+      test('default', () => {
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '0': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([0]);
+        expect(newData).toHaveLength(2);
+        expect(newData[0]).toEqual(originalData[1]);
+        expect(newData[1]).toEqual(originalData[2]);
+        expect(onRowSelectionChangeValue).toEqual({ '0': true });
       });
 
-      describe('deep', () => {
-        test('default', () => {
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '1.0': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([1, 0]);
-          expect(newData[1].children).toHaveLength(1);
-          expect(newData[1].children[0]).toEqual(originalData[1].children[1]);
-          expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
-        });
+      test('lastChildInListOfChildren', () => {
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '2': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([1]);
+        expect(newData).toHaveLength(2);
+        expect(newData[0]).toEqual(originalData[0]);
+        expect(newData[1]).toEqual(originalData[1]);
+        expect(onRowSelectionChangeValue).toEqual({ '1': true });
+      });
 
-        test('lastChildInListOfChildren', () => {
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '1.1': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([1, 0]);
-          expect(newData[1].children).toHaveLength(1);
-          expect(newData[1].children[0]).toEqual(originalData[1].children[0]);
-          expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
-        });
-
-        test('lastRemainingChild', () => {
-          const originalData = structuredClone(data);
-          table.getState().rowSelection = { '1.1.0': true };
-          const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-          const newData = deleteFirstSelectedRowReturnValue.newData;
-          const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-          expect(data).toEqual(originalData);
-          expect(newData).not.toBe(data);
-          expect(selectedVariablePath).toEqual([1, 1]);
-          expect(newData[1].children[1].children).toHaveLength(0);
-          expect(onRowSelectionChangeValue).toEqual({ '1.1': true });
-        });
+      test('lastRemainingChild', () => {
+        data = [{ name: 'NameNode0', value: 'ValueNode0', children: [] }];
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '0': true };
+        onRowSelectionChangeValue = { '0': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([]);
+        expect(newData).toHaveLength(0);
+        expect(onRowSelectionChangeValue).toEqual({});
       });
     });
 
-    test('noSelection', () => {
-      const originalData = structuredClone(data);
-      table.getState().rowSelection = {};
-      const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
-      const newData = deleteFirstSelectedRowReturnValue.newData;
-      const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
-      expect(data).toEqual(originalData);
-      expect(newData).not.toBe(data);
-      expect(selectedVariablePath).toEqual([]);
-      expect(newData).toEqual(data);
-      expect(onRowSelectionChangeValue).toEqual({});
-    });
-  });
-
-  describe('getPathOfRow', () => {
-    test('singleDigit', () => {
-      expect(getPathOfRow(createRow(table, '1', newNode, 1, 0))).toEqual([1]);
-    });
-
-    test('multipleDigits', () => {
-      expect(getPathOfRow(createRow(table, '1.3.2', newNode, 1, 0))).toEqual([1, 3, 2]);
-    });
-
-    test('missing', () => {
-      expect(getPathOfRow(undefined)).toEqual([]);
-    });
-  });
-
-  describe('toRowId', () => {
-    test('default', () => {
-      expect(toRowId([1, 3, 3, 7])).toEqual('1.3.3.7');
-    });
-
-    test('empty', () => {
-      expect(toRowId([])).toEqual('');
-    });
-  });
-
-  describe('treeGlobalFilter', () => {
-    describe('true', () => {
-      test('inParentName', () => {
-        expect(treeGlobalFilter(data, [2, 0], 'fOrPaReNtNa')).toBeTruthy();
+    describe('deep', () => {
+      test('default', () => {
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '1.0': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([1, 0]);
+        expect(newData[1].children).toHaveLength(1);
+        expect(newData[1].children[0]).toEqual(originalData[1].children[1]);
+        expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
       });
 
-      test('inNodeName', () => {
-        expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDnA')).toBeTruthy();
+      test('lastChildInListOfChildren', () => {
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '1.1': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([1, 0]);
+        expect(newData[1].children).toHaveLength(1);
+        expect(newData[1].children[0]).toEqual(originalData[1].children[0]);
+        expect(onRowSelectionChangeValue).toEqual({ '1.0': true });
       });
 
-      test('inNodeValue', () => {
-        expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDvAl')).toBeTruthy();
-      });
-    });
-
-    describe('false', () => {
-      test('noMatch', () => {
-        expect(treeGlobalFilter(data, [2, 0], 'noMatch')).toBeFalsy();
-      });
-
-      test('pathEmpty', () => {
-        expect(treeGlobalFilter(data, [], 'pathEmpty')).toBeFalsy();
+      test('lastRemainingChild', () => {
+        const originalData = structuredClone(data);
+        table.getState().rowSelection = { '1.1.0': true };
+        const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+        const newData = deleteFirstSelectedRowReturnValue.newData;
+        const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+        expect(data).toEqual(originalData);
+        expect(newData).not.toBe(data);
+        expect(selectedVariablePath).toEqual([1, 1]);
+        expect(newData[1].children[1].children).toHaveLength(0);
+        expect(onRowSelectionChangeValue).toEqual({ '1.1': true });
       });
     });
   });
 
-  describe('keyOfRow', () => {
-    test('withoutParents', () => {
-      expect(keyOfRow(table.getRowModel().rows[0])).toEqual('NameNode0');
+  test('noSelection', () => {
+    const originalData = structuredClone(data);
+    table.getState().rowSelection = {};
+    const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, data);
+    const newData = deleteFirstSelectedRowReturnValue.newData;
+    const selectedVariablePath = deleteFirstSelectedRowReturnValue.selectedVariablePath;
+    expect(data).toEqual(originalData);
+    expect(newData).not.toBe(data);
+    expect(selectedVariablePath).toEqual([]);
+    expect(newData).toEqual(data);
+    expect(onRowSelectionChangeValue).toEqual({});
+  });
+});
+
+describe('getPathOfRow', () => {
+  test('singleDigit', () => {
+    expect(getPathOfRow(createRow(table, '1', newNode, 1, 0))).toEqual([1]);
+  });
+
+  test('multipleDigits', () => {
+    expect(getPathOfRow(createRow(table, '1.3.2', newNode, 1, 0))).toEqual([1, 3, 2]);
+  });
+
+  test('missing', () => {
+    expect(getPathOfRow(undefined)).toEqual([]);
+  });
+});
+
+describe('toRowId', () => {
+  test('default', () => {
+    expect(toRowId([1, 3, 3, 7])).toEqual('1.3.3.7');
+  });
+
+  test('empty', () => {
+    expect(toRowId([])).toEqual('');
+  });
+});
+
+describe('treeGlobalFilter', () => {
+  describe('true', () => {
+    test('inParentName', () => {
+      expect(treeGlobalFilter(data, [2, 0], 'fOrPaReNtNa')).toBeTruthy();
     });
 
-    test('withParents', () => {
-      expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode11.NameNode110');
+    test('inNodeName', () => {
+      expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDnA')).toBeTruthy();
+    });
+
+    test('inNodeValue', () => {
+      expect(treeGlobalFilter(data, [2, 0], 'fOrChIlDvAl')).toBeTruthy();
     });
   });
 
-  describe('newNodeName', () => {
-    test('noSelection', () => {
-      table.getState().rowSelection = {};
-      expect(newNodeName(table, 'NewName')).toEqual('NewName');
-      table.getRowModel().rows[0].original.name = 'NewName';
-      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
-      table.getRowModel().rows[1].original.name = 'NewName2';
-      expect(newNodeName(table, 'NewName')).toEqual('NewName3');
+  describe('false', () => {
+    test('noMatch', () => {
+      expect(treeGlobalFilter(data, [2, 0], 'noMatch')).toBeFalsy();
     });
 
-    test('folderSelection', () => {
-      table.getState().rowSelection = { '1.1': true };
-      expect(newNodeName(table, 'NewName')).toEqual('NewName');
-      table.getRowModel().rows[1].subRows[1].subRows[0].original.name = 'NewName';
-      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
-    });
-
-    test('rootLeafSelection', () => {
-      table.getState().rowSelection = { '0': true };
-      expect(newNodeName(table, 'NewName')).toEqual('NewName');
-      table.getRowModel().rows[0].original.name = 'NewName';
-      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
-    });
-
-    test('leafSelection', () => {
-      table.getState().rowSelection = { '1.1.0.0': true };
-      expect(newNodeName(table, 'NewName')).toEqual('NewName');
-      table.getRowModel().rows[1].subRows[1].subRows[0].subRows[0].original.name = 'NewName';
-      expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+    test('pathEmpty', () => {
+      expect(treeGlobalFilter(data, [], 'pathEmpty')).toBeFalsy();
     });
   });
+});
 
-  describe('keyOfFirstSelectedNonLeafRow', () => {
-    test('noSelection', () => {
-      table.getState().rowSelection = {};
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
-    });
-
-    test('folderSelection', () => {
-      table.getState().rowSelection = { '1.1': true };
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11');
-    });
-
-    test('rootLeafSelection', () => {
-      table.getState().rowSelection = { '0': true };
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
-    });
-
-    test('leafSelection', () => {
-      table.getState().rowSelection = { '1.1.0.0': true };
-      expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11.NameNode110');
-    });
+describe('keyOfRow', () => {
+  test('withoutParents', () => {
+    expect(keyOfRow(table.getRowModel().rows[0])).toEqual('NameNode0');
   });
 
-  test('keysOfAllNonLeafRows', () => {
-    expect(keysOfAllNonLeafRows(table)).toEqual([
-      'NameNode1',
-      'NameNode1.NameNode11',
-      'NameNode1.NameNode11.NameNode110',
-      'SearchForParentName'
-    ]);
+  test('withParents', () => {
+    expect(keyOfRow(table.getRowModel().rows[1].getLeafRows()[1].getLeafRows()[0])).toEqual('NameNode1.NameNode11.NameNode110');
+  });
+});
+
+describe('newNodeName', () => {
+  test('noSelection', () => {
+    table.getState().rowSelection = {};
+    expect(newNodeName(table, 'NewName')).toEqual('NewName');
+    table.getRowModel().rows[0].original.name = 'NewName';
+    expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+    table.getRowModel().rows[1].original.name = 'NewName2';
+    expect(newNodeName(table, 'NewName')).toEqual('NewName3');
   });
 
-  describe('subRowNamesOfRow', () => {
-    test('root', () => {
-      expect(subRowNamesOfRow('', table)).toEqual(['NameNode0', 'NameNode1', 'SearchForParentName']);
-    });
+  test('folderSelection', () => {
+    table.getState().rowSelection = { '1.1': true };
+    expect(newNodeName(table, 'NewName')).toEqual('NewName');
+    table.getRowModel().rows[1].subRows[1].subRows[0].original.name = 'NewName';
+    expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+  });
 
-    test('singlePart', () => {
-      expect(subRowNamesOfRow('NameNode1', table)).toEqual(['NameNode10', 'NameNode11']);
-    });
+  test('rootLeafSelection', () => {
+    table.getState().rowSelection = { '0': true };
+    expect(newNodeName(table, 'NewName')).toEqual('NewName');
+    table.getRowModel().rows[0].original.name = 'NewName';
+    expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+  });
 
-    test('multipleParts', () => {
-      expect(subRowNamesOfRow('NameNode1.NameNode11.NameNode110', table)).toEqual(['NameNode1100']);
-    });
+  test('leafSelection', () => {
+    table.getState().rowSelection = { '1.1.0.0': true };
+    expect(newNodeName(table, 'NewName')).toEqual('NewName');
+    table.getRowModel().rows[1].subRows[1].subRows[0].subRows[0].original.name = 'NewName';
+    expect(newNodeName(table, 'NewName')).toEqual('NewName2');
+  });
+});
 
-    test('notPresent', () => {
-      expect(subRowNamesOfRow('This.Key.Is.Not.Present', table)).toEqual([]);
-    });
+describe('keyOfFirstSelectedNonLeafRow', () => {
+  test('noSelection', () => {
+    table.getState().rowSelection = {};
+    expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
+  });
+
+  test('folderSelection', () => {
+    table.getState().rowSelection = { '1.1': true };
+    expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11');
+  });
+
+  test('rootLeafSelection', () => {
+    table.getState().rowSelection = { '0': true };
+    expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('');
+  });
+
+  test('leafSelection', () => {
+    table.getState().rowSelection = { '1.1.0.0': true };
+    expect(keyOfFirstSelectedNonLeafRow(table)).toEqual('NameNode1.NameNode11.NameNode110');
+  });
+});
+
+test('keysOfAllNonLeafRows', () => {
+  expect(keysOfAllNonLeafRows(table)).toEqual([
+    'NameNode1',
+    'NameNode1.NameNode11',
+    'NameNode1.NameNode11.NameNode110',
+    'SearchForParentName'
+  ]);
+});
+
+describe('subRowNamesOfRow', () => {
+  test('root', () => {
+    expect(subRowNamesOfRow('', table)).toEqual(['NameNode0', 'NameNode1', 'SearchForParentName']);
+  });
+
+  test('singlePart', () => {
+    expect(subRowNamesOfRow('NameNode1', table)).toEqual(['NameNode10', 'NameNode11']);
+  });
+
+  test('multipleParts', () => {
+    expect(subRowNamesOfRow('NameNode1.NameNode11.NameNode110', table)).toEqual(['NameNode1100']);
+  });
+
+  test('notPresent', () => {
+    expect(subRowNamesOfRow('This.Key.Is.Not.Present', table)).toEqual([]);
   });
 });

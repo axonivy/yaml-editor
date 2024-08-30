@@ -17,12 +17,7 @@ const rowWithoutMessages = mockRow('key2', 'key0') as Row<Variable>;
 
 const variables = [
   variable('NameNode0', []),
-  variable('NameNode1', [
-    variable('NameNode10', []),
-    variable('NameNode11', [
-      variable('NameNode110', [])
-    ])
-  ])
+  variable('NameNode1', [variable('NameNode10', []), variable('NameNode11', [variable('NameNode110', [])])])
 ];
 
 beforeEach(() => {
@@ -50,123 +45,121 @@ beforeEach(() => {
   ];
 });
 
-describe('validaton-utils', () => {
-  describe('validationMessagesOfRow', () => {
-    test('default', () => {
-      const messages = validationMessagesOfRow(rowWithMessages, validationMessages);
-      expect(messages).toHaveLength(2);
-      expect(messages[0]).toEqual(validationMessages[1]);
-      expect(messages[1]).toEqual(validationMessages[2]);
-    });
-
-    test('noMatches', () => {
-      const messages = validationMessagesOfRow(rowWithoutMessages, validationMessages);
-      expect(messages).toHaveLength(0);
-    });
-
-    test('undefined', () => {
-      const messages = validationMessagesOfRow(rowWithMessages, undefined);
-      expect(messages).toHaveLength(0);
-    });
+describe('validationMessagesOfRow', () => {
+  test('default', () => {
+    const messages = validationMessagesOfRow(rowWithMessages, validationMessages);
+    expect(messages).toHaveLength(2);
+    expect(messages[0]).toEqual(validationMessages[1]);
+    expect(messages[1]).toEqual(validationMessages[2]);
   });
 
-  describe('containsError', () => {
-    test('true', () => {
-      validationMessages[1].severity = 2;
-      expect(containsError(validationMessages)).toBeTruthy();
-    });
-
-    test('false', () => {
-      expect(containsError(validationMessages)).toBeFalsy();
-    });
+  test('noMatches', () => {
+    const messages = validationMessagesOfRow(rowWithoutMessages, validationMessages);
+    expect(messages).toHaveLength(0);
   });
 
-  describe('containsWarning', () => {
-    test('true', () => {
-      validationMessages[1].severity = 1;
-      expect(containsWarning(validationMessages)).toBeTruthy();
-    });
+  test('undefined', () => {
+    const messages = validationMessagesOfRow(rowWithMessages, undefined);
+    expect(messages).toHaveLength(0);
+  });
+});
 
-    test('false', () => {
-      expect(containsWarning(validationMessages)).toBeFalsy();
-    });
+describe('containsError', () => {
+  test('true', () => {
+    validationMessages[1].severity = 2;
+    expect(containsError(validationMessages)).toBeTruthy();
   });
 
-  describe('toValidationMessageVariant', () => {
-    test('warning', () => {
-      expect(toValidationMessageVariant(1)).toEqual('warning');
-    });
+  test('false', () => {
+    expect(containsError(validationMessages)).toBeFalsy();
+  });
+});
 
-    test('error', () => {
-      expect(toValidationMessageVariant(2)).toEqual('error');
-    });
-
-    test('default', () => {
-      expect(toValidationMessageVariant(42)).toEqual('info');
-    });
+describe('containsWarning', () => {
+  test('true', () => {
+    validationMessages[1].severity = 1;
+    expect(containsWarning(validationMessages)).toBeTruthy();
   });
 
-  describe('validateName', () => {
-    test('valid', () => {
-      expect(validateName('Name', ['AnotherName'])).toBeUndefined();
-    });
+  test('false', () => {
+    expect(containsWarning(validationMessages)).toBeFalsy();
+  });
+});
 
-    describe('invalid', () => {
-      describe('blank', () => {
-        test('empty', () => {
-          expect(validateName('', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
-        });
-
-        test('whitespace', () => {
-          expect(validateName('   ', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
-        });
-      });
-
-      test('taken', () => {
-        expect(validateName('Name', ['Name'])).toEqual({ message: 'Name is already present in this Namespace.', variant: 'error' });
-      });
-
-      test('containsDot', () => {
-        expect(validateName('New.Name', [])).toEqual({ message: "Character '.' is not allowed.", variant: 'error' });
-      });
-    });
+describe('toValidationMessageVariant', () => {
+  test('warning', () => {
+    expect(toValidationMessageVariant(1)).toEqual('warning');
   });
 
-  describe('validateNamespace', () => {
-    describe('valid', () => {
+  test('error', () => {
+    expect(toValidationMessageVariant(2)).toEqual('error');
+  });
+
+  test('default', () => {
+    expect(toValidationMessageVariant(42)).toEqual('info');
+  });
+});
+
+describe('validateName', () => {
+  test('valid', () => {
+    expect(validateName('Name', ['AnotherName'])).toBeUndefined();
+  });
+
+  describe('invalid', () => {
+    describe('blank', () => {
       test('empty', () => {
-        expect(validateNamespace('', variables)).toBeUndefined();
+        expect(validateName('', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
       });
 
-      test('completelyNew', () => {
-        expect(validateNamespace('New.Namespace', variables)).toBeUndefined();
-      });
-
-      test('partiallyNew', () => {
-        expect(validateNamespace('NameNode1.New.Namespace', variables)).toBeUndefined();
+      test('whitespace', () => {
+        expect(validateName('   ', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
       });
     });
 
-    describe('invalid', () => {
-      test('firstPartIsNotAFolder', () => {
-        expect(validateNamespace('NameNode0.New.Namespace', variables)).toEqual({
-          message: "Namespace 'NameNode0' is not a folder, you cannot add a child to it.",
-          variant: 'error'
-        });
-      });
+    test('taken', () => {
+      expect(validateName('Name', ['Name'])).toEqual({ message: 'Name is already present in this Namespace.', variant: 'error' });
+    });
 
-      test('middlePartIsNotAFolder', () => {
-        expect(validateNamespace('NameNode1.NameNode10.New.Namespace', variables)).toEqual({
-          message: "Namespace 'NameNode1.NameNode10' is not a folder, you cannot add a child to it.",
-          variant: 'error'
-        });
-      });
+    test('containsDot', () => {
+      expect(validateName('New.Name', [])).toEqual({ message: "Character '.' is not allowed.", variant: 'error' });
+    });
+  });
+});
 
-      test('lastPartIsNotAFolder', () => {
-        expect(validateNamespace('NameNode1.NameNode11.NameNode110', variables)).toEqual({
-          message: "Namespace 'NameNode1.NameNode11.NameNode110' is not a folder, you cannot add a child to it.",
-          variant: 'error'
-        });
+describe('validateNamespace', () => {
+  describe('valid', () => {
+    test('empty', () => {
+      expect(validateNamespace('', variables)).toBeUndefined();
+    });
+
+    test('completelyNew', () => {
+      expect(validateNamespace('New.Namespace', variables)).toBeUndefined();
+    });
+
+    test('partiallyNew', () => {
+      expect(validateNamespace('NameNode1.New.Namespace', variables)).toBeUndefined();
+    });
+  });
+
+  describe('invalid', () => {
+    test('firstPartIsNotAFolder', () => {
+      expect(validateNamespace('NameNode0.New.Namespace', variables)).toEqual({
+        message: "Namespace 'NameNode0' is not a folder, you cannot add a child to it.",
+        variant: 'error'
+      });
+    });
+
+    test('middlePartIsNotAFolder', () => {
+      expect(validateNamespace('NameNode1.NameNode10.New.Namespace', variables)).toEqual({
+        message: "Namespace 'NameNode1.NameNode10' is not a folder, you cannot add a child to it.",
+        variant: 'error'
+      });
+    });
+
+    test('lastPartIsNotAFolder', () => {
+      expect(validateNamespace('NameNode1.NameNode11.NameNode110', variables)).toEqual({
+        message: "Namespace 'NameNode1.NameNode11.NameNode110' is not a folder, you cannot add a child to it.",
+        variant: 'error'
       });
     });
   });
