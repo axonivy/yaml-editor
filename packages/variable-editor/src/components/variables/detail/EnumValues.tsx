@@ -3,18 +3,20 @@ import {
   BasicField,
   Button,
   deleteFirstSelectedRow,
+  Flex,
   InputCell,
   SelectRow,
+  Separator,
   Table,
   TableBody,
   TableCell,
   updateRowData,
+  useReadonly,
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
-import { Control } from '../../control/Control';
 import { toEnumMetadataUpdate } from '../data/metadata';
 import { type VariableUpdates } from '../data/variable';
 
@@ -67,24 +69,23 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
     onChange(updates);
   };
 
+  const readonly = useReadonly();
+  const control = readonly ? null : (
+    <Flex gap={2}>
+      <Button key='addButton' icon={IvyIcons.Plus} onClick={addValue} aria-label='Add value' />
+      <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
+      <Button
+        key='deleteButton'
+        icon={IvyIcons.Trash}
+        onClick={deleteValue}
+        disabled={!table.getIsSomeRowsSelected()}
+        aria-label='Delete value'
+      />
+    </Flex>
+  );
+
   return (
-    <BasicField
-      label='List of possible values'
-      control={
-        <Control
-          buttons={[
-            <Button key='addButton' icon={IvyIcons.Plus} onClick={addValue} aria-label='Add value' />,
-            <Button
-              key='deleteButton'
-              icon={IvyIcons.Trash}
-              onClick={deleteValue}
-              disabled={!table.getIsSomeRowsSelected()}
-              aria-label='Delete value'
-            />
-          ]}
-        />
-      }
-    >
+    <BasicField label='List of possible values' control={control}>
       <Table>
         <TableBody>
           {table.getRowModel().rows.map(row => (
