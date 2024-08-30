@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  selectRow,
   useBrowser,
   type BrowserNode
 } from '@axonivy/ui-components';
@@ -16,7 +17,6 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useClient } from '../../../protocol';
 import type { DataContext, ProjectVarNode } from '../../../protocol/types';
 import { genQueryKey } from '../../../query';
-import { selectRow } from '../../../utils/table/table';
 import { toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
 import type { AddNodeReturnType, TreePath } from '../../../utils/tree/types';

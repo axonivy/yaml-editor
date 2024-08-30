@@ -1,4 +1,5 @@
 import {
+  BasicField,
   Button,
   Combobox,
   Dialog,
@@ -8,14 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Fieldset,
   Flex,
-  Input
+  Input,
+  selectRow
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
-import { selectRow } from '../../../utils/table/table';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
 import type { TreePath } from '../../../utils/tree/types';
@@ -79,15 +79,15 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
           <DialogTitle>New Variable</DialogTitle>
         </DialogHeader>
         <Flex direction='column' gap={2}>
-          <Fieldset label='Name' message={nameValidationMessage} aria-label='Name'>
+          <BasicField label='Name' message={nameValidationMessage} aria-label='Name'>
             <Input
               value={name}
               onChange={event => {
                 setName(event.target.value);
               }}
             />
-          </Fieldset>
-          <Fieldset label='Namespace' message={namespaceValidationMessage} aria-label='Namespace'>
+          </BasicField>
+          <BasicField label='Namespace' message={namespaceValidationMessage} aria-label='Namespace'>
             <Combobox
               value={namespace}
               onChange={setNamespace}
@@ -96,7 +96,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
               }}
               options={namespaceOptions()}
             />
-          </Fieldset>
+          </BasicField>
         </Flex>
         <DialogFooter>
           <DialogClose asChild>

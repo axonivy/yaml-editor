@@ -1,16 +1,16 @@
-import { BasicSelect, Fieldset, Input } from '@axonivy/ui-components';
+import { BasicField, BasicSelect, Input } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { PasswordInput } from '../../input/PasswordInput';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
 
-type ValueFieldsetProps = {
+type ValueProps = {
   variable: Variable;
   onChange: (updates: VariableUpdates) => void;
 };
 
-export const Value = ({ variable, onChange }: ValueFieldsetProps) => {
+export const Value = ({ variable, onChange }: ValueProps) => {
   const enumSelectItems = useMemo(() => {
     const metadata = variable.metadata;
     if (!isEnumMetadata(metadata)) {
@@ -56,5 +56,5 @@ export const Value = ({ variable, onChange }: ValueFieldsetProps) => {
     }
   };
 
-  return <Fieldset label='Value'>{input()}</Fieldset>;
+  return <BasicField label='Value'>{input()}</BasicField>;
 };

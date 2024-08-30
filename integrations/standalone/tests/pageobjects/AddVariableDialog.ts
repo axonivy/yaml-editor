@@ -1,23 +1,23 @@
 import { type Locator, type Page } from '@playwright/test';
 import { Button } from './Button';
 import { Combobox } from './Combobox';
-import { FieldsetMessage } from './FieldsetMessage';
+import { FieldMessage } from './FieldMessage';
 import { TextArea } from './TextArea';
 
 export class AddVariableDialog {
   private readonly add: Button;
   readonly name: TextArea;
-  readonly nameMessage: FieldsetMessage;
+  readonly nameMessage: FieldMessage;
   readonly namespace: Combobox;
-  readonly namespaceMessage: FieldsetMessage;
+  readonly namespaceMessage: FieldMessage;
   private readonly create: Button;
 
   constructor(page: Page, parent: Locator) {
     this.add = new Button(parent, { name: 'Add variable' });
     this.name = new TextArea(parent);
-    this.nameMessage = new FieldsetMessage(parent, { label: 'Name' });
+    this.nameMessage = new FieldMessage(parent, { label: 'Name' });
     this.namespace = new Combobox(page, parent);
-    this.namespaceMessage = new FieldsetMessage(parent, { label: 'Namespace' });
+    this.namespaceMessage = new FieldMessage(parent, { label: 'Namespace' });
     this.create = new Button(parent, { name: 'Create variable' });
   }
 
