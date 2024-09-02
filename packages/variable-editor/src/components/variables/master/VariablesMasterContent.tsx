@@ -15,10 +15,8 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import type { DataContext, ValidationMessages } from '../../../protocol/types';
+import { useAppContext } from '../../../context/AppContext';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
-import { type TreePath } from '../../../utils/tree/types';
-import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
 import { AddVariableDialog } from './AddVariableDialog';
@@ -26,21 +24,9 @@ import { OverwriteDialog } from './OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
 
-type VariablesMasterContentProps = {
-  context: DataContext;
-  variables: Array<Variable>;
-  setVariables: (variables: Array<Variable>) => void;
-  setSelectedVariablePath: (path: TreePath) => void;
-  validationMessages?: ValidationMessages;
-};
+export const VariablesMasterContent = () => {
+  const { variables, setVariables, setSelectedVariable } = useAppContext();
 
-export const VariablesMasterContent = ({
-  context,
-  variables,
-  setVariables,
-  setSelectedVariablePath,
-  validationMessages
-}: VariablesMasterContentProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const globalFilter = useTreeGlobalFilter(variables);
@@ -73,36 +59,23 @@ export const VariablesMasterContent = ({
 
   const deleteVariable = () => {
     const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, variables);
-    setSelectedVariablePath(deleteFirstSelectedRowReturnValue.selectedPath);
+    setSelectedVariable(deleteFirstSelectedRowReturnValue.selectedPath);
     setVariables(deleteFirstSelectedRowReturnValue.newData);
   };
 
   const resetSelection = () => {
     selectRow(table);
-    setSelectedVariablePath([]);
+    setSelectedVariable([]);
   };
 
   const readonly = useReadonly();
   const control = readonly ? null : (
     <Flex gap={2}>
-      <AddVariableDialog
-        key='addButton'
-        table={table}
-        variables={variables}
-        setVariables={setVariables}
-        setSelectedVariablePath={setSelectedVariablePath}
-      />
+      <AddVariableDialog table={table} />
       <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
-      <OverwriteDialog
-        context={context}
-        table={table}
-        variables={variables}
-        setVariables={setVariables}
-        setSelectedVariablePath={setSelectedVariablePath}
-      />
+      <OverwriteDialog table={table} />
       <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
       <Button
-        key='deleteButton'
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
         disabled={table.getSelectedRowModel().flatRows.length === 0}
@@ -118,12 +91,7 @@ export const VariablesMasterContent = ({
         <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
         <TableBody>
           {table.getRowModel().rows.map(row => (
-            <ValidationRow
-              key={row.id}
-              row={row}
-              setSelectedVariablePath={setSelectedVariablePath}
-              validationMessages={validationMessagesOfRow(row, validationMessages)}
-            />
+            <ValidationRow key={row.id} row={row} />
           ))}
         </TableBody>
       </Table>

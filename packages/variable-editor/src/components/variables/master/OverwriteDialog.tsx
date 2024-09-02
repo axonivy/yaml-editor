@@ -14,35 +14,36 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { useQuery } from '@tanstack/react-query';
 import { type Table } from '@tanstack/react-table';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
-import type { DataContext, ProjectVarNode } from '../../../protocol/types';
+import type { ProjectVarNode } from '../../../protocol/types';
 import { genQueryKey } from '../../../query/query-client';
 import { toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
-import type { AddNodeReturnType, TreePath } from '../../../utils/tree/types';
+import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { isMetadataType, type MetadataType } from '../data/metadata';
 import { VariableFactory, type Variable } from '../data/variable';
 import { nodeIcon } from '../data/variable-utils';
 
 type OverwriteProps = {
-  context: DataContext;
   table: Table<Variable>;
-  variables: Array<Variable>;
-  setVariables: (variables: Array<Variable>) => void;
-  setSelectedVariablePath: (path: TreePath) => void;
 };
 
-export const OverwriteDialog = ({ context, table, variables, setVariables, setSelectedVariablePath }: OverwriteProps) => {
+export const OverwriteDialog = ({ table }: OverwriteProps) => {
+  const { variables, setVariables, setSelectedVariable } = useAppContext();
+
   const insertVariable = (node?: ProjectVarNode): void => {
     if (node) {
       const addNodeReturnValue = addVariable(variables, node);
       setVariables(addNodeReturnValue.newData);
       selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-      setSelectedVariablePath(addNodeReturnValue.newNodePath);
+      setSelectedVariable(addNodeReturnValue.newNodePath);
     }
   };
 
-  const VariableBrowser = ({ applyFn, context }: { applyFn: (node?: ProjectVarNode) => void; context: DataContext }) => {
+  const VariableBrowser = ({ applyFn }: { applyFn: (node?: ProjectVarNode) => void }) => {
+    const { context } = useAppContext();
+
     const client = useClient();
 
     const queryKeys = useMemo(() => ({ knownVariables: () => genQueryKey('meta/knownVariables', context) }), [context]);
@@ -112,7 +113,6 @@ export const OverwriteDialog = ({ context, table, variables, setVariables, setSe
             insertVariable(node);
             setDialogState(false);
           }}
-          context={context}
         />
       </DialogContent>
     </Dialog>

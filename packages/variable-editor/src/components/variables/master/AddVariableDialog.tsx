@@ -16,21 +16,20 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { type Table } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
+import { useAppContext } from '../../../context/AppContext';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
-import type { TreePath } from '../../../utils/tree/types';
 import { validateName, validateNamespace } from '../data/validation-utils';
 import { VariableFactory, type Variable } from '../data/variable';
 import './AddVariableDialog.css';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
-  variables: Array<Variable>;
-  setVariables: (variables: Array<Variable>) => void;
-  setSelectedVariablePath: (path: TreePath) => void;
 };
 
-export const AddVariableDialog = ({ table, variables, setVariables, setSelectedVariablePath }: AddVariableDialogProps) => {
+export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
+  const { variables, setVariables, setSelectedVariable } = useAppContext();
+
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
 
@@ -56,7 +55,7 @@ export const AddVariableDialog = ({ table, variables, setVariables, setSelectedV
   const addVariable = () => {
     const addNodeReturnValue = addNode(name, namespace, variables, VariableFactory);
     selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-    setSelectedVariablePath(addNodeReturnValue.newNodePath);
+    setSelectedVariable(addNodeReturnValue.newNodePath);
     setVariables(addNodeReturnValue.newData);
   };
 

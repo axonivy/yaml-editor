@@ -15,14 +15,14 @@ import {
   useTheme
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import { useAppContext } from '../../../context/AppContext';
 
 type VariablesMasterToolbarProps = {
   title: string;
-  sidebar: boolean;
-  setSidebar: (sidebar: boolean) => void;
 };
 
-export const VariablesMasterToolbar = ({ title, sidebar, setSidebar }: VariablesMasterToolbarProps) => {
+export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) => {
+  const { detail, setDetail } = useAppContext();
   const { theme, setTheme } = useTheme();
 
   return (
@@ -57,7 +57,7 @@ export const VariablesMasterToolbar = ({ title, sidebar, setSidebar }: Variables
             </PopoverContent>
           </Popover>
         )}
-        <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setSidebar(!sidebar)} aria-label='Details toggle' />
+        <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setDetail(!detail)} aria-label='Details toggle' />
       </Flex>
     </Toolbar>
   );
