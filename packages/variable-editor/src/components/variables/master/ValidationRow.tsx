@@ -1,12 +1,11 @@
-import './ValidationRow.css';
-import { SelectRow, TableCell } from '@axonivy/ui-components';
+import { MessageRow, SelectRow, TableCell } from '@axonivy/ui-components';
 import { flexRender, type Row } from '@tanstack/react-table';
 import type { ValidationMessages } from '../../../protocol/types';
 import { getPathOfRow } from '../../../utils/tree/tree';
 import { type TreePath } from '../../../utils/tree/types';
-import { containsError, containsWarning } from '../data/validation-utils';
+import { containsError, containsWarning, toValidationMessageVariant } from '../data/validation-utils';
 import type { Variable } from '../data/variable';
-import { ValidationMessagesRows } from './ValidationMessagesRows';
+import './ValidationRow.css';
 
 type ValidationRowProps = {
   row: Row<Variable>;
@@ -32,7 +31,13 @@ export const ValidationRow = ({ row, setSelectedVariablePath, validationMessages
           <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
         ))}
       </SelectRow>
-      <ValidationMessagesRows validationMessages={validationMessages} />
+      {validationMessages.map((validationMessage, index) => (
+        <MessageRow
+          key={index}
+          columnCount={2}
+          message={{ message: validationMessage.message, variant: toValidationMessageVariant(validationMessage.severity) }}
+        />
+      ))}
     </>
   );
 };

@@ -1,21 +1,23 @@
-import './VariableEditor.css';
+import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Spinner } from '@axonivy/ui-components';
+import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
-import { Editor } from './components/editor/Editor';
 import type { Variable } from './components/variables/data/variable';
 import { toContent, toVariables } from './components/variables/data/variable-utils';
-import { VariablesDetail } from './components/variables/detail/VariablesDetail';
-import { VariablesMaster } from './components/variables/master/VariablesMaster';
+import { VariablesDetailContent } from './components/variables/detail/VariablesDetailContent';
+import { VariablesMasterContent } from './components/variables/master/VariablesMasterContent';
+import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { useClient } from './protocol/ClientContextProvider';
 import type { Data, EditorProps, ValidationMessages } from './protocol/types';
+import { genQueryKey } from './query/query-client';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
-import { genQueryKey } from './query/query-client';
-import { Flex, PanelMessage, Spinner } from '@axonivy/ui-components';
-import { IvyIcons } from '@axonivy/ui-icons';
+import './VariablesEditor.css';
 
 function VariableEditor(props: EditorProps) {
+  const [sidebar, setSidebar] = useState(true);
+
   const [context, setContext] = useState(props.context);
   const [directSave, setDirectSave] = useState(props.directSave);
   useEffect(() => {
@@ -95,20 +97,31 @@ function VariableEditor(props: EditorProps) {
   }
 
   return (
-    <Editor
-      masterTitle={title}
-      masterContent={
-        <VariablesMaster
-          context={context}
-          variables={rootVariable.children}
-          setVariables={setVariables}
-          setSelectedVariablePath={setSelectedVariablePath}
-          validationMessages={validationMessages}
-        />
-      }
-      detailTitle={detailTitle}
-      detailContent={<VariablesDetail variables={rootVariable.children} variablePath={selectedVariablePath} setVariables={setVariables} />}
-    />
+    <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
+      <ResizablePanel defaultSize={75} minSize={50} className='master-panel' data-testid='master-panel'>
+        <Flex className='panel-content-container' direction='column'>
+          <VariablesMasterToolbar title={title} sidebar={sidebar} setSidebar={setSidebar} />
+          <VariablesMasterContent
+            context={context}
+            variables={rootVariable.children}
+            setVariables={setVariables}
+            setSelectedVariablePath={setSelectedVariablePath}
+            validationMessages={validationMessages}
+          />
+        </Flex>
+      </ResizablePanel>
+      {sidebar && (
+        <>
+          <ResizableHandle />
+          <ResizablePanel defaultSize={25} minSize={10}>
+            <Flex direction='column' className='panel-content-container' data-testid='details-container'>
+              <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title' />
+              <VariablesDetailContent variables={rootVariable.children} variablePath={selectedVariablePath} setVariables={setVariables} />
+            </Flex>
+          </ResizablePanel>
+        </>
+      )}
+    </ResizablePanelGroup>
   );
 }
 

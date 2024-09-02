@@ -24,9 +24,9 @@ import { variableIcon } from '../data/variable-utils';
 import { AddVariableDialog } from './AddVariableDialog';
 import { OverwriteDialog } from './OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
-import './VariablesMaster.css';
+import './VariablesMasterContent.css';
 
-type VariablesProps = {
+type VariablesMasterContentProps = {
   context: DataContext;
   variables: Array<Variable>;
   setVariables: (variables: Array<Variable>) => void;
@@ -34,7 +34,13 @@ type VariablesProps = {
   validationMessages?: ValidationMessages;
 };
 
-export const VariablesMaster = ({ context, variables, setVariables, setSelectedVariablePath, validationMessages }: VariablesProps) => {
+export const VariablesMasterContent = ({
+  context,
+  variables,
+  setVariables,
+  setSelectedVariablePath,
+  validationMessages
+}: VariablesMasterContentProps) => {
   const selection = useTableSelect<Variable>();
   const expanded = useTableExpand<Variable>();
   const globalFilter = useTreeGlobalFilter(variables);
@@ -106,7 +112,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
   );
 
   return (
-    <BasicField className='variable-wrapper' label='List of variables' control={control}>
+    <BasicField className='master-content' label='List of variables' control={control}>
       {globalFilter.filter}
       <Table>
         <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
