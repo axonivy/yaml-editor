@@ -7,6 +7,7 @@ import { toContent, toVariables } from './components/variables/data/variable-uti
 import { VariablesDetailContent } from './components/variables/detail/VariablesDetailContent';
 import { VariablesMasterContent } from './components/variables/master/VariablesMasterContent';
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
+import { AppProvider } from './context/AppContext';
 import { useClient } from './protocol/ClientContextProvider';
 import type { Data, EditorProps, ValidationMessages } from './protocol/types';
 import { genQueryKey } from './query/query-client';
@@ -16,7 +17,7 @@ import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
 
 function VariableEditor(props: EditorProps) {
-  const [sidebar, setSidebar] = useState(true);
+  const [detail, setDetail] = useState(true);
 
   const [context, setContext] = useState(props.context);
   const [directSave, setDirectSave] = useState(props.directSave);
@@ -24,8 +25,8 @@ function VariableEditor(props: EditorProps) {
     setContext(props.context);
     setDirectSave(props.directSave);
   }, [props]);
-  const [selectedVariablePath, setSelectedVariablePath] = useState<TreePath>([]);
-  const [validationMessages, setValidationMessages] = useState<ValidationMessages>();
+  const [selectedVariable, setSelectedVariable] = useState<TreePath>([]);
+  const [validationMessages, setValidationMessages] = useState<ValidationMessages>([]);
 
   const client = useClient();
   const queryClient = useQueryClient();
@@ -91,37 +92,44 @@ function VariableEditor(props: EditorProps) {
 
   const title = 'Variables Editor';
   let detailTitle = title;
-  const selectedVariable = getNode(rootVariable.children, selectedVariablePath);
-  if (selectedVariable) {
-    detailTitle += ' - ' + selectedVariable.name;
+  const variable = getNode(rootVariable.children, selectedVariable);
+  if (variable) {
+    detailTitle += ' - ' + variable.name;
   }
 
   return (
-    <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
-      <ResizablePanel defaultSize={75} minSize={50} className='master-panel' data-testid='master-panel'>
-        <Flex className='panel-content-container' direction='column'>
-          <VariablesMasterToolbar title={title} sidebar={sidebar} setSidebar={setSidebar} />
-          <VariablesMasterContent
-            context={context}
-            variables={rootVariable.children}
-            setVariables={setVariables}
-            setSelectedVariablePath={setSelectedVariablePath}
-            validationMessages={validationMessages}
-          />
-        </Flex>
-      </ResizablePanel>
-      {sidebar && (
-        <>
-          <ResizableHandle />
-          <ResizablePanel defaultSize={25} minSize={10}>
-            <Flex direction='column' className='panel-content-container' data-testid='details-container'>
-              <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title' />
-              <VariablesDetailContent variables={rootVariable.children} variablePath={selectedVariablePath} setVariables={setVariables} />
-            </Flex>
-          </ResizablePanel>
-        </>
-      )}
-    </ResizablePanelGroup>
+    <AppProvider
+      value={{
+        variables: rootVariable.children,
+        setVariables: setVariables,
+        selectedVariable: selectedVariable,
+        setSelectedVariable: setSelectedVariable,
+        validationMessages: validationMessages,
+        context: context,
+        detail: detail,
+        setDetail: setDetail
+      }}
+    >
+      <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
+        <ResizablePanel defaultSize={75} minSize={50} className='master-panel' data-testid='master-panel'>
+          <Flex className='panel-content-container' direction='column'>
+            <VariablesMasterToolbar title={title} />
+            <VariablesMasterContent />
+          </Flex>
+        </ResizablePanel>
+        {detail && (
+          <>
+            <ResizableHandle />
+            <ResizablePanel defaultSize={25} minSize={10}>
+              <Flex direction='column' className='panel-content-container' data-testid='details-container'>
+                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title' />
+                <VariablesDetailContent />
+              </Flex>
+            </ResizablePanel>
+          </>
+        )}
+      </ResizablePanelGroup>
+    </AppProvider>
   );
 }
 
