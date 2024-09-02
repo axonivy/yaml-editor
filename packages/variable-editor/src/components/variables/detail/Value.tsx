@@ -1,6 +1,5 @@
-import { BasicField, BasicSelect, Input } from '@axonivy/ui-components';
+import { BasicField, BasicSelect, Input, PasswordInput } from '@axonivy/ui-components';
 import { useMemo } from 'react';
-import { PasswordInput } from '../../input/PasswordInput';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
 
