@@ -1,0 +1,4 @@
+.detail-content {
+  margin: var(--size-3);
+  min-height: 0;
+}
