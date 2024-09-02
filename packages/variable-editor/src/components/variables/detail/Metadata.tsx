@@ -1,5 +1,4 @@
 import { BasicField, BasicSelect } from '@axonivy/ui-components';
-import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import {
   fileMetadataFilenameExtensionOptions,
   isEnumMetadata,
@@ -9,7 +8,7 @@ import {
   type FileMetadataFilenameExtension,
   type MetadataType
 } from '../data/metadata';
-import { variableMetadataAttribute, type Variable, type VariableUpdates } from '../data/variable';
+import { type Variable, type VariableUpdates } from '../data/variable';
 import { EnumValues } from './EnumValues';
 
 type MetadataProps = {
@@ -25,10 +24,10 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
     const updates: VariableUpdates = [];
     switch (value) {
       case 'daytime':
-        updates.push({ key: treeNodeValueAttribute, value: '00:00' });
+        updates.push({ key: 'value', value: '00:00' });
         break;
       case 'enum':
-        updates.push({ key: treeNodeValueAttribute, value: '' });
+        updates.push({ key: 'value', value: '' });
         if (isEnumMetadata(newMetadata)) {
           newMetadata.values = [''];
         }
@@ -38,7 +37,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
           newMetadata.filenameExtension = 'txt';
         }
     }
-    updates.push({ key: variableMetadataAttribute, value: newMetadata });
+    updates.push({ key: 'metadata', value: newMetadata });
     onChange(updates);
   };
 

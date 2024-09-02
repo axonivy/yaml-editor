@@ -17,7 +17,7 @@ import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import type { DataContext, ValidationMessages } from '../../../protocol/types';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
-import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
+import { type TreePath } from '../../../utils/tree/types';
 import { validationMessagesOfRow } from '../data/validation-utils';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
@@ -40,7 +40,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
   const globalFilter = useTreeGlobalFilter(variables);
   const columns: Array<ColumnDef<Variable, string>> = [
     {
-      accessorKey: treeNodeNameAttribute,
+      accessorKey: 'name',
       header: header => <ExpandableHeader name='Name' header={header} />,
       cell: cell => <ExpandableCell cell={cell} icon={variableIcon(cell.row.original)} />,
       minSize: 50

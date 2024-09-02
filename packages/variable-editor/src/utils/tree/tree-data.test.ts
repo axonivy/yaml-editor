@@ -1,11 +1,11 @@
 import { setupData } from './test-utils/setup';
 import { TestTreeNodeFactory } from './test-utils/types';
 import { addNode, getNode, getNodesOnPath, hasChildren, removeNode, updateNode } from './tree-data';
-import { treeNodeNameAttribute, treeNodeValueAttribute, type TreeNodeUpdates } from './types';
+import { type TreeNodeUpdates } from './types';
 
 const nodeUpdates: TreeNodeUpdates<{ name: string; value: string; children: Array<any> }> = [
-  { key: treeNodeNameAttribute, value: 'newName' },
-  { key: treeNodeValueAttribute, value: 'newValue' }
+  { key: 'name', value: 'newName' },
+  { key: 'value', value: 'newValue' }
 ];
 
 describe('getNode', () => {

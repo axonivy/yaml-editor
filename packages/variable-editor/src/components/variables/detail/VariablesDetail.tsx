@@ -1,7 +1,7 @@
 import { BasicField, Input, PanelMessage, Textarea } from '@axonivy/ui-components';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
-import { treeNodeNameAttribute, type TreePath } from '../../../utils/tree/types';
-import { variableDescriptionAttribute, type Variable, type VariableUpdates } from '../data/variable';
+import { type TreePath } from '../../../utils/tree/types';
+import { type Variable, type VariableUpdates } from '../data/variable';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
 
@@ -27,16 +27,13 @@ export const VariablesDetail = ({ variables, variablePath, setVariables }: Varia
   return (
     <>
       <BasicField label='Name'>
-        <Input
-          value={variable.name}
-          onChange={event => handleVariableAttributeChange([{ key: treeNodeNameAttribute, value: event.target.value }])}
-        />
+        <Input value={variable.name} onChange={event => handleVariableAttributeChange([{ key: 'name', value: event.target.value }])} />
       </BasicField>
       {!hasChildren && <Value variable={variable} onChange={handleVariableAttributeChange} />}
       <BasicField label='Description'>
         <Textarea
           value={variable.description}
-          onChange={event => handleVariableAttributeChange([{ key: variableDescriptionAttribute, value: event.target.value }])}
+          onChange={event => handleVariableAttributeChange([{ key: 'description', value: event.target.value }])}
         />
       </BasicField>
       {!hasChildren && <Metadata variable={variable} onChange={handleVariableAttributeChange} />}

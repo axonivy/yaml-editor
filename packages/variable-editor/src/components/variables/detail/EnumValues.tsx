@@ -16,7 +16,6 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { flexRender, getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
-import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { toEnumMetadataUpdate } from '../data/metadata';
 import { type VariableUpdates } from '../data/variable';
 
@@ -64,7 +63,7 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
     const newValues = deleteFirstSelectedRow(table, values);
     const updates: VariableUpdates = [toEnumMetadataUpdate(newValues)];
     if (!newValues.includes(value)) {
-      updates.push({ key: treeNodeValueAttribute, value: '' });
+      updates.push({ key: 'value', value: '' });
     }
     onChange(updates);
   };

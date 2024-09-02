@@ -8,7 +8,6 @@ import {
   toEnumMetadataUpdate,
   toFileMetadataUpdate
 } from './metadata';
-import { variableMetadataAttribute } from './variable';
 
 test('metadataOptions', () => {
   expect(metadataOptions).toEqual([
@@ -104,13 +103,13 @@ describe('isFileMetadataFilenameExtension', () => {
 
 test('toEnumMetadataUpdate', () => {
   const values = ['value0', 'value1'];
-  expect(toEnumMetadataUpdate(values)).toEqual({ key: variableMetadataAttribute, value: { type: 'enum', values: values } });
+  expect(toEnumMetadataUpdate(values)).toEqual({ key: 'metadata', value: { type: 'enum', values: values } });
 });
 
 test('toFileMetadataUpdate', () => {
   const filenameExtension = 'txt';
   expect(toFileMetadataUpdate(filenameExtension)).toEqual({
-    key: variableMetadataAttribute,
+    key: 'metadata',
     value: { type: 'file', filenameExtension: filenameExtension }
   });
 });

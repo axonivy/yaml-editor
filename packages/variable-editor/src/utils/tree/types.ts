@@ -1,7 +1,3 @@
-export const treeNodeNameAttribute = 'name';
-export const treeNodeValueAttribute = 'value';
-export const treeNodeChildrenAttribute = 'children';
-
 export type TreeNode<TNode extends TreeNode<TNode>> = {
   name: string;
   value: string;

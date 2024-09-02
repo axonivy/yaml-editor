@@ -1,6 +1,5 @@
 import { BasicField, BasicSelect, Input } from '@axonivy/ui-components';
 import { useMemo } from 'react';
-import { treeNodeValueAttribute } from '../../../utils/tree/types';
 import { PasswordInput } from '../../input/PasswordInput';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
@@ -22,34 +21,23 @@ export const Value = ({ variable, onChange }: ValueProps) => {
   const input = () => {
     switch (variable.metadata.type) {
       case 'password':
-        return (
-          <PasswordInput
-            value={variable.value}
-            onChange={(newValue: string) => onChange([{ key: treeNodeValueAttribute, value: newValue }])}
-          />
-        );
+        return <PasswordInput value={variable.value} onChange={(newValue: string) => onChange([{ key: 'value', value: newValue }])} />;
       case 'daytime':
-        return (
-          <Input
-            value={variable.value}
-            onChange={event => onChange([{ key: treeNodeValueAttribute, value: event.target.value }])}
-            type='time'
-          />
-        );
+        return <Input value={variable.value} onChange={event => onChange([{ key: 'value', value: event.target.value }])} type='time' />;
       case 'enum':
         return (
           <BasicSelect
             value={variable.value}
             items={enumSelectItems}
             emptyItem={true}
-            onValueChange={(value: string) => onChange([{ key: treeNodeValueAttribute, value: value }])}
+            onValueChange={(value: string) => onChange([{ key: 'value', value: value }])}
           />
         );
       default:
         return (
           <Input
             value={variable.value}
-            onChange={event => onChange([{ key: treeNodeValueAttribute, value: event.target.value }])}
+            onChange={event => onChange([{ key: 'value', value: event.target.value }])}
             autoFocus={variable.value.length === 0}
           />
         );
