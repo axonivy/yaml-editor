@@ -1,7 +1,6 @@
-import type { TreeNode, TreeNodeFactory } from '../types';
+import type { TreeNodeFactory } from '../types';
 
-export interface TestNode extends TreeNode<TestNode> {}
-export const TestNodeFactory: TreeNodeFactory<TestNode> = (name: string) => {
+export const TestTreeNodeFactory: TreeNodeFactory<{ name: string; value: string; children: Array<any> }> = (name: string) => {
   return {
     name: name,
     value: '',

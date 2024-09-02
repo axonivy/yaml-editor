@@ -10,109 +10,107 @@ import {
 } from './metadata';
 import { variableMetadataAttribute } from './variable';
 
-describe('metadata', () => {
-  test('metadataOptions', () => {
-    expect(metadataOptions).toEqual([
-      { label: 'Password', value: 'password' },
-      { label: 'Daytime', value: 'daytime' },
-      { label: 'Enum', value: 'enum' },
-      { label: 'File', value: 'file' }
-    ]);
-  });
+test('metadataOptions', () => {
+  expect(metadataOptions).toEqual([
+    { label: 'Password', value: 'password' },
+    { label: 'Daytime', value: 'daytime' },
+    { label: 'Enum', value: 'enum' },
+    { label: 'File', value: 'file' }
+  ]);
+});
 
-  test('fileMetadataFilenameExtensionOptions', () => {
-    expect(fileMetadataFilenameExtensionOptions).toEqual([
-      { label: 'txt', value: 'txt' },
-      { label: 'json', value: 'json' }
-    ]);
-  });
+test('fileMetadataFilenameExtensionOptions', () => {
+  expect(fileMetadataFilenameExtensionOptions).toEqual([
+    { label: 'txt', value: 'txt' },
+    { label: 'json', value: 'json' }
+  ]);
+});
 
-  describe('isMetadataType', () => {
-    describe('true', () => {
-      test('empty', () => {
-        expect(isMetadataType('')).toBeTruthy();
-      });
-
-      test('password', () => {
-        expect(isMetadataType('password')).toBeTruthy();
-      });
-
-      test('daytime', () => {
-        expect(isMetadataType('daytime')).toBeTruthy();
-      });
-
-      test('enum', () => {
-        expect(isMetadataType('enum')).toBeTruthy();
-      });
-
-      test('file', () => {
-        expect(isMetadataType('file')).toBeTruthy();
-      });
+describe('isMetadataType', () => {
+  describe('true', () => {
+    test('empty', () => {
+      expect(isMetadataType('')).toBeTruthy();
     });
 
-    test('false', () => {
-      expect(isMetadataType('other')).toBeFalsy();
+    test('password', () => {
+      expect(isMetadataType('password')).toBeTruthy();
+    });
+
+    test('daytime', () => {
+      expect(isMetadataType('daytime')).toBeTruthy();
+    });
+
+    test('enum', () => {
+      expect(isMetadataType('enum')).toBeTruthy();
+    });
+
+    test('file', () => {
+      expect(isMetadataType('file')).toBeTruthy();
     });
   });
 
-  describe('isEnumMetadata', () => {
-    test('true', () => {
-      expect(isEnumMetadata({ type: 'enum' })).toBeTruthy();
+  test('false', () => {
+    expect(isMetadataType('other')).toBeFalsy();
+  });
+});
+
+describe('isEnumMetadata', () => {
+  test('true', () => {
+    expect(isEnumMetadata({ type: 'enum' })).toBeTruthy();
+  });
+
+  describe('false', () => {
+    test('default', () => {
+      expect(isEnumMetadata({ type: 'password' })).toBeFalsy();
     });
 
-    describe('false', () => {
-      test('default', () => {
-        expect(isEnumMetadata({ type: 'password' })).toBeFalsy();
-      });
+    test('metadataNotProvided', () => {
+      expect(isEnumMetadata(undefined)).toBeFalsy();
+    });
+  });
+});
 
-      test('metadataNotProvided', () => {
-        expect(isEnumMetadata(undefined)).toBeFalsy();
-      });
+describe('isFileMetadata', () => {
+  test('true', () => {
+    expect(isFileMetadata({ type: 'file' })).toBeTruthy();
+  });
+
+  describe('false', () => {
+    test('default', () => {
+      expect(isFileMetadata({ type: 'password' })).toBeFalsy();
+    });
+
+    test('metadataNotProvided', () => {
+      expect(isFileMetadata(undefined)).toBeFalsy();
+    });
+  });
+});
+
+describe('isFileMetadataFilenameExtension', () => {
+  describe('true', () => {
+    test('txt', () => {
+      expect(isFileMetadataFilenameExtension('txt')).toBeTruthy();
+    });
+
+    test('json', () => {
+      expect(isFileMetadataFilenameExtension('json')).toBeTruthy();
     });
   });
 
-  describe('isFileMetadata', () => {
-    test('true', () => {
-      expect(isFileMetadata({ type: 'file' })).toBeTruthy();
-    });
-
-    describe('false', () => {
-      test('default', () => {
-        expect(isFileMetadata({ type: 'password' })).toBeFalsy();
-      });
-
-      test('metadataNotProvided', () => {
-        expect(isFileMetadata(undefined)).toBeFalsy();
-      });
-    });
+  test('false', () => {
+    expect(isFileMetadataFilenameExtension('other')).toBeFalsy();
   });
+});
 
-  describe('isFileMetadataFilenameExtension', () => {
-    describe('true', () => {
-      test('txt', () => {
-        expect(isFileMetadataFilenameExtension('txt')).toBeTruthy();
-      });
+test('toEnumMetadataUpdate', () => {
+  const values = ['value0', 'value1'];
+  expect(toEnumMetadataUpdate(values)).toEqual({ key: variableMetadataAttribute, value: { type: 'enum', values: values } });
+});
 
-      test('json', () => {
-        expect(isFileMetadataFilenameExtension('json')).toBeTruthy();
-      });
-    });
-
-    test('false', () => {
-      expect(isFileMetadataFilenameExtension('other')).toBeFalsy();
-    });
-  });
-
-  test('toEnumMetadataUpdate', () => {
-    const values = ['value0', 'value1'];
-    expect(toEnumMetadataUpdate(values)).toEqual({ key: variableMetadataAttribute, value: { type: 'enum', values: values } });
-  });
-
-  test('toFileMetadataUpdate', () => {
-    const filenameExtension = 'txt';
-    expect(toFileMetadataUpdate(filenameExtension)).toEqual({
-      key: variableMetadataAttribute,
-      value: { type: 'file', filenameExtension: filenameExtension }
-    });
+test('toFileMetadataUpdate', () => {
+  const filenameExtension = 'txt';
+  expect(toFileMetadataUpdate(filenameExtension)).toEqual({
+    key: variableMetadataAttribute,
+    value: { type: 'file', filenameExtension: filenameExtension }
   });
 });

@@ -25,139 +25,124 @@ import {
 import type { Variable } from './variable';
 import { toContent, toVariables, variableIcon } from './variable-utils';
 
-let variable: Variable;
+describe('toVariables', () => {
+  test('default', () => {
+    expect(toVariables(content)).toEqual(rootVariable);
+  });
 
-beforeEach(() => {
-  variable = {
-    description: '',
-    metadata: {
-      type: ''
-    },
-    name: '',
-    value: '',
-    children: []
-  };
+  test('comments', () => {
+    expect(toVariables(contentWithComments)).toEqual(rootVariableWithComments);
+  });
+
+  describe('metadata', () => {
+    test('default', () => {
+      expect(toVariables(contentWithMetadata)).toEqual(rootVariableWithMetadata);
+    });
+
+    test('weirdFormat', () => {
+      expect(toVariables(contentWithWeirdMetadataFormat)).toEqual(rootVariableParsedFromContentWithWeirdMetadataFormat);
+    });
+
+    test('wrongFormat', () => {
+      expect(toVariables(contentWithWrongMetadataFormat)).toEqual(rootVariableParsedFromContentWithWrongMetadataFormat);
+    });
+  });
+
+  test('mixed', () => {
+    expect(toVariables(contentMixed)).toEqual(rootVariableMixed);
+  });
+
+  describe('empty', () => {
+    test('empty', () => {
+      expect(toVariables(contentEmpty)).toEqual(rootVariableEmpty);
+    });
+
+    test('emptyVariables', () => {
+      expect(toVariables(contentWithEmptyVariables)).toEqual(rootVariableEmpty);
+    });
+
+    test('emptyVariablesMapping', () => {
+      expect(toVariables(contentWithEmptyVariablesMapping)).toEqual(rootVariableEmpty);
+    });
+
+    test('commentOnly', () => {
+      expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
+    });
+
+    test('emptyValue', () => {
+      expect(toVariables(contentWithEmptyValue)).toEqual(rootVariableWithEmptyValue);
+    });
+  });
+
+  describe('malformed', () => {
+    test('wrongNameOfTopLevelNode', () => {
+      expect(toVariables(contentWithWrongNameOfTopLevelNode)).toEqual(rootVariableEmpty);
+    });
+
+    test('multipleTopLevelNodes', () => {
+      expect(toVariables(contentWithMultipleTopLevelNodes)).toEqual(rootVariableEmpty);
+    });
+
+    test('notYAML', () => {
+      expect(toVariables(contentNotYAML)).toEqual(rootVariableEmpty);
+    });
+  });
 });
 
-describe('variable-utils', () => {
-  describe('toVariables', () => {
-    test('default', () => {
-      expect(toVariables(content)).toEqual(rootVariable);
-    });
-
-    test('comments', () => {
-      expect(toVariables(contentWithComments)).toEqual(rootVariableWithComments);
-    });
-
-    describe('metadata', () => {
-      test('default', () => {
-        expect(toVariables(contentWithMetadata)).toEqual(rootVariableWithMetadata);
-      });
-
-      test('weirdFormat', () => {
-        expect(toVariables(contentWithWeirdMetadataFormat)).toEqual(rootVariableParsedFromContentWithWeirdMetadataFormat);
-      });
-
-      test('wrongFormat', () => {
-        expect(toVariables(contentWithWrongMetadataFormat)).toEqual(rootVariableParsedFromContentWithWrongMetadataFormat);
-      });
-    });
-
-    test('mixed', () => {
-      expect(toVariables(contentMixed)).toEqual(rootVariableMixed);
-    });
-
-    describe('empty', () => {
-      test('empty', () => {
-        expect(toVariables(contentEmpty)).toEqual(rootVariableEmpty);
-      });
-
-      test('emptyVariables', () => {
-        expect(toVariables(contentWithEmptyVariables)).toEqual(rootVariableEmpty);
-      });
-
-      test('emptyVariablesMapping', () => {
-        expect(toVariables(contentWithEmptyVariablesMapping)).toEqual(rootVariableEmpty);
-      });
-
-      test('commentOnly', () => {
-        expect(toVariables(contentWithCommentOnly)).toEqual(rootVariableParsedFromContentWithCommentOnly);
-      });
-
-      test('emptyValue', () => {
-        expect(toVariables(contentWithEmptyValue)).toEqual(rootVariableWithEmptyValue);
-      });
-    });
-
-    describe('malformed', () => {
-      test('wrongNameOfTopLevelNode', () => {
-        expect(toVariables(contentWithWrongNameOfTopLevelNode)).toEqual(rootVariableEmpty);
-      });
-
-      test('multipleTopLevelNodes', () => {
-        expect(toVariables(contentWithMultipleTopLevelNodes)).toEqual(rootVariableEmpty);
-      });
-
-      test('notYAML', () => {
-        expect(toVariables(contentNotYAML)).toEqual(rootVariableEmpty);
-      });
-    });
+describe('toContent', () => {
+  test('default', () => {
+    expect(toContent(rootVariable)).toEqual(contentStringsOnly);
   });
 
-  describe('toContent', () => {
-    test('default', () => {
-      expect(toContent(rootVariable)).toEqual(contentStringsOnly);
-    });
-
-    test('comments', () => {
-      expect(toContent(rootVariableWithComments)).toEqual(contentWithComments);
-    });
-
-    test('metadata', () => {
-      expect(toContent(rootVariableWithMetadata)).toEqual(contentWithMetadata);
-    });
-
-    test('mixed', () => {
-      expect(toContent(rootVariableMixed)).toEqual(contentMixed);
-    });
-
-    test('ignoreDuplicateKeys', () => {
-      expect(toContent(rootVariableWithDuplicates)).toEqual(contentParsedFromRootVariableWithDuplicates);
-    });
-
-    test('empty', () => {
-      expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
-    });
+  test('comments', () => {
+    expect(toContent(rootVariableWithComments)).toEqual(contentWithComments);
   });
 
-  describe('variableIcon', () => {
-    test('default', () => {
-      expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
-    });
+  test('metadata', () => {
+    expect(toContent(rootVariableWithMetadata)).toEqual(contentWithMetadata);
+  });
 
-    test('mapping', () => {
-      variable.children.push(variable);
-      expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
-    });
+  test('mixed', () => {
+    expect(toContent(rootVariableMixed)).toEqual(contentMixed);
+  });
 
-    test('password', () => {
-      variable.metadata.type = 'password';
-      expect(variableIcon(variable)).toEqual(IvyIcons.Password);
-    });
+  test('ignoreDuplicateKeys', () => {
+    expect(toContent(rootVariableWithDuplicates)).toEqual(contentParsedFromRootVariableWithDuplicates);
+  });
 
-    test('daytime', () => {
-      variable.metadata.type = 'daytime';
-      expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
-    });
+  test('empty', () => {
+    expect(toContent(rootVariableEmpty)).toEqual(contentWithEmptyVariablesMapping);
+  });
+});
 
-    test('enum', () => {
-      variable.metadata.type = 'enum';
-      expect(variableIcon(variable)).toEqual(IvyIcons.List);
-    });
+describe('variableIcon', () => {
+  test('default', () => {
+    const variable = { metadata: {}, children: [] as Array<Variable> } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.Quote);
+  });
 
-    test('file', () => {
-      variable.metadata.type = 'file';
-      expect(variableIcon(variable)).toEqual(IvyIcons.Note);
-    });
+  test('mapping', () => {
+    const variable = { metadata: { type: 'password' }, children: [{}] } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.FolderOpen);
+  });
+
+  test('password', () => {
+    const variable = { metadata: { type: 'password' }, children: [] as Array<Variable> } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.Password);
+  });
+
+  test('daytime', () => {
+    const variable = { metadata: { type: 'daytime' }, children: [] as Array<Variable> } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.CalendarTime);
+  });
+
+  test('enum', () => {
+    const variable = { metadata: { type: 'enum' }, children: [] as Array<Variable> } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.List);
+  });
+
+  test('file', () => {
+    const variable = { metadata: { type: 'file' }, children: [] as Array<Variable> } as Variable;
+    expect(variableIcon(variable)).toEqual(IvyIcons.Note);
   });
 });

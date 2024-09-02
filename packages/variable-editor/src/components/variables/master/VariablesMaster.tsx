@@ -67,7 +67,7 @@ export const VariablesMaster = ({ context, variables, setVariables, setSelectedV
 
   const deleteVariable = () => {
     const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, variables);
-    setSelectedVariablePath(deleteFirstSelectedRowReturnValue.selectedVariablePath);
+    setSelectedVariablePath(deleteFirstSelectedRowReturnValue.selectedPath);
     setVariables(deleteFirstSelectedRowReturnValue.newData);
   };
 
