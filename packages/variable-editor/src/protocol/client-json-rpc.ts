@@ -5,7 +5,8 @@ import {
   createWebSocketConnection,
   urlBuilder,
   type Connection,
-  type Disposable
+  type Disposable,
+  type MessageConnection
 } from '@axonivy/jsonrpc';
 import type { Client, Data, DataContext, MetaRequestTypes, NotificationTypes, RequestTypes, ValidationMessages } from './types';
 
@@ -42,17 +43,23 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
     return this.connection.onNotification(kind, listener);
   }
 
-  public static async startWebSocketClient(url: string): Promise<Client> {
+  public static async startWebSocketClient(url: string): Promise<ClientJsonRpc> {
     const webSocketUrl = urlBuilder(url, 'ivy-config-lsp');
     const connection = await createWebSocketConnection(webSocketUrl);
     return ClientJsonRpc.startClient(connection);
   }
 
-  public static async startClient(connection: Connection): Promise<Client> {
-    const messageConnection = createMessageConnection(connection.reader, connection.writer);
-    const client = new ClientJsonRpc(messageConnection);
-    client.start();
-    connection.reader.onClose(() => client.stop());
+  public static webSocketUrl(url: string) {
+    return urlBuilder(url, 'ivy-config-lsp');
+  }
+
+  public static async startClient(connection: Connection): Promise<ClientJsonRpc> {
+    return this.startMessageClient(createMessageConnection(connection.reader, connection.writer));
+  }
+
+  public static async startMessageClient(connection: MessageConnection): Promise<ClientJsonRpc> {
+    const client = new ClientJsonRpc(connection);
+    await client.start();
     return client;
   }
 }
