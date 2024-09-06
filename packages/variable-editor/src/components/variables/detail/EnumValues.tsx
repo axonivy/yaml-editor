@@ -60,7 +60,7 @@ export const EnumValues = ({ selectedValue: value, values, onChange }: EnumValue
   };
 
   const deleteValue = () => {
-    const newValues = deleteFirstSelectedRow(table, values);
+    const { newData: newValues } = deleteFirstSelectedRow(table, values);
     const updates: VariableUpdates = [toEnumMetadataUpdate(newValues)];
     if (!newValues.includes(value)) {
       updates.push({ key: 'value', value: '' });
