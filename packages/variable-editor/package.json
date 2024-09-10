@@ -17,9 +17,9 @@
   "types": "lib/index.d.ts",
   "main": "lib/editor.js",
   "dependencies": {
-    "@axonivy/jsonrpc": "~11.4.0-next.298",
-    "@axonivy/ui-components": "~11.4.0-next.298",
-    "@axonivy/ui-icons": "~11.4.0-next.298",
+    "@axonivy/jsonrpc": "~11.4.0-next.304",
+    "@axonivy/ui-components": "~11.4.0-next.304",
+    "@axonivy/ui-icons": "~11.4.0-next.304",
     "@tanstack/react-query": "5.32.1",
     "@tanstack/react-query-devtools": "5.32.1",
     "react": "^18.3.1",
