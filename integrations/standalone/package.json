@@ -1,18 +1,18 @@
 {
   "name": "@axonivy/config-editor-standalone",
   "private": true,
-  "version": "11.4.0-next",
+  "version": "12.0.0-next",
   "dependencies": {
     "@axonivy/variable-editor": "*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.46.0",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "vite": "^5.4.2",
-    "@playwright/test": "1.46.0"
+    "vite": "^5.4.2"
   },
   "scripts": {
     "clean": "rimraf build",
