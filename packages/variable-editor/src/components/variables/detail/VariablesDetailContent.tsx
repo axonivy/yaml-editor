@@ -1,4 +1,4 @@
-import { BasicField, Flex, Input, PanelMessage, Textarea } from '@axonivy/ui-components';
+import { BasicField, Flex, BasicInput, PanelMessage, Textarea } from '@axonivy/ui-components';
 import { useAppContext } from '../../../context/AppContext';
 import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
@@ -24,7 +24,7 @@ export const VariablesDetailContent = () => {
   return (
     <Flex direction='column' gap={4} className='detail-content'>
       <BasicField label='Name'>
-        <Input value={variable.name} onChange={event => handleVariableAttributeChange([{ key: 'name', value: event.target.value }])} />
+        <BasicInput value={variable.name} onChange={event => handleVariableAttributeChange([{ key: 'name', value: event.target.value }])} />
       </BasicField>
       {!hasChildren && <Value variable={variable} onChange={handleVariableAttributeChange} />}
       <BasicField label='Description'>

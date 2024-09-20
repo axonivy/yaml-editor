@@ -1,4 +1,4 @@
-import { BasicField, BasicSelect, Input, PasswordInput } from '@axonivy/ui-components';
+import { BasicField, BasicSelect, BasicInput, PasswordInput } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
@@ -22,7 +22,9 @@ export const Value = ({ variable, onChange }: ValueProps) => {
       case 'password':
         return <PasswordInput value={variable.value} onChange={(newValue: string) => onChange([{ key: 'value', value: newValue }])} />;
       case 'daytime':
-        return <Input value={variable.value} onChange={event => onChange([{ key: 'value', value: event.target.value }])} type='time' />;
+        return (
+          <BasicInput value={variable.value} onChange={event => onChange([{ key: 'value', value: event.target.value }])} type='time' />
+        );
       case 'enum':
         return (
           <BasicSelect
@@ -34,7 +36,7 @@ export const Value = ({ variable, onChange }: ValueProps) => {
         );
       default:
         return (
-          <Input
+          <BasicInput
             value={variable.value}
             onChange={event => onChange([{ key: 'value', value: event.target.value }])}
             autoFocus={variable.value.length === 0}
