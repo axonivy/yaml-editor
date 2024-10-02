@@ -2,7 +2,12 @@
   overflow: hidden auto;
 }
 
+.master-content-container {
+  height: 100%;
+}
+
 .master-content {
   margin: var(--size-3);
   min-height: 0;
+  height: fit-content;
 }
