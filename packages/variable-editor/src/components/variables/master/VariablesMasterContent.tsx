@@ -85,16 +85,18 @@ export const VariablesMasterContent = () => {
   );
 
   return (
-    <BasicField className='master-content' label='List of variables' control={control}>
-      {globalFilter.filter}
-      <Table>
-        <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
-        <TableBody>
-          {table.getRowModel().rows.map(row => (
-            <ValidationRow key={row.id} row={row} />
-          ))}
-        </TableBody>
-      </Table>
-    </BasicField>
+    <Flex direction='column' className='master-content-container' onClick={resetSelection}>
+      <BasicField className='master-content' label='List of variables' control={control} onClick={event => event.stopPropagation()}>
+        {globalFilter.filter}
+        <Table>
+          <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
+          <TableBody>
+            {table.getRowModel().rows.map(row => (
+              <ValidationRow key={row.id} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+      </BasicField>
+    </Flex>
   );
 };
