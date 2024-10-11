@@ -90,7 +90,7 @@ function VariableEditor(props: EditorProps) {
     mutation.mutate(() => toContent(newRootVariable));
   };
 
-  const title = 'Variables Editor';
+  const title = `Variables - ${context.pmv}`;
   let detailTitle = title;
   const variable = getNode(rootVariable.children, selectedVariable);
   if (variable) {
