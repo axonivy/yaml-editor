@@ -15,7 +15,7 @@
 
   <modules>
     <module>connector</module>
-    <module>variables</module>
+    <module>variables-test-project</module>
   </modules>
 
   <pluginRepositories>
