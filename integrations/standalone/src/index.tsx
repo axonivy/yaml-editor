@@ -34,7 +34,7 @@ export async function start(): Promise<void> {
           <ClientContextProvider client={client}>
             <QueryProvider client={queryClient}>
               <ReadonlyProvider readonly={readonly}>
-                <VariableEditor context={{ app, pmv, file: 'variables.yaml' }} />
+                <VariableEditor context={{ app, pmv, file: 'config/variables.yaml' }} />
               </ReadonlyProvider>
             </QueryProvider>
           </ClientContextProvider>

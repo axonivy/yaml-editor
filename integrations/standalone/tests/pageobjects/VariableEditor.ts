@@ -39,7 +39,7 @@ export class VariableEditor {
     const app = process.env.TEST_APP ?? 'designer';
     const serverUrl = server.replace(/^https?:\/\//, '');
     const pmv = 'variables-test-project';
-    const url = `?server=${serverUrl}&app=${app}&pmv=${pmv}&file=variables.yaml`;
+    const url = `?server=${serverUrl}&app=${app}&pmv=${pmv}&file=config/variables.yaml`;
     return this.openUrl(page, url);
   }
 
