@@ -16,7 +16,7 @@ test('new text variable', async () => {
 
   await details.fill('myName', 'myValue', 'This is myName with a value of myValue');
 
-  await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', '');
+  await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', 'Default');
   await details.expectTitle('Variables - project-name - myName');
   await editor.tree.row(11).expectValues(['myName', 'myValue']);
   await editor.tree.row(10).click();
@@ -24,7 +24,7 @@ test('new text variable', async () => {
   await editor.tree.row(11).click();
 
   await details.expectTitle('Variables - project-name - myName');
-  await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', '');
+  await details.expectValues('myName', 'myValue', 'This is myName with a value of myValue', 'Default');
 });
 
 test('new password variable', async () => {
@@ -186,12 +186,12 @@ test('edit metadata', async () => {
   const details = editor.details;
   await details.metaData.expectValue('Password');
 
-  await details.metaData.choose('');
+  await details.metaData.choose('Default');
 
   await editor.tree.row(0).click();
   await editor.tree.row(2).click();
   await editor.tree.row(2).expectValues(['secretKey', 'MySecretKey']);
-  await details.metaData.expectValue('');
+  await details.metaData.expectValue('Default');
 });
 
 test('show password', async () => {
@@ -222,7 +222,7 @@ test('delete selected', async () => {
   await editor.tree.row(1).expectValues(['appId', 'MyAppId']);
   const details = editor.details;
   await details.expectTitle('Variables - project-name - appId');
-  await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
+  await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
 
   await editor.delete.click();
 

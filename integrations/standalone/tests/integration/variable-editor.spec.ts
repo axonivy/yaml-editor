@@ -75,7 +75,7 @@ test('importAndOverwriteWholeSubTree', async () => {
   await tree.row(6).click();
   await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   await tree.row(7).click();
-  await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', '');
+  await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
 });
 
 test('load data', async () => {
@@ -91,7 +91,7 @@ test('load data', async () => {
   await details.expectFolderValues('connector', '');
 
   await tree.row(2).click();
-  await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
+  await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
 
   await tree.row(3).click();
   await details.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
@@ -104,7 +104,7 @@ test('save data', async () => {
   await tree.expectRowCount(4);
 
   await tree.row(2).click();
-  await details.fill('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', '');
+  await details.fill('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', 'Default');
 
   await tree.row(3).click();
   await details.fill('secretKeyChanged', 'MySecretKeyChanged', 'Secret key from your applications "certificates & secrets changed"', 'Password');
@@ -114,7 +114,7 @@ test('save data', async () => {
   const details2 = editor2.details;
 
   await tree2.row(2).click();
-  await details2.expectValues('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', '');
+  await details2.expectValues('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', 'Default');
   await details2.fill('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
 
   await tree2.row(3).click();
@@ -126,7 +126,7 @@ test('save data', async () => {
   const details3 = editor3.details;
 
   await tree3.row(2).click();
-  await details3.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
+  await details3.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
 
   await tree3.row(3).click();
   await details3.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
