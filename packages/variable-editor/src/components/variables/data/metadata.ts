@@ -13,6 +13,7 @@ export interface FileMetadata extends Metadata {
 export type FileMetadataFilenameExtension = (typeof fileMetadataFilenameExtensionOptions)[number]['value'];
 
 export const metadataOptions = [
+  { label: 'Default', value: 'default' },
   { label: 'Password', value: 'password' },
   { label: 'Daytime', value: 'daytime' },
   { label: 'Enum', value: 'enum' },

@@ -11,6 +11,7 @@ import {
 
 test('metadataOptions', () => {
   expect(metadataOptions).toEqual([
+    { label: 'Default', value: 'default' },
     { label: 'Password', value: 'password' },
     { label: 'Daytime', value: 'daytime' },
     { label: 'Enum', value: 'enum' },

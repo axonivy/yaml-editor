@@ -20,7 +20,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
   const metadata = variable.metadata;
 
   const onValueChange = (value: MetadataType) => {
-    const newMetadata = { type: value };
+    const newMetadata = { type: value === 'default' ? '' : value };
     const updates: VariableUpdates = [];
     switch (value) {
       case 'daytime':
@@ -44,7 +44,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
   return (
     <>
       <BasicField label='Metadata'>
-        <BasicSelect value={metadata.type} items={metadataOptions} emptyItem={true} onValueChange={onValueChange} />
+        <BasicSelect value={metadata.type === '' ? 'default' : metadata.type} items={metadataOptions} onValueChange={onValueChange} />
       </BasicField>
       {isEnumMetadata(metadata) && <EnumValues selectedValue={variable.value} values={metadata.values} onChange={onChange} />}
       {isFileMetadata(metadata) && (
