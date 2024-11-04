@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { VariableEditor } from '../pageobjects/VariableEditor';
+import { VariableEditor } from '../../pageobjects/VariableEditor';
 
 let editor: VariableEditor;
 

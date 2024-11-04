@@ -1,6 +1,6 @@
 import { test } from '@playwright/test';
-import type { Table } from '../pageobjects/Table';
-import { VariableEditor } from '../pageobjects/VariableEditor';
+import { VariableEditor } from '../../pageobjects/VariableEditor';
+import type { Table } from '../../pageobjects/Table';
 
 let editor: VariableEditor;
 let tree: Table;
