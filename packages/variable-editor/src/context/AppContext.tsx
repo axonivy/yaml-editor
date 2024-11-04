@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { Variable } from '../components/variables/data/variable';
-import type { DataContext, ValidationMessages } from '../protocol/types';
+import type { DataContext, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import type { TreePath } from '../utils/tree/types';
 
 type AppContext = {

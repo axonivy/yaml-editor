@@ -9,7 +9,7 @@ import { VariablesMasterContent } from './components/variables/master/VariablesM
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { AppProvider } from './context/AppContext';
 import { useClient } from './protocol/ClientContextProvider';
-import type { Data, EditorProps, ValidationMessages } from './protocol/types';
+import type { Data, EditorProps, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { genQueryKey } from './query/query-client';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';

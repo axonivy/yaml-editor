@@ -7,7 +7,15 @@ import {
   type Disposable,
   type MessageConnection
 } from '@axonivy/jsonrpc';
-import type { Client, Data, DataContext, MetaRequestTypes, NotificationTypes, RequestTypes, ValidationMessages } from './types';
+import type {
+  Client,
+  Data,
+  DataContext,
+  MetaRequestTypes,
+  NotificationTypes,
+  RequestTypes,
+  ValidationMessages
+} from '@axonivy/variable-editor-protocol';
 
 export class ClientJsonRpc extends BaseRpcClient implements Client {
   protected onDataChangedEmitter = new Emitter<void>();

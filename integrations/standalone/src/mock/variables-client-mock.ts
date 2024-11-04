@@ -1,4 +1,4 @@
-import type { Client, Data, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor/src/protocol/types';
+import type { Client, Data, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor-protocol/src/types';
 
 export class VariablesClientMock implements Client {
   private variablesData: Data = {

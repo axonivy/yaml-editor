@@ -13,7 +13,7 @@ import {
   type MetadataType
 } from './metadata';
 import type { RootVariable, Variable } from './variable';
-import type { ProjectVarNode } from '../../../protocol/types';
+import type { ProjectVarNode } from '@axonivy/variable-editor-protocol';
 
 export const toVariables = (content: string) => {
   const rootVariable: RootVariable = {
