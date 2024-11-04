@@ -16,7 +16,7 @@ import { type Table } from '@tanstack/react-table';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useClient } from '../../../protocol/ClientContextProvider';
-import type { ProjectVarNode } from '../../../protocol/types';
+import type { ProjectVarNode } from '@axonivy/variable-editor-protocol';
 import { genQueryKey } from '../../../query/query-client';
 import { toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';

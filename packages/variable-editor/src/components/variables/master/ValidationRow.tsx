@@ -1,7 +1,7 @@
 import { MessageRow, SelectRow, TableCell } from '@axonivy/ui-components';
 import { flexRender, type Row } from '@tanstack/react-table';
 import { useAppContext } from '../../../context/AppContext';
-import type { ValidationMessages } from '../../../protocol/types';
+import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { getPathOfRow } from '../../../utils/tree/tree';
 import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from '../data/validation-utils';
 import type { Variable } from '../data/variable';

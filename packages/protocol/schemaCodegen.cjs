@@ -60,7 +60,7 @@ function writeSrc(ts) {
 
 if (schemaUri.startsWith('http')) {
   loadJson(schemaUri)
-    .then(schema => tsGen.compile(schema, 'DataClasses'))
+    .then(schema => tsGen.compile(schema, 'Variables'))
     .then(ts => writeSrc(ts));
 } else {
   tsGen.compileFromFile(schemaUri).then(ts => writeSrc(ts));

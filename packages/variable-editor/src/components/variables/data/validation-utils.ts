@@ -1,6 +1,6 @@
 import type { MessageData } from '@axonivy/ui-components';
 import { type Row } from '@tanstack/react-table';
-import type { ValidationMessage, ValidationMessages } from '../../../protocol/types';
+import type { ValidationMessage, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { keyOfRow } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import type { Variable } from './variable';
