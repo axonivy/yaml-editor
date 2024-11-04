@@ -9,8 +9,8 @@ import {
 } from '@axonivy/jsonrpc';
 import type {
   Client,
-  Data,
-  DataContext,
+  VariablesData,
+  VariablesEditorDataContext,
   MetaRequestTypes,
   NotificationTypes,
   RequestTypes,
@@ -26,15 +26,15 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
     this.onNotification('dataChanged', data => this.onDataChangedEmitter.fire(data));
   }
 
-  data(context: DataContext): Promise<Data> {
+  data(context: VariablesEditorDataContext): Promise<VariablesData> {
     return this.sendRequest('data', context);
   }
 
-  saveData(saveData: Data): Promise<ValidationMessages> {
+  saveData(saveData: VariablesData): Promise<ValidationMessages> {
     return this.sendRequest('saveData', saveData);
   }
 
-  validate(context: DataContext): Promise<ValidationMessages> {
+  validate(context: VariablesEditorDataContext): Promise<ValidationMessages> {
     return this.sendRequest('validate', context);
   }
 

@@ -1,21 +1,12 @@
-export type Data = { context: DataContext; data: string };
-export type ProjectVarNode = {
-  key: string;
-  name: string;
-  value: string;
-  description: string;
-  type: string;
-  children: Array<ProjectVarNode>;
-};
-export type DataContext = { app: string; pmv: string; file: string };
-export type EditorProps = { context: DataContext; directSave?: boolean };
-export type SaveArgs = Data & { directSave?: boolean };
+import type { ProjectVarNode, ValidationResult, VariablesData, VariablesEditorDataContext } from './editor';
 
-export type ValidationMessage = { message: string; path: string; severity: number };
-export type ValidationMessages = Array<ValidationMessage>;
+export type EditorProps = { context: VariablesEditorDataContext; directSave?: boolean };
+export type SaveArgs = VariablesData & { directSave?: boolean };
+
+export type ValidationMessages = Array<ValidationResult>;
 
 export interface MetaRequestTypes {
-  'meta/knownVariables': [DataContext, ProjectVarNode];
+  'meta/knownVariables': [VariablesEditorDataContext, ProjectVarNode];
 }
 
 export interface RequestTypes extends MetaRequestTypes {
@@ -37,9 +28,9 @@ export interface Disposable {
 }
 
 export interface Client {
-  data(context: DataContext): Promise<Data>;
+  data(context: VariablesEditorDataContext): Promise<VariablesData>;
   saveData(saveArgs: SaveArgs): Promise<ValidationMessages>;
-  validate(validate: DataContext): Promise<ValidationMessages>;
+  validate(validate: VariablesEditorDataContext): Promise<ValidationMessages>;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   onDataChanged: Event<void>;
 }

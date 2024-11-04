@@ -9,7 +9,7 @@ import { VariablesMasterContent } from './components/variables/master/VariablesM
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { AppProvider } from './context/AppContext';
 import { useClient } from './protocol/ClientContextProvider';
-import type { Data, EditorProps, ValidationMessages } from '@axonivy/variable-editor-protocol';
+import type { VariablesData, EditorProps, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { genQueryKey } from './query/query-client';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
@@ -57,7 +57,7 @@ function VariableEditor(props: EditorProps) {
   const mutation = useMutation({
     mutationKey: queryKeys.saveData(),
     mutationFn: async (updateData: Unary<string>) => {
-      const saveData = queryClient.setQueryData<Data>(queryKeys.data(), prevData => {
+      const saveData = queryClient.setQueryData<VariablesData>(queryKeys.data(), prevData => {
         if (prevData) {
           return { ...prevData, data: updateData(prevData.data) };
         }

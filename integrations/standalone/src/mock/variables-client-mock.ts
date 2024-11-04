@@ -1,7 +1,8 @@
-import type { Client, Data, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor-protocol/src/types';
+import type { Client, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor-protocol/src/types';
+import type { VariablesData } from '@axonivy/variable-editor-protocol/src/editor';
 
 export class VariablesClientMock implements Client {
-  private variablesData: Data = {
+  private variablesData: VariablesData = {
     context: { app: '', pmv: '', file: '' },
     data: `Variables:
   microsoft-connector:
@@ -39,11 +40,11 @@ export class VariablesClientMock implements Client {
 `
   };
 
-  data(): Promise<Data> {
+  data(): Promise<VariablesData> {
     return Promise.resolve(this.variablesData);
   }
 
-  saveData(saveData: Data): Promise<ValidationMessages> {
+  saveData(saveData: VariablesData): Promise<ValidationMessages> {
     this.variablesData.data = saveData.data;
     return Promise.resolve([]);
   }

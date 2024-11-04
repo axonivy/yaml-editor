@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { Variable } from '../components/variables/data/variable';
-import type { DataContext, ValidationMessages } from '@axonivy/variable-editor-protocol';
+import type { VariablesEditorDataContext, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import type { TreePath } from '../utils/tree/types';
 
 type AppContext = {
@@ -9,7 +9,7 @@ type AppContext = {
   selectedVariable: TreePath;
   setSelectedVariable: (path: TreePath) => void;
   validationMessages: ValidationMessages;
-  context: DataContext;
+  context: VariablesEditorDataContext;
   detail: boolean;
   setDetail: (visible: boolean) => void;
 };
