@@ -8,7 +8,6 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.46.0",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -21,7 +20,7 @@
     "package": "vite build",
     "type": "tsc --noEmit",
     "dev": "vite",
-    "preview": "vite preview",
+    "serve": "vite preview",
     "lint": "eslint --ext .ts,.tsx ./src",
     "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
     "webtest:mock": "npx playwright test -c ./tests/mock",

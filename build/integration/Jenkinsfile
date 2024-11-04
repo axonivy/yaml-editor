@@ -12,26 +12,24 @@ pipeline {
 
   parameters {
     string(name: 'engineSource', defaultValue: 'https://product.ivyteam.io/', description: 'Engine page url')
-    choice(name: 'browser', choices: ['', 'all', 'chrome', 'firefox', 'webkit'], description: 'Browser used for integration tests (default: "all" on master/release, "chrome" on branch)')
+    choice(name: 'browser', choices: ['', '*', 'chrome', 'firefox', 'webkit'], description: 'Browser used for integration tests (default: "*" on master/release, "chrome" on branch)')
   }
 
   stages {
     stage('Integration Test') {
-      environment {
-        BROWSERS = browser()
-      }
       steps {
         script {
-          docker.build('node-webtest', '-f build/playwright/Dockerfile .').inside {
-            sh 'npm install'
-            dir ('integrations/standalone/tests/integration/projects') {
-              maven cmd: "-ntp clean verify -Dengine.page.url=${params.engineSource}"
+          docker.build('node-webtest', '-f build/Dockerfile.playwright .').inside {
+            sh 'npm run update:axonivy:next'
+            sh 'npm install && npm run package'
+            dir ('playwright/projects') {
+              maven cmd: "-ntp clean verify -Dengine.page.url=${params.engineSource} -Dwebtest.cmd=webtest:${browser()}"
             }
           }
-          archiveArtifacts artifacts: 'integrations/standalone/test-results/**', allowEmptyArchive: true
-          archiveArtifacts artifacts: 'integrations/standalone/**/target/**/ivy.log', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright/test-results/**', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright/**/target/**/ivy.log', allowEmptyArchive: true
           withChecks('Integration WebTest') {
-            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'integrations/**/report.xml'
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'playwright/**/report.xml'
           }
         }
       }
@@ -39,14 +37,10 @@ pipeline {
   }
 }
 
-def isReleaseOrMasterBranch() {
-  return env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/') 
-}
-
 def browser() {
   if (params.browser == '') {
-    if (isReleaseOrMasterBranch()) {
-      return 'all'
+    if (isReleasingBranch()) {
+      return '*'
     }
     return 'chrome'
   }

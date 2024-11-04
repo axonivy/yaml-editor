@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>ch.ivyteam.variable</groupId>
   <artifactId>application</artifactId>
@@ -11,6 +13,7 @@
     <engine.test.app>variable-test</engine.test.app>
     <project.build.plugin.version>11.4.0-SNAPSHOT</project.build.plugin.version>
     <engine.page.url>https://product.ivyteam.io/</engine.page.url>
+    <webtest.cmd>webtest</webtest.cmd>
   </properties>
 
   <modules>
@@ -31,7 +34,7 @@
     </pluginRepository>
   </pluginRepositories>
 
-   <build>
+  <build>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -45,7 +48,9 @@
         <executions>
           <execution>
             <id>create.app</id>
-            <goals><goal>single</goal></goals>
+            <goals>
+              <goal>single</goal>
+            </goals>
             <phase>generate-resources</phase>
           </execution>
         </executions>
@@ -60,7 +65,9 @@
           <execution>
             <id>test.engine.starter</id>
             <phase>pre-integration-test</phase>
-            <goals><goal>start-test-engine</goal></goals>
+            <goals>
+              <goal>start-test-engine</goal>
+            </goals>
             <configuration>
               <additionalVmOptions>-Dglsp.test.mode=true -Ddev.mode=true</additionalVmOptions>
             </configuration>
@@ -68,7 +75,9 @@
           <execution>
             <id>test.app.deploy</id>
             <phase>pre-integration-test</phase>
-            <goals><goal>deploy-to-engine</goal></goals>
+            <goals>
+              <goal>deploy-to-engine</goal>
+            </goals>
             <configuration>
               <deployFile>${project.build.directory}/${project.artifactId}-${project.version}.zip</deployFile>
               <useLatestMinor>true</useLatestMinor>
@@ -79,7 +88,9 @@
           <execution>
             <id>test.engine.stopper</id>
             <phase>post-integration-test</phase>
-            <goals><goal>stop-test-engine</goal></goals>
+            <goals>
+              <goal>stop-test-engine</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -96,10 +107,8 @@
             <configuration>
               <executable>npm</executable>
               <arguments>
-                <argument>--prefix</argument>
-                <argument>../../..</argument>
                 <argument>run</argument>
-                <argument>webtest:engine</argument>
+                <argument>${webtest.cmd}</argument>
               </arguments>
               <environmentVariables>
                 <BASE_URL>${test.engine.url}</BASE_URL>

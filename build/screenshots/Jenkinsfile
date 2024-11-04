@@ -16,26 +16,26 @@ pipeline {
       steps {
         script {
           catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-            docker.image('mcr.microsoft.com/playwright:v1.46.0-jammy').inside {
-              sh 'npm install'
+            docker.build('node-webtest', '-f build/Dockerfile.playwright .').inside {
+              sh 'npm install && npm run package'
               sh 'npm run webtest:screenshot'
             }
           }
-          archiveArtifacts artifacts: 'integrations/standalone/test-results/**', allowEmptyArchive: true
-          archiveArtifacts artifacts: 'integrations/standalone/**/target/screenshots/*.png', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright/test-results/**', allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright/**/target/screenshots/*.png', allowEmptyArchive: true
           withChecks('Screenshots') {
-            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'integrations/**/report.xml'
+            junit testDataPublishers: [[$class: 'StabilityTestDataPublisher']], testResults: 'playwright/**/report.xml'
           }
         }
       }
     }
     stage('Deploy') {
       when {
-        expression { isReleaseOrMasterBranch() && currentBuild.currentResult == 'SUCCESS' }
+        expression { isReleasingBranch() && currentBuild.currentResult == 'SUCCESS' }
       }
       steps {
         script {
-          docker.build('maven-build', '-f build/screenshots/Dockerfile .').inside {
+          docker.build('maven-build', '-f build/Dockerfile.maven .').inside {
             maven cmd: '-ntp -f integrations/standalone/tests/screenshots deploy -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
           }
           archiveArtifacts 'integrations/standalone/**/target/variable-editor-screenshots-*.zip'
@@ -43,8 +43,4 @@ pipeline {
       }
     }
   }
-}
-
-def isReleaseOrMasterBranch() {
-  return env.BRANCH_NAME == 'master' || env.BRANCH_NAME.startsWith('release/') 
 }
