@@ -12,6 +12,10 @@
       "path": "./packages/variable-editor"
     },
     {
+      "name": "package/protocol",
+      "path": "./packages/protocol"
+    },
+    {
       "name": "integrations/standalone",
       "path": "./integrations/standalone"
     },

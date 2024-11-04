@@ -16,6 +16,7 @@
     "type": "lerna run type",
     "lint": "lerna run lint --",
     "lint:ci": "npm run lint -- -o eslint.xml -f checkstyle",
+    "protocol": "npm run --workspace=@axonivy/variable-editor-protocol",
     "dev": "npm --workspace=@axonivy/config-editor-standalone run dev",
     "test": "npm --workspace=@axonivy/variable-editor run test",
     "test:ci": "lerna run test:ci",
