@@ -7,4 +7,4 @@ eslint.xml
 test-results
 playwright-report
 **/standalone/build
-**/standalone/**/target
+target
