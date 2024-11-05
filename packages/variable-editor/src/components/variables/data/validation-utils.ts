@@ -1,6 +1,6 @@
 import type { MessageData } from '@axonivy/ui-components';
+import type { ValidationMessages, ValidationResult } from '@axonivy/variable-editor-protocol';
 import { type Row } from '@tanstack/react-table';
-import type { ValidationMessage, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { keyOfRow } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import type { Variable } from './variable';
@@ -12,28 +12,17 @@ export const validationMessagesOfRow = (row: Row<Variable>, validationMessages?:
   return validationMessages.filter(validationMessage => validationMessageBelongsToRow(row, validationMessage));
 };
 
-const validationMessageBelongsToRow = (row: Row<Variable>, validationMessage: ValidationMessage) => {
+const validationMessageBelongsToRow = (row: Row<Variable>, validationMessage: ValidationResult) => {
   const key = 'Variables.' + keyOfRow(row);
   return key === validationMessage.path;
 };
 
 export const containsError = (validationMessages: ValidationMessages) => {
-  return validationMessages.find(validationMessage => validationMessage.severity === 2);
+  return validationMessages.find(validationMessage => validationMessage.severity === 'ERROR');
 };
 
 export const containsWarning = (validationMessages: ValidationMessages) => {
-  return validationMessages.find(validationMessage => validationMessage.severity === 1);
-};
-
-export const toValidationMessageVariant = (severity: number) => {
-  switch (severity) {
-    case 1:
-      return 'warning';
-    case 2:
-      return 'error';
-    default:
-      return 'info';
-  }
+  return validationMessages.find(validationMessage => validationMessage.severity === 'WARNING');
 };
 
 export const validateName = (name: string, takenNames: Array<string>): MessageData => {

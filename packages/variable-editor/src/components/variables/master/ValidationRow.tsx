@@ -3,7 +3,7 @@ import { flexRender, type Row } from '@tanstack/react-table';
 import { useAppContext } from '../../../context/AppContext';
 import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { getPathOfRow } from '../../../utils/tree/tree';
-import { containsError, containsWarning, toValidationMessageVariant, validationMessagesOfRow } from '../data/validation-utils';
+import { containsError, containsWarning, validationMessagesOfRow } from '../data/validation-utils';
 import type { Variable } from '../data/variable';
 import './ValidationRow.css';
 
@@ -34,11 +34,7 @@ export const ValidationRow = ({ row }: ValidationRowProps) => {
         ))}
       </SelectRow>
       {messages.map((validationMessage, index) => (
-        <MessageRow
-          key={index}
-          columnCount={2}
-          message={{ message: validationMessage.message, variant: toValidationMessageVariant(validationMessage.severity) }}
-        />
+        <MessageRow key={index} columnCount={2} message={{ message: validationMessage.message, variant: validationMessage.severity }} />
       ))}
     </>
   );
