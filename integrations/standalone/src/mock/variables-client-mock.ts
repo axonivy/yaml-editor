@@ -1,5 +1,5 @@
 import type { Client, Event, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor-protocol/src/types';
-import type { VariablesData } from '@axonivy/variable-editor-protocol/src/editor';
+import type { VariablesActionArgs, VariablesData } from '@axonivy/variable-editor-protocol/src/editor';
 
 export class VariablesClientMock implements Client {
   private variablesData: VariablesData = {
@@ -37,7 +37,8 @@ export class VariablesClientMock implements Client {
     # while the default provider works well for most methods, if you specifically need to use the PATCH method, consider switching the provider to:
     #   org.glassfish.jersey.apache.connector.ApacheConnectorProvider
     connectorProvider: org.glassfish.jersey.client.HttpUrlConnectorProvider
-`
+`,
+    helpUrl: 'https://dev.axonivy.com'
   };
 
   data(): Promise<VariablesData> {
@@ -59,6 +60,10 @@ export class VariablesClientMock implements Client {
       default:
         throw Error('mock meta path not programmed');
     }
+  }
+
+  action(action: VariablesActionArgs): void {
+    console.log(action);
   }
 
   onDataChanged: Event<void>;

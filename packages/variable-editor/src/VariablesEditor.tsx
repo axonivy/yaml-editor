@@ -1,4 +1,13 @@
-import { Flex, PanelMessage, ResizableHandle, ResizablePanel, ResizablePanelGroup, SidebarHeader, Spinner } from '@axonivy/ui-components';
+import {
+  Button,
+  Flex,
+  PanelMessage,
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  SidebarHeader,
+  Spinner
+} from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
@@ -15,6 +24,7 @@ import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
+import { useAction } from './context/useAction';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -71,6 +81,8 @@ function VariableEditor(props: EditorProps) {
     }
   });
 
+  const openUrl = useAction('openUrl');
+
   if (isPending) {
     return (
       <Flex alignItems='center' justifyContent='center' style={{ width: '100%', height: '100%' }}>
@@ -122,7 +134,9 @@ function VariableEditor(props: EditorProps) {
             <ResizableHandle />
             <ResizablePanel defaultSize={25} minSize={10}>
               <Flex direction='column' className='panel-content-container' data-testid='details-container'>
-                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title' />
+                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title'>
+                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} aria-label='Help' />
+                </SidebarHeader>
                 <VariablesDetailContent />
               </Flex>
             </ResizablePanel>

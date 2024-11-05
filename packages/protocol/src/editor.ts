@@ -11,6 +11,7 @@ export type Severity = ("INFO" | "WARNING" | "ERROR")
 export interface Variables {
   projectVarNode: ProjectVarNode;
   validationResult: ValidationResult[];
+  variablesActionArgs: VariablesActionArgs;
   variablesData: VariablesData;
   variablesEditorDataContext: VariablesEditorDataContext;
   variablesSaveDataArgs: VariablesSaveDataArgs;
@@ -30,14 +31,20 @@ export interface ValidationResult {
   path: string;
   severity: Severity;
 }
-export interface VariablesData {
+export interface VariablesActionArgs {
+  actionId: "openUrl";
   context: VariablesEditorDataContext;
-  data: string;
+  payload: string;
 }
 export interface VariablesEditorDataContext {
   app: string;
   file: string;
   pmv: string;
+}
+export interface VariablesData {
+  context: VariablesEditorDataContext;
+  data: string;
+  helpUrl: string;
 }
 export interface VariablesSaveDataArgs {
   context: VariablesEditorDataContext;
