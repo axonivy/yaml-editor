@@ -14,7 +14,9 @@ import type {
   MetaRequestTypes,
   NotificationTypes,
   RequestTypes,
-  ValidationMessages
+  ValidationMessages,
+  VariablesActionArgs,
+  OnNotificationTypes
 } from '@axonivy/variable-editor-protocol';
 
 export class ClientJsonRpc extends BaseRpcClient implements Client {
@@ -42,11 +44,19 @@ export class ClientJsonRpc extends BaseRpcClient implements Client {
     return this.sendRequest(path, args);
   }
 
+  action(action: VariablesActionArgs): void {
+    this.sendNotification('action', action);
+  }
+
   sendRequest<K extends keyof RequestTypes>(command: K, args: RequestTypes[K][0]): Promise<RequestTypes[K][1]> {
     return args === undefined ? this.connection.sendRequest(command) : this.connection.sendRequest(command, args);
   }
 
-  onNotification<K extends keyof NotificationTypes>(kind: K, listener: (args: NotificationTypes[K]) => any): Disposable {
+  sendNotification<K extends keyof NotificationTypes>(command: K, args: NotificationTypes[K]): Promise<void> {
+    return this.connection.sendNotification(command, args);
+  }
+
+  onNotification<K extends keyof OnNotificationTypes>(kind: K, listener: (args: OnNotificationTypes[K]) => any): Disposable {
     return this.connection.onNotification(kind, listener);
   }
 
