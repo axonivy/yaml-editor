@@ -77,7 +77,7 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
         <DialogHeader>
           <DialogTitle>New Variable</DialogTitle>
         </DialogHeader>
-        <Flex direction='column' gap={2}>
+        <Flex direction='column' gap={3}>
           <BasicField label='Name' message={nameValidationMessage} aria-label='Name'>
             <Input
               value={name}
@@ -86,7 +86,11 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
               }}
             />
           </BasicField>
-          <BasicField label='Namespace' message={namespaceValidationMessage} aria-label='Namespace'>
+          <BasicField
+            label='Namespace'
+            message={namespaceValidationMessage ?? { variant: 'info', message: `Folder structure of variable (e.g. 'Connector.Key')` }}
+            aria-label='Namespace'
+          >
             <Combobox
               value={namespace}
               onChange={setNamespace}

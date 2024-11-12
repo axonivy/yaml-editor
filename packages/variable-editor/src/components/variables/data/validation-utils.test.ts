@@ -1,8 +1,9 @@
 import type { ValidationResult } from '@axonivy/variable-editor-protocol';
 import type { Row } from '@tanstack/react-table';
 import { setupRow, setupVariable } from './test-utils/setup';
-import { containsError, containsWarning, validateName, validateNamespace, validationMessagesOfRow } from './validation-utils';
+import { rowClass, validateName, validateNamespace, validationMessagesOfRow } from './validation-utils';
 import type { Variable } from './variable';
+import type { MessageData } from '@axonivy/ui-components';
 
 const validationMessages: Array<ValidationResult> = [
   {
@@ -53,27 +54,22 @@ describe('validationMessagesOfRow', () => {
   });
 });
 
-describe('containsError', () => {
-  test('true', () => {
-    const validationMessagesWithError = structuredClone(validationMessages);
-    validationMessagesWithError[1].severity = 'ERROR';
-    expect(containsError(validationMessagesWithError)).toBeTruthy();
+describe('rowClass', () => {
+  test('error', () => {
+    const messages: Array<MessageData> = [
+      { message: 'error', variant: 'warning' },
+      { message: 'error', variant: 'error' }
+    ];
+    expect(rowClass(messages)).toEqual('row-error');
   });
 
-  test('false', () => {
-    expect(containsError(validationMessages)).toBeFalsy();
-  });
-});
-
-describe('containsWarning', () => {
-  test('true', () => {
-    const validationMessagesWithWarning = structuredClone(validationMessages);
-    validationMessagesWithWarning[1].severity = 'WARNING';
-    expect(containsWarning(validationMessagesWithWarning)).toBeTruthy();
+  test('warning', () => {
+    const messages: Array<MessageData> = [{ message: 'error', variant: 'warning' }];
+    expect(rowClass(messages)).toEqual('row-warning');
   });
 
-  test('false', () => {
-    expect(containsWarning(validationMessages)).toBeFalsy();
+  test('none', () => {
+    expect(rowClass([{ message: 'hi', variant: 'info' }])).toEqual('');
   });
 });
 
