@@ -32,7 +32,7 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
         {theme !== 'system' && (
           <Popover>
             <PopoverTrigger asChild>
-              <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
+              <Button icon={IvyIcons.Settings} size='large' title='Settings' aria-label='Settings' />
             </PopoverTrigger>
             <PopoverContent sideOffset={12}>
               <ReadonlyProvider readonly={false}>
@@ -57,7 +57,13 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
             </PopoverContent>
           </Popover>
         )}
-        <Button icon={IvyIcons.LayoutSidebarRightCollapse} size='large' onClick={() => setDetail(!detail)} aria-label='Details toggle' />
+        <Button
+          icon={IvyIcons.LayoutSidebarRightCollapse}
+          size='large'
+          onClick={() => setDetail(!detail)}
+          title='Details toggle'
+          aria-label='Details toggle'
+        />
       </Flex>
     </Toolbar>
   );
