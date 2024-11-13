@@ -8,7 +8,7 @@ type AppContext = {
   setVariables: (variables: Array<Variable>) => void;
   selectedVariable: TreePath;
   setSelectedVariable: (path: TreePath) => void;
-  validationMessages: ValidationMessages;
+  validations: ValidationMessages;
   context: VariablesEditorDataContext;
   detail: boolean;
   setDetail: (visible: boolean) => void;
@@ -19,7 +19,7 @@ const appContext = createContext<AppContext>({
   setVariables: () => {},
   selectedVariable: [],
   setSelectedVariable: () => {},
-  validationMessages: [],
+  validations: [],
   context: { app: '', pmv: '', file: '' },
   detail: true,
   setDetail: () => {}
