@@ -5,11 +5,11 @@
   "command": {
     "run": {
       "stream": true
+    },
+    "publish": {
+      "forcePublish": true,
+      "skipGit": true,
+      "registry": "https://npmjs-registry.ivyteam.ch/"
     }
-  },
-  "publish": {
-    "forcePublish": true,
-    "skipGit": true,
-    "registry": "https://npmjs-registry.ivyteam.ch/"
   }
 }
