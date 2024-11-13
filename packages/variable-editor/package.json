@@ -18,9 +18,9 @@
   "main": "lib/editor.js",
   "dependencies": {
     "@axonivy/variable-editor-protocol": "~12.0.0-next",
-    "@axonivy/jsonrpc": "~12.0.0-next.372",
-    "@axonivy/ui-components": "~12.0.0-next.372",
-    "@axonivy/ui-icons": "~12.0.0-next.372",
+    "@axonivy/jsonrpc": "~12.0.0-next.380",
+    "@axonivy/ui-components": "~12.0.0-next.380",
+    "@axonivy/ui-icons": "~12.0.0-next.380",
     "@tanstack/react-query": "5.32.1",
     "@tanstack/react-query-devtools": "5.32.1",
     "react": "^18.3.1",
@@ -28,6 +28,8 @@
   },
   "devDependencies": {
     "@types/react": "^18.3.4",
+    "@testing-library/react": "^16.0.0",
+    "@vanilla-extract/recipes": "^0.5.5",
     "@vitejs/plugin-react": "^4.3.1",
     "copyfiles": "^2.4.1",
     "eslint-plugin-testing-library": "^6.3.0",

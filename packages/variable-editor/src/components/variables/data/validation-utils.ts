@@ -1,31 +1,8 @@
 import type { MessageData } from '@axonivy/ui-components';
-import type { ValidationMessages, ValidationResult } from '@axonivy/variable-editor-protocol';
-import { type Row } from '@tanstack/react-table';
-import { keyOfRow } from '../../../utils/tree/tree';
 import { hasChildren } from '../../../utils/tree/tree-data';
 import type { Variable } from './variable';
 
-export const validationMessagesOfRow = (row: Row<Variable>, validationMessages?: ValidationMessages) => {
-  if (!validationMessages) {
-    return [];
-  }
-  return validationMessages.filter(validationMessage => validationMessageBelongsToRow(row, validationMessage));
-};
-
-const validationMessageBelongsToRow = (row: Row<Variable>, validationMessage: ValidationResult) => {
-  const key = 'Variables.' + keyOfRow(row);
-  return key === validationMessage.path;
-};
-
-export const containsError = (validationMessages: ValidationMessages) => {
-  return validationMessages.find(validationMessage => validationMessage.severity === 'ERROR');
-};
-
-export const containsWarning = (validationMessages: ValidationMessages) => {
-  return validationMessages.find(validationMessage => validationMessage.severity === 'WARNING');
-};
-
-export const validateName = (name: string, takenNames: Array<string>): MessageData => {
+export const validateName = (name: string, takenNames: Array<string>): MessageData | undefined => {
   if (name.trim() === '') {
     return toErrorMessage('Name cannot be empty.');
   }
@@ -35,9 +12,10 @@ export const validateName = (name: string, takenNames: Array<string>): MessageDa
   if (name.includes('.')) {
     return toErrorMessage("Character '.' is not allowed.");
   }
+  return;
 };
 
-export const validateNamespace = (namespace: string, variables: Array<Variable>): MessageData => {
+export const validateNamespace = (namespace: string, variables: Array<Variable>): MessageData | undefined => {
   const keyParts = namespace.split('.');
   let currentVariables = variables;
   for (const [index, keyPart] of keyParts.entries()) {
@@ -50,8 +28,9 @@ export const validateNamespace = (namespace: string, variables: Array<Variable>)
     }
     currentVariables = nextVariable.children;
   }
+  return;
 };
 
-const toErrorMessage = (message: string) => {
+const toErrorMessage = (message: string): MessageData => {
   return { message: message, variant: 'error' };
 };

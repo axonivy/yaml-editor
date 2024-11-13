@@ -116,7 +116,7 @@ function VariableEditor(props: EditorProps) {
         setVariables: setVariables,
         selectedVariable: selectedVariable,
         setSelectedVariable: setSelectedVariable,
-        validationMessages: validationMessages,
+        validations: validationMessages,
         context: context,
         detail: detail,
         setDetail: setDetail

@@ -1,81 +1,10 @@
-import type { ValidationResult } from '@axonivy/variable-editor-protocol';
-import type { Row } from '@tanstack/react-table';
-import { setupRow, setupVariable } from './test-utils/setup';
-import { containsError, containsWarning, validateName, validateNamespace, validationMessagesOfRow } from './validation-utils';
-import type { Variable } from './variable';
-
-const validationMessages: Array<ValidationResult> = [
-  {
-    message: 'message0',
-    path: 'Variables.key0.key0',
-    severity: 'INFO'
-  },
-  {
-    message: 'message1',
-    path: 'Variables.key0.key1',
-    severity: 'INFO'
-  },
-  {
-    message: 'message2',
-    path: 'Variables.key0.key1',
-    severity: 'INFO'
-  },
-  {
-    message: 'message3',
-    path: 'Variables.key1.key0',
-    severity: 'INFO'
-  }
-];
-const rowWithMessages = setupRow('key1', 'key0') as Row<Variable>;
-const rowWithoutMessages = setupRow('key2', 'key0') as Row<Variable>;
+import { setupVariable } from './test-utils/setup';
+import { validateName, validateNamespace } from './validation-utils';
 
 const variables = [
   setupVariable('NameNode0', []),
   setupVariable('NameNode1', [setupVariable('NameNode10', []), setupVariable('NameNode11', [setupVariable('NameNode110', [])])])
 ];
-
-describe('validationMessagesOfRow', () => {
-  test('default', () => {
-    const messages = validationMessagesOfRow(rowWithMessages, validationMessages);
-    expect(messages).toHaveLength(2);
-    expect(messages[0]).toEqual(validationMessages[1]);
-    expect(messages[1]).toEqual(validationMessages[2]);
-  });
-
-  test('noMatches', () => {
-    const messages = validationMessagesOfRow(rowWithoutMessages, validationMessages);
-    expect(messages).toHaveLength(0);
-  });
-
-  test('undefined', () => {
-    const messages = validationMessagesOfRow(rowWithMessages, undefined);
-    expect(messages).toHaveLength(0);
-  });
-});
-
-describe('containsError', () => {
-  test('true', () => {
-    const validationMessagesWithError = structuredClone(validationMessages);
-    validationMessagesWithError[1].severity = 'ERROR';
-    expect(containsError(validationMessagesWithError)).toBeTruthy();
-  });
-
-  test('false', () => {
-    expect(containsError(validationMessages)).toBeFalsy();
-  });
-});
-
-describe('containsWarning', () => {
-  test('true', () => {
-    const validationMessagesWithWarning = structuredClone(validationMessages);
-    validationMessagesWithWarning[1].severity = 'WARNING';
-    expect(containsWarning(validationMessagesWithWarning)).toBeTruthy();
-  });
-
-  test('false', () => {
-    expect(containsWarning(validationMessages)).toBeFalsy();
-  });
-});
 
 describe('validateName', () => {
   test('valid', () => {
