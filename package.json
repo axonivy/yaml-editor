@@ -23,7 +23,7 @@
     "webtest": "npm --workspace=@axonivy/config-editor-playwright run webtest",
     "webtest:screenshot": "npm --workspace=@axonivy/config-editor-playwright run webtest:screenshots",
     "update:axonivy:next": "npx --yes npm-check-updates @axonivy* -ws -t patch -u",
-    "publish:next": "lerna publish --exact --canary --preid next --tag-version-prefix beta --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
+    "publish:next": "lerna publish --exact --canary --preid next --pre-dist-tag next --no-git-tag-version --no-push --ignore-scripts --yes"
   },
   "devDependencies": {
     "@types/node": "^22.8.7",
