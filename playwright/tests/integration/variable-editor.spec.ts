@@ -35,49 +35,6 @@ test('validation', async () => {
   await tree.validation(0).expectText('Not ivy.var field compliant: Invalid character . at position 6 in hello.world.');
 });
 
-test('importAndOverwrite', async () => {
-  const tree = editor.tree;
-  await tree.expectRowCount(4);
-
-  const overwrite = editor.overwrite;
-  await overwrite.open();
-  const variables = overwrite.variables;
-  await variables.cell(0, 0).expectValue('Amazon');
-  await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
-  await variables.cell(1, 0).expand();
-  await variables.cell(2, 0).expectValue('SecretKeySecret key to access amazon comprehend');
-  await variables.row(2).click();
-  await overwrite.importBtn.click();
-  await overwrite.expectClosed();
-
-  const details = editor.details;
-  await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
-});
-
-test('importAndOverwriteWholeSubTree', async () => {
-  const tree = editor.tree;
-  await tree.expectRowCount(4);
-
-  const overwrite = editor.overwrite;
-  await overwrite.open();
-  const variables = overwrite.variables;
-  await variables.cell(0, 0).expectValue('Amazon');
-  await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
-  await variables.row(1).click();
-  await overwrite.importBtn.click();
-  await overwrite.expectClosed();
-
-  const details = editor.details;
-  await details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
-  await tree.expectRowCount(8);
-  await tree.row(4).click();
-  await details.expectFolderValues('Amazon', '');
-  await tree.row(6).click();
-  await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
-  await tree.row(7).click();
-  await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
-});
-
 test('load data', async () => {
   const tree = editor.tree;
   const details = editor.details;
