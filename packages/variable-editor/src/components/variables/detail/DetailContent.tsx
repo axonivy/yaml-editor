@@ -4,12 +4,13 @@ import { getNode, updateNode, hasChildren as variableHasChildren } from '../../.
 import { type VariableUpdates } from '../data/variable';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
-import './VariablesDetailContent.css';
+import './DetailContent.css';
+import { useMemo } from 'react';
 
 export const VariablesDetailContent = () => {
   const { variables, setVariables, selectedVariable } = useAppContext();
 
-  const variable = getNode(variables, selectedVariable);
+  const variable = useMemo(() => getNode(variables, selectedVariable), [variables, selectedVariable]);
   if (!variable) {
     return <PanelMessage message='Select a variable to edit its properties.' />;
   }

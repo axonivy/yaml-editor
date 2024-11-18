@@ -74,19 +74,19 @@ test('new file variable', async () => {
   const details = editor.details;
   await details.expectTitle('Variables - project-name - NewVariable');
 
-  await details.fill('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
+  await details.fill('myName', '', 'This is myName with a value of myValue', 'File');
   await details.fileNameExtension.choose('txt');
 
-  await details.expectValues('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
+  await details.expectValues('myName', '', 'This is myName with a value of myValue', 'File');
   await details.fileNameExtension.expectValue('txt');
   await details.expectTitle('Variables - project-name - myName');
-  await editor.tree.row(11).expectValues(['myName', 'test.txt']);
+  await editor.tree.row(11).expectValues(['myName', '']);
   await editor.tree.row(10).click();
   await details.expectTitle('Variables - project-name - connectorProvider');
   await editor.tree.row(11).click();
 
   await details.expectTitle('Variables - project-name - myName');
-  await details.expectValues('myName', 'test.txt', 'This is myName with a value of myValue', 'File');
+  await details.expectValues('myName', '', 'This is myName with a value of myValue', 'File');
   await details.fileNameExtension.expectValue('txt');
 });
 

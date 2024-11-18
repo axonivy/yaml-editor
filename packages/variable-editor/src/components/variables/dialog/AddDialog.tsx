@@ -20,8 +20,8 @@ import { useAppContext } from '../../../context/AppContext';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
 import { validateName, validateNamespace } from '../data/validation-utils';
-import { VariableFactory, type Variable } from '../data/variable';
-import './AddVariableDialog.css';
+import { createVariable, type Variable } from '../data/variable';
+import './AddDialog.css';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
@@ -53,7 +53,7 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
   };
 
   const addVariable = () => {
-    const addNodeReturnValue = addNode(name, namespace, variables, VariableFactory);
+    const addNodeReturnValue = addNode(name, namespace, variables, createVariable);
     selectRow(table, toRowId(addNodeReturnValue.newNodePath));
     setSelectedVariable(addNodeReturnValue.newNodePath);
     setVariables(addNodeReturnValue.newData);

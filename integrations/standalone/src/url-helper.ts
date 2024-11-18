@@ -28,6 +28,10 @@ export namespace URLParams {
     return false;
   }
 
+  export function directSave(): boolean {
+    return parameter('directSave') !== undefined;
+  }
+
   export function webSocketBase(): string {
     return `${isSecureConnection() ? 'wss' : 'ws'}://${server()}`;
   }

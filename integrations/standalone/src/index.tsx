@@ -12,6 +12,7 @@ export async function start(): Promise<void> {
   const pmv = URLParams.pmv();
   const theme = URLParams.theme();
   const readonly = URLParams.readonly();
+  const directSave = URLParams.directSave();
   const queryClient = initQueryClient();
   const root = ReactDOM.createRoot(document.getElementById('root')!);
 
@@ -34,7 +35,7 @@ export async function start(): Promise<void> {
           <ClientContextProvider client={client}>
             <QueryProvider client={queryClient}>
               <ReadonlyProvider readonly={readonly}>
-                <VariableEditor context={{ app, pmv, file: 'config/variables.yaml' }} />
+                <VariableEditor context={{ app, pmv, file: 'config/variables.yaml' }} directSave={directSave} />
               </ReadonlyProvider>
             </QueryProvider>
           </ClientContextProvider>
