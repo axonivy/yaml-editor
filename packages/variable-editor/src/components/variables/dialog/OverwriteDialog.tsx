@@ -16,14 +16,16 @@ type OverwriteProps = {
 };
 
 export const OverwriteDialog = ({ table }: OverwriteProps) => {
-  const { variables, setVariables, setSelectedVariable } = useAppContext();
+  const { setVariables, setSelectedVariable } = useAppContext();
 
   const insertVariable = (node?: ProjectVarNode): void => {
     if (node) {
-      const addNodeReturnValue = addVariable(variables, node);
-      setVariables(addNodeReturnValue.newData);
-      selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-      setSelectedVariable(addNodeReturnValue.newNodePath);
+      setVariables(old => {
+        const addNodeReturnValue = addVariable(old, node);
+        selectRow(table, toRowId(addNodeReturnValue.newNodePath));
+        setSelectedVariable(addNodeReturnValue.newNodePath);
+        return addNodeReturnValue.newData;
+      });
     }
   };
 
@@ -49,7 +51,7 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
   );
 };
 
-const addVariable = (variables: Variable[], node: ProjectVarNode): AddNodeReturnType<Variable> => {
+const addVariable = (variables: Array<Variable>, node: ProjectVarNode): AddNodeReturnType<Variable> => {
   const lastDot = node.key.lastIndexOf('.');
   const namespace = node.key.substring(0, lastDot);
   let metadataType: MetadataType = '';

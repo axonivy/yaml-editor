@@ -11,7 +11,7 @@ import {
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
-import type { Variable } from './components/variables/data/variable';
+import type { RootVariable, Variable } from './components/variables/data/variable';
 import { toContent, toVariables } from './components/variables/data/variable-utils';
 import { VariablesDetailContent } from './components/variables/detail/DetailContent';
 import { VariablesMasterContent } from './components/variables/master/VariablesMasterContent';
@@ -28,7 +28,6 @@ import { useAction } from './context/useAction';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
-
   const [context, setContext] = useState(props.context);
   const [directSave, setDirectSave] = useState(props.directSave);
   useEffect(() => {
@@ -36,49 +35,51 @@ function VariableEditor(props: EditorProps) {
     setDirectSave(props.directSave);
   }, [props]);
   const [selectedVariable, setSelectedVariable] = useState<TreePath>([]);
-  const [validationMessages, setValidationMessages] = useState<ValidationMessages>([]);
 
   const client = useClient();
   const queryClient = useQueryClient();
 
-  const queryKeys = useMemo(() => {
-    return {
+  const queryKeys = useMemo(
+    () => ({
       data: () => genQueryKey('data', context),
       saveData: () => genQueryKey('saveData', context),
       validate: () => genQueryKey('validate', context)
-    };
-  }, [context]);
+    }),
+    [context]
+  );
 
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isPending, isError, isSuccess, error } = useQuery({
     queryKey: queryKeys.data(),
-    queryFn: () => client.data(context),
+    queryFn: async () => {
+      const content = await client.data(context);
+      return { ...content, root: toVariables(content.data) };
+    },
     structuralSharing: false
   });
 
-  useQuery({
+  const validations = useQuery({
     queryKey: queryKeys.validate(),
-    queryFn: async () => {
-      const validationMessages = await client.validate(context);
-      setValidationMessages(validationMessages);
-      return validationMessages;
-    }
-  });
+    queryFn: async () => await client.validate(context),
+    initialData: [],
+    enabled: isSuccess
+  }).data;
 
   const mutation = useMutation({
     mutationKey: queryKeys.saveData(),
-    mutationFn: async (updateData: Unary<string>) => {
-      const saveData = queryClient.setQueryData<VariablesData>(queryKeys.data(), prevData => {
+    mutationFn: async (updateData: Unary<Array<Variable>>) => {
+      const saveData = queryClient.setQueryData<VariablesData & { root: RootVariable }>(queryKeys.data(), prevData => {
         if (prevData) {
-          return { ...prevData, data: updateData(prevData.data) };
+          prevData.root.children = updateData(prevData.root.children);
+          return prevData;
         }
-        return undefined;
+        return;
       });
       if (saveData) {
-        const data = await client.saveData({ context, data: saveData.data, directSave });
-        return setValidationMessages(data);
+        return await client.saveData({ context, data: toContent(saveData.root), directSave });
       }
-      return Promise.resolve();
-    }
+      return Promise.resolve([]);
+    },
+    onSuccess: (data: ValidationMessages) => queryClient.setQueryData(queryKeys.validate(), data)
   });
 
   const openUrl = useAction('openUrl');
@@ -95,16 +96,9 @@ function VariableEditor(props: EditorProps) {
     return <PanelMessage icon={IvyIcons.ErrorXMark} message={`An error has occurred: ${error.message}`} />;
   }
 
-  const rootVariable = toVariables(data.data);
-  const setVariables = (variables: Array<Variable>) => {
-    const newRootVariable = structuredClone(rootVariable);
-    newRootVariable.children = variables;
-    mutation.mutate(() => toContent(newRootVariable));
-  };
-
   const title = `Variables - ${context.pmv}`;
   let detailTitle = title;
-  const variable = getNode(rootVariable.children, selectedVariable);
+  const variable = getNode(data.root.children, selectedVariable);
   if (variable) {
     detailTitle += ' - ' + variable.name;
   }
@@ -112,14 +106,14 @@ function VariableEditor(props: EditorProps) {
   return (
     <AppProvider
       value={{
-        variables: rootVariable.children,
-        setVariables: setVariables,
-        selectedVariable: selectedVariable,
-        setSelectedVariable: setSelectedVariable,
-        validations: validationMessages,
-        context: context,
-        detail: detail,
-        setDetail: setDetail
+        variables: data.root.children,
+        setVariables: mutation.mutate,
+        selectedVariable,
+        setSelectedVariable,
+        validations,
+        context,
+        detail,
+        setDetail
       }}
     >
       <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
