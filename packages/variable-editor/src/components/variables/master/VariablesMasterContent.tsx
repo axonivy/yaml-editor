@@ -57,11 +57,12 @@ export const VariablesMasterContent = () => {
     }
   });
 
-  const deleteVariable = () => {
-    const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, variables);
-    setSelectedVariable(deleteFirstSelectedRowReturnValue.selectedPath);
-    setVariables(deleteFirstSelectedRowReturnValue.newData);
-  };
+  const deleteVariable = () =>
+    setVariables(old => {
+      const deleteFirstSelectedRowReturnValue = deleteFirstSelectedRow(table, old);
+      setSelectedVariable(deleteFirstSelectedRowReturnValue.selectedPath);
+      return deleteFirstSelectedRowReturnValue.newData;
+    });
 
   const resetSelection = () => {
     selectRow(table);

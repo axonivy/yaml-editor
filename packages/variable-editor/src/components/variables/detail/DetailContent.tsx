@@ -17,10 +17,7 @@ export const VariablesDetailContent = () => {
 
   const hasChildren = variableHasChildren(variable);
 
-  const handleVariableAttributeChange = (updates: VariableUpdates) => {
-    const newVariables = updateNode(variables, selectedVariable, updates);
-    setVariables(newVariables);
-  };
+  const handleVariableAttributeChange = (updates: VariableUpdates) => setVariables(old => updateNode(old, selectedVariable, updates));
 
   return (
     <Flex direction='column' gap={4} className='detail-content'>

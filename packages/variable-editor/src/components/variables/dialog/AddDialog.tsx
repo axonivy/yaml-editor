@@ -33,35 +33,26 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
 
-  const nameValidationMessage = useMemo(() => {
-    return validateName(name, subRowNamesOfRow(namespace, table));
-  }, [name, namespace, table]);
+  const nameValidationMessage = useMemo(() => validateName(name, subRowNamesOfRow(namespace, table)), [name, namespace, table]);
 
-  const namespaceValidationMessage = useMemo(() => {
-    return validateNamespace(namespace, variables);
-  }, [namespace, variables]);
+  const namespaceValidationMessage = useMemo(() => validateNamespace(namespace, variables), [namespace, variables]);
 
   const initializeVariableDialog = () => {
     setName(newNodeName(table, 'NewVariable'));
     setNamespace(keyOfFirstSelectedNonLeafRow(table));
   };
 
-  const namespaceOptions = () => {
-    return keysOfAllNonLeafRows(table).map(key => ({
-      value: key
-    }));
-  };
+  const namespaceOptions = () => keysOfAllNonLeafRows(table).map(key => ({ value: key }));
 
-  const addVariable = () => {
-    const addNodeReturnValue = addNode(name, namespace, variables, createVariable);
-    selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-    setSelectedVariable(addNodeReturnValue.newNodePath);
-    setVariables(addNodeReturnValue.newData);
-  };
+  const addVariable = () =>
+    setVariables(old => {
+      const addNodeReturnValue = addNode(name, namespace, old, createVariable);
+      selectRow(table, toRowId(addNodeReturnValue.newNodePath));
+      setSelectedVariable(addNodeReturnValue.newNodePath);
+      return addNodeReturnValue.newData;
+    });
 
-  const allInputsValid = () => {
-    return !nameValidationMessage && !namespaceValidationMessage;
-  };
+  const allInputsValid = () => !nameValidationMessage && !namespaceValidationMessage;
 
   return (
     <Dialog>

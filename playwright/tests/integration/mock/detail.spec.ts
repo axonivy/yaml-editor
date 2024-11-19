@@ -236,8 +236,7 @@ test('add existing', async () => {
   await editor.tree.expectRowCount(12);
 
   const details = editor.details;
-  details.name.fill('appId');
+  await details.name.fill('appId');
 
-  await editor.tree.expectRowCount(11);
-  await expect(editor.details.locator.locator('p')).toHaveText('Select a variable to edit its properties.');
+  await editor.tree.expectRowCount(12);
 });
