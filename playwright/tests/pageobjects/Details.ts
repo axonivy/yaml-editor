@@ -40,6 +40,10 @@ export class Details {
         await this.enumValue.choose(value);
         return;
       }
+      if (metaData === 'File') {
+        await this.value.expectDisabled();
+        return;
+      }
     }
     await this.value.fill(value);
   }
@@ -48,6 +52,8 @@ export class Details {
     await this.name.expectValue(name);
     if (metaData === 'Enum') {
       await this.enumValue.expectValue(value);
+    } else if (metaData === 'File') {
+      await this.value.expectDisabled();
     } else {
       await this.value.expectValue(value);
     }
@@ -61,6 +67,7 @@ export class Details {
         await this.value.expectType('time');
         break;
       case 'Enum':
+      case 'File':
         break;
       default:
         await this.value.expectNoType();

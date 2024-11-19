@@ -50,3 +50,5 @@ export interface Client {
 export interface ClientContext {
   client: Client;
 }
+
+export const EMPTY_PROJECT_VAR_NODE: ProjectVarNode = { children: [], description: '', key: '', name: '', type: '', value: '' };

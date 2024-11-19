@@ -1,4 +1,4 @@
-import { BasicField, BasicSelect, BasicInput, PasswordInput } from '@axonivy/ui-components';
+import { BasicField, BasicSelect, BasicInput, PasswordInput, Message } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
@@ -33,6 +33,13 @@ export const Value = ({ variable, onChange }: ValueProps) => {
             emptyItem={true}
             onValueChange={(value: string) => onChange([{ key: 'value', value: value }])}
           />
+        );
+      case 'file':
+        return (
+          <>
+            <BasicInput value={variable.value} disabled={true} />
+            <Message message='Value is served by a file' variant='info' />
+          </>
         );
       default:
         return (

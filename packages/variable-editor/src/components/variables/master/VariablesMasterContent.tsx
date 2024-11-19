@@ -19,8 +19,8 @@ import { useAppContext } from '../../../context/AppContext';
 import { deleteFirstSelectedRow, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
-import { AddVariableDialog } from './AddVariableDialog';
-import { OverwriteDialog } from './OverwriteDialog';
+import { AddVariableDialog } from '../dialog/AddDialog';
+import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
 

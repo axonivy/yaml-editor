@@ -15,7 +15,7 @@
   ],
   "type": "module",
   "types": "./lib/index.d.ts",
-  "module": "./lib/protocol.js",
+  "module": "./lib/index.js",
   "source": "./src/index",
   "scripts": {
     "clean": "rimraf lib tsconfig.tsbuildinfo",

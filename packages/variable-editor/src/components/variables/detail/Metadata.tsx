@@ -33,6 +33,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
         }
         break;
       case 'file':
+        updates.push({ key: 'value', value: '' });
         if (isFileMetadata(newMetadata)) {
           newMetadata.filenameExtension = 'txt';
         }

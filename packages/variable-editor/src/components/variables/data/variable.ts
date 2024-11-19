@@ -5,15 +5,13 @@ export interface Variable extends TreeNode<Variable> {
   description: string;
   metadata: Metadata;
 }
-export const VariableFactory: TreeNodeFactory<Variable> = (name: string) => {
-  return {
-    name: name,
-    value: '',
-    children: [],
-    description: '',
-    metadata: { type: '' }
-  };
-};
+export const createVariable: TreeNodeFactory<Variable> = (name: string) => ({
+  name: name,
+  value: '',
+  children: [],
+  description: '',
+  metadata: { type: '' }
+});
 
 export type VariableUpdate = TreeNodeUpdate<Variable>;
 export type VariableUpdates = TreeNodeUpdates<Variable>;

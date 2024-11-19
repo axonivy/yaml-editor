@@ -13,7 +13,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import type { Variable } from './components/variables/data/variable';
 import { toContent, toVariables } from './components/variables/data/variable-utils';
-import { VariablesDetailContent } from './components/variables/detail/VariablesDetailContent';
+import { VariablesDetailContent } from './components/variables/detail/DetailContent';
 import { VariablesMasterContent } from './components/variables/master/VariablesMasterContent';
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { AppProvider } from './context/AppContext';
