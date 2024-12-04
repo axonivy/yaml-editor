@@ -23,13 +23,13 @@ type VariablesMasterToolbarProps = {
 
 export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) => {
   const { detail, setDetail } = useAppContext();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, disabled } = useTheme();
 
   return (
     <Toolbar className='master-toolbar'>
       <ToolbarTitle>{title}</ToolbarTitle>
       <Flex gap={1}>
-        {theme !== 'system' && (
+        {!disabled && (
           <Popover>
             <PopoverTrigger asChild>
               <Button icon={IvyIcons.Settings} size='large' title='Settings' aria-label='Settings' />
