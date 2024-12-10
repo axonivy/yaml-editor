@@ -1,16 +1,33 @@
-import { BasicField, Flex, BasicInput, PanelMessage, Textarea } from '@axonivy/ui-components';
+import { BasicField, BasicInput, Flex, PanelMessage, ReadonlyProvider, Textarea } from '@axonivy/ui-components';
+import { EMPTY_PROJECT_VAR_NODE, type ProjectVarNode } from '@axonivy/variable-editor-protocol';
+import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
-import { getNode, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
+import { useMeta } from '../../../context/useMeta';
+import { getNode, getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
+import './DetailContent.css';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
-import './DetailContent.css';
-import { useMemo } from 'react';
+
+export const useOverwrites = () => {
+  const { context, variables, selectedVariable } = useAppContext();
+  const variableNodes = getNodesOnPath(variables, selectedVariable);
+  let currentNode: ProjectVarNode | undefined = useMeta('meta/knownVariables', context, EMPTY_PROJECT_VAR_NODE).data;
+  for (const variableNode of variableNodes) {
+    currentNode = currentNode.children.find(child => child.name === variableNode?.name);
+    if (!currentNode) {
+      return false;
+    }
+  }
+  return true;
+};
 
 export const VariablesDetailContent = () => {
   const { variables, setVariables, selectedVariable } = useAppContext();
 
   const variable = useMemo(() => getNode(variables, selectedVariable), [variables, selectedVariable]);
+  const overwrites = useOverwrites();
+
   if (!variable) {
     return <PanelMessage message='Select a variable to edit its properties.' />;
   }
@@ -31,7 +48,11 @@ export const VariablesDetailContent = () => {
           onChange={event => handleVariableAttributeChange([{ key: 'description', value: event.target.value }])}
         />
       </BasicField>
-      {!hasChildren && <Metadata variable={variable} onChange={handleVariableAttributeChange} />}
+      {!hasChildren && (
+        <ReadonlyProvider readonly={overwrites}>
+          <Metadata variable={variable} onChange={handleVariableAttributeChange} />
+        </ReadonlyProvider>
+      )}
     </Flex>
   );
 };

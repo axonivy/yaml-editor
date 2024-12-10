@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { VariableEditor } from '../../pageobjects/VariableEditor';
 
 test('importAndOverwrite', async ({ page }) => {
@@ -43,4 +43,11 @@ test('importAndOverwriteWholeSubTree', async ({ page }) => {
   await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   await tree.row(14).click();
   await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
+});
+
+test('disabledMetadataOfOverwrittenVariable', async ({ page }) => {
+  const editor = await VariableEditor.openMock(page);
+  await editor.addVariable('SecretKey', 'Amazon.Comprehend');
+  await editor.tree.row(13).click();
+  await expect(editor.details.metaData.locator).toBeDisabled();
 });
