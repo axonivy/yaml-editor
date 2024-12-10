@@ -5,39 +5,35 @@ import type { Variable } from '../data/variable';
 import { useOverwrites } from './DetailContent';
 
 describe('useOverwrites', () => {
-  describe('false', () => {
-    test('in known folder', () => {
-      const view = customRenderHook(() => useOverwrites(), {
-        wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 0] } }
-      });
-      expect(view.result.current).toBeFalsy();
+  test('variable that does not exist in required project returns false', () => {
+    const view = customRenderHook(() => useOverwrites(), {
+      wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [0] } }
     });
+    expect(view.result.current).toBeFalsy();
+  });
 
-    test('not in known folder', () => {
-      const view = customRenderHook(() => useOverwrites(), {
-        wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [0] } }
-      });
-      expect(view.result.current).toBeFalsy();
+  test('variable located in existing folder of required project returns false', () => {
+    const view = customRenderHook(() => useOverwrites(), {
+      wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 0] } }
+    });
+    expect(view.result.current).toBeFalsy();
+  });
+
+  test('variable that exists in required project returns true', async () => {
+    const view = customRenderHook(() => useOverwrites(), {
+      wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 1, 0] } }
+    });
+    await waitFor(() => {
+      expect(view.result.current).toBeTruthy();
     });
   });
 
-  describe('true', () => {
-    test('leaf', async () => {
-      const view = customRenderHook(() => useOverwrites(), {
-        wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 1, 0] } }
-      });
-      await waitFor(() => {
-        expect(view.result.current).toBeTruthy();
-      });
+  test('variable that exists as folder in required project returns true', async () => {
+    const view = customRenderHook(() => useOverwrites(), {
+      wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 1] } }
     });
-
-    test('not leaf', async () => {
-      const view = customRenderHook(() => useOverwrites(), {
-        wrapperProps: { client: new ClientMock(), appContext: { variables: variables, selectedVariable: [1, 1] } }
-      });
-      await waitFor(() => {
-        expect(view.result.current).toBeTruthy();
-      });
+    await waitFor(() => {
+      expect(view.result.current).toBeTruthy();
     });
   });
 });

@@ -1,4 +1,4 @@
-import { BasicField, BasicInput, Flex, PanelMessage, ReadonlyProvider, Textarea } from '@axonivy/ui-components';
+import { BasicField, BasicInput, Flex, PanelMessage, ReadonlyProvider, Textarea, useReadonly } from '@axonivy/ui-components';
 import { EMPTY_PROJECT_VAR_NODE, type ProjectVarNode } from '@axonivy/variable-editor-protocol';
 import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
@@ -24,6 +24,7 @@ export const useOverwrites = () => {
 
 export const VariablesDetailContent = () => {
   const { variables, setVariables, selectedVariable } = useAppContext();
+  const readonly = useReadonly();
 
   const variable = useMemo(() => getNode(variables, selectedVariable), [variables, selectedVariable]);
   const overwrites = useOverwrites();
@@ -49,7 +50,7 @@ export const VariablesDetailContent = () => {
         />
       </BasicField>
       {!hasChildren && (
-        <ReadonlyProvider readonly={overwrites}>
+        <ReadonlyProvider readonly={readonly || overwrites}>
           <Metadata variable={variable} onChange={handleVariableAttributeChange} />
         </ReadonlyProvider>
       )}
