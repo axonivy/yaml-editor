@@ -11,8 +11,11 @@ import { Value } from './Value';
 
 export const useOverwrites = () => {
   const { context, variables, selectedVariable } = useAppContext();
-  const variableNodes = getNodesOnPath(variables, selectedVariable);
   let currentNode: ProjectVarNode | undefined = useMeta('meta/knownVariables', context, EMPTY_PROJECT_VAR_NODE).data;
+  if (currentNode === undefined || currentNode.children.length === 0) {
+    return false;
+  }
+  const variableNodes = getNodesOnPath(variables, selectedVariable);
   for (const variableNode of variableNodes) {
     currentNode = currentNode.children.find(child => child.name === variableNode?.name);
     if (!currentNode) {
