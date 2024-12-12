@@ -8,7 +8,7 @@ export interface EnumMetadata extends Metadata {
 }
 
 export interface FileMetadata extends Metadata {
-  filenameExtension: FileMetadataFilenameExtension;
+  extension: FileMetadataFilenameExtension;
 }
 export type FileMetadataFilenameExtension = (typeof fileMetadataFilenameExtensionOptions)[number]['value'];
 
@@ -29,6 +29,10 @@ export const isMetadataType = (metadataType: string): metadataType is MetadataTy
   return metadataType === '' || metadataOptions.some(option => option.value === metadataType);
 };
 
+export const isMetadata = (metadata?: Metadata): metadata is Metadata => {
+  return metadata !== undefined && isMetadataType(metadata.type);
+};
+
 export const isEnumMetadata = (metadata?: Metadata): metadata is EnumMetadata => {
   return metadata !== undefined && metadata.type === 'enum';
 };
@@ -47,6 +51,6 @@ export const toEnumMetadataUpdate = (values: Array<string>): VariableUpdate => {
 };
 
 export const toFileMetadataUpdate = (filenameExtension: FileMetadataFilenameExtension): VariableUpdate => {
-  const metadata: FileMetadata = { type: 'file', filenameExtension: filenameExtension };
+  const metadata: FileMetadata = { type: 'file', extension: filenameExtension };
   return { key: 'metadata', value: metadata };
 };

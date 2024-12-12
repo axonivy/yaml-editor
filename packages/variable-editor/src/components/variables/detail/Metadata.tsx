@@ -35,7 +35,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
       case 'file':
         updates.push({ key: 'value', value: '' });
         if (isFileMetadata(newMetadata)) {
-          newMetadata.filenameExtension = 'txt';
+          newMetadata.extension = 'txt';
         }
     }
     updates.push({ key: 'metadata', value: newMetadata });
@@ -51,7 +51,7 @@ export const Metadata = ({ variable, onChange }: MetadataProps) => {
       {isFileMetadata(metadata) && (
         <BasicField label='Filename extension'>
           <BasicSelect
-            value={metadata.filenameExtension}
+            value={metadata.extension}
             items={fileMetadataFilenameExtensionOptions}
             onValueChange={(filenameExtension: FileMetadataFilenameExtension) => onChange([toFileMetadataUpdate(filenameExtension)])}
           />

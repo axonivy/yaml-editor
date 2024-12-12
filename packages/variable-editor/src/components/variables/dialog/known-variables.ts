@@ -1,16 +1,16 @@
 import type { BrowserNode } from '@axonivy/ui-components';
-import type { ProjectVarNode } from '@axonivy/variable-editor-protocol';
+import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 import { nodeIcon } from '../data/variable-utils';
 
-export const toNodes = (root?: ProjectVarNode): Array<BrowserNode> => {
+export const toNodes = (root?: KnownVariables): Array<BrowserNode> => {
   if (!root) {
     return [];
   }
   return root.children.map(varNode => toNode(varNode));
 };
 
-const toNode = (node: ProjectVarNode): BrowserNode => {
-  const c = node.children.map(child => toNode(child));
+const toNode = (node: KnownVariables): BrowserNode => {
+  const children = node.children.map(child => toNode(child));
   const icon = nodeIcon(node);
   const info = node.description;
   return {
@@ -18,6 +18,6 @@ const toNode = (node: ProjectVarNode): BrowserNode => {
     info,
     icon,
     data: node,
-    children: c
+    children
   };
 };
