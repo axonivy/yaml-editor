@@ -3,8 +3,8 @@
   "private": true,
   "version": "12.0.2-next",
   "dependencies": {
-    "@axonivy/ui-components": "~12.0.1-next.401",
-    "@axonivy/ui-icons": "~12.0.1-next.401",
+    "@axonivy/ui-components": "~12.0.2-next.409",
+    "@axonivy/ui-icons": "~12.0.2-next.409",
     "@axonivy/variable-editor": "*",
     "@axonivy/variable-editor-protocol": "*",
     "react": "^18.3.1",
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "vite": "^5.4.10"
   },
   "scripts": {
