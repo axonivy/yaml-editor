@@ -1,6 +1,6 @@
 {
   "name": "@axonivy/variable-editor",
-  "version": "12.0.1-next",
+  "version": "12.0.2-next",
   "license": "Apache-2.0",
   "author": "Axon Ivy AG",
   "homepage": "https://developer.axonivy.com/",
@@ -20,7 +20,7 @@
     "@axonivy/jsonrpc": "~12.0.1-next.401",
     "@axonivy/ui-components": "~12.0.1-next.401",
     "@axonivy/ui-icons": "~12.0.1-next.401",
-    "@axonivy/variable-editor-protocol": "12.0.1-next",
+    "@axonivy/variable-editor-protocol": "12.0.2-next",
     "@tanstack/react-query": "5.32.1",
     "@tanstack/react-query-devtools": "5.32.1",
     "react": "^18.3.1",
