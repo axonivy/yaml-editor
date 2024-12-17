@@ -1,4 +1,5 @@
 import { IvyIcons } from '@axonivy/ui-icons';
+import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 import { Pair, Scalar, YAMLMap, isMap, isPair, isScalar, parseDocument, stringify } from 'yaml';
 import { addSingleLeadingWhitespaceToEachLine, getLastLine, removeSingleLeadingWhitespaceFromEachLine } from '../../../utils/string/string';
 import { hasChildren } from '../../../utils/tree/tree-data';
@@ -13,7 +14,6 @@ import {
   type MetadataType
 } from './metadata';
 import type { RootVariable, Variable } from './variable';
-import type { ProjectVarNode } from '@axonivy/variable-editor-protocol';
 
 export const toVariables = (content: string) => {
   const rootVariable: RootVariable = {
@@ -184,7 +184,7 @@ const enrichVariableWithEnumMetadata = (variable: Variable, metadata: string) =>
 const enrichVariableWithFileMetadata = (variable: Variable, metadata: string) => {
   const filenameExtension = metadata.replace(/^file:\s*/, '');
   if (isFileMetadataFilenameExtension(filenameExtension)) {
-    const fileMetadata: FileMetadata = { type: 'file', filenameExtension: filenameExtension };
+    const fileMetadata: FileMetadata = { type: 'file', extension: filenameExtension };
     variable.metadata = fileMetadata;
   }
   return variable;
@@ -245,7 +245,7 @@ const parseMetadataComment = (metadata: Metadata) => {
       break;
     case 'file':
       if (isFileMetadata(metadata)) {
-        metadataComment = 'file: ' + metadata.filenameExtension;
+        metadataComment = 'file: ' + metadata.extension;
       }
       break;
     default:
@@ -262,8 +262,8 @@ export const variableIcon = (variable: Variable) => {
   return icon(variable.metadata.type);
 };
 
-export const nodeIcon = (variableNode: ProjectVarNode) => {
-  return icon(variableNode.type);
+export const nodeIcon = (node: KnownVariables) => {
+  return icon(node.metaData.type);
 };
 
 const icon = (type: string) => {

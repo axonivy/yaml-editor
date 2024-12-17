@@ -1,5 +1,5 @@
 import type {
-  ProjectVarNode,
+  KnownVariables,
   ValidationResult,
   VariablesActionArgs,
   VariablesData,
@@ -13,7 +13,7 @@ export type SaveArgs = VariablesSaveDataArgs & { directSave?: boolean };
 export type ValidationMessages = Array<ValidationResult>;
 
 export interface MetaRequestTypes {
-  'meta/knownVariables': [VariablesEditorDataContext, ProjectVarNode];
+  'meta/knownVariables': [VariablesEditorDataContext, KnownVariables];
 }
 
 export interface RequestTypes extends MetaRequestTypes {
@@ -51,4 +51,11 @@ export interface ClientContext {
   client: Client;
 }
 
-export const EMPTY_PROJECT_VAR_NODE: ProjectVarNode = { children: [], description: '', key: '', name: '', type: '', value: '' };
+export const EMPTY_KNOWN_VARIABLES: KnownVariables = {
+  children: [],
+  description: '',
+  metaData: { type: '' },
+  name: '',
+  namespace: '',
+  value: ''
+};

@@ -1,4 +1,4 @@
-import type { Client, MetaRequestTypes, ProjectVarNode } from '@axonivy/variable-editor-protocol';
+import type { Client, MetaRequestTypes, KnownVariables } from '@axonivy/variable-editor-protocol';
 import { waitFor } from '@testing-library/react';
 import { customRenderHook } from '../data/test-utils/test-utils';
 import type { Variable } from '../data/variable';
@@ -47,6 +47,6 @@ class ClientMock implements Partial<Client> {
   meta<TMeta extends keyof MetaRequestTypes>(): Promise<MetaRequestTypes[TMeta][1]> {
     return Promise.resolve({
       children: [{ name: 'Amazon', children: [{ name: 'Comprehend', children: [{ name: 'SecretKey' }, { name: 'AccessKey' }] }] }]
-    } as ProjectVarNode);
+    } as KnownVariables);
   }
 }

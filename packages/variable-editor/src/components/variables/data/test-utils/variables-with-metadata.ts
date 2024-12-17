@@ -44,7 +44,7 @@ export const rootVariableWithMetadata: RootVariable = {
       name: 'fileKey',
       value: 'fileValue',
       description: '',
-      metadata: { type: 'file', filenameExtension: 'json' } as FileMetadata,
+      metadata: { type: 'file', extension: 'json' } as FileMetadata,
       children: []
     }
   ]

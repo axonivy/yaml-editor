@@ -1,6 +1,6 @@
-import type { Locator, Page } from '@playwright/test';
-import { Table } from './Table';
+import { expect, type Locator, type Page } from '@playwright/test';
 import { Button } from './Button';
+import { Table } from './Table';
 
 export class EnumValues {
   private readonly table: Table;
@@ -41,10 +41,17 @@ export class EnumValues {
     await this.table.cell(rowCount - 1, 0).fill(value);
   }
 
-  async expectValues(values: string[]) {
+  async expectValues(...values: Array<string>) {
     await this.table.expectRowCount(values.length);
     for (let row = 0; row < values.length; row++) {
       await this.table.cell(row, 0).expectValue(values[row]);
+    }
+  }
+
+  async expectToBeDisabled() {
+    const rowCount = await this.table.rowCount();
+    for (let row = 0; row < rowCount; row++) {
+      await expect(this.table.row(row).locator.locator('.ui-input')).toBeDisabled();
     }
   }
 }

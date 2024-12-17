@@ -3,6 +3,7 @@ import {
   isEnumMetadata,
   isFileMetadata,
   isFileMetadataFilenameExtension,
+  isMetadata,
   isMetadataType,
   metadataOptions,
   toEnumMetadataUpdate,
@@ -51,6 +52,48 @@ describe('isMetadataType', () => {
 
   test('false', () => {
     expect(isMetadataType('other')).toBeFalsy();
+  });
+});
+
+describe('isMetadata', () => {
+  describe('true', () => {
+    test('empty', () => {
+      expect(isMetadata({ type: '' })).toBeTruthy();
+    });
+
+    test('password', () => {
+      expect(isMetadata({ type: 'password' })).toBeTruthy();
+    });
+
+    test('daytime', () => {
+      expect(isMetadata({ type: 'daytime' })).toBeTruthy();
+    });
+
+    test('enum', () => {
+      expect(isMetadata({ type: 'enum' })).toBeTruthy();
+    });
+
+    test('file', () => {
+      expect(isMetadata({ type: 'file' })).toBeTruthy();
+    });
+  });
+
+  describe('false', () => {
+    test('not a meta data type', () => {
+      expect(isMetadata({ type: 'other' })).toBeFalsy();
+    });
+
+    test('null', () => {
+      expect(isMetadata(null)).toBeFalsy();
+    });
+
+    test('undefined', () => {
+      expect(isMetadata(undefined)).toBeFalsy();
+    });
+
+    test('type is undefined', () => {
+      expect(isMetadata({})).toBeFalsy();
+    });
   });
 });
 
@@ -108,9 +151,9 @@ test('toEnumMetadataUpdate', () => {
 });
 
 test('toFileMetadataUpdate', () => {
-  const filenameExtension = 'txt';
-  expect(toFileMetadataUpdate(filenameExtension)).toEqual({
+  const extension = 'txt';
+  expect(toFileMetadataUpdate(extension)).toEqual({
     key: 'metadata',
-    value: { type: 'file', filenameExtension: filenameExtension }
+    value: { type: 'file', extension }
   });
 });

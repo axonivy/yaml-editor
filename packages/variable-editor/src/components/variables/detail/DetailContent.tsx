@@ -1,5 +1,5 @@
 import { BasicField, BasicInput, Flex, PanelMessage, ReadonlyProvider, Textarea, useReadonly } from '@axonivy/ui-components';
-import { EMPTY_PROJECT_VAR_NODE, type ProjectVarNode } from '@axonivy/variable-editor-protocol';
+import { EMPTY_KNOWN_VARIABLES, type KnownVariables } from '@axonivy/variable-editor-protocol';
 import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
@@ -11,7 +11,7 @@ import { Value } from './Value';
 
 export const useOverwrites = () => {
   const { context, variables, selectedVariable } = useAppContext();
-  let currentNode: ProjectVarNode | undefined = useMeta('meta/knownVariables', context, EMPTY_PROJECT_VAR_NODE).data;
+  let currentNode: KnownVariables | undefined = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
   if (currentNode === undefined || currentNode.children.length === 0) {
     return false;
   }

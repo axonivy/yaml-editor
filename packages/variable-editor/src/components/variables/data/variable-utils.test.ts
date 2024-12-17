@@ -1,4 +1,5 @@
 import { IvyIcons } from '@axonivy/ui-icons';
+import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 import { content, contentStringsOnly, rootVariable } from './test-utils/variables';
 import {
   contentEmpty,
@@ -23,7 +24,7 @@ import {
   rootVariableWithMetadata
 } from './test-utils/variables-with-metadata';
 import type { Variable } from './variable';
-import { toContent, toVariables, variableIcon } from './variable-utils';
+import { nodeIcon, toContent, toVariables, variableIcon } from './variable-utils';
 
 describe('toVariables', () => {
   test('default', () => {
@@ -144,5 +145,37 @@ describe('variableIcon', () => {
   test('file', () => {
     const variable = { metadata: { type: 'file' }, children: [] as Array<Variable> } as Variable;
     expect(variableIcon(variable)).toEqual(IvyIcons.Note);
+  });
+});
+
+describe('nodeIcon', () => {
+  test('default', () => {
+    const node = { metaData: { type: 'other' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.Quote);
+  });
+
+  test('mapping', () => {
+    const node = { metaData: { type: 'folder' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.FolderOpen);
+  });
+
+  test('password', () => {
+    const node = { metaData: { type: 'password' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.Password);
+  });
+
+  test('daytime', () => {
+    const node = { metaData: { type: 'daytime' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.CalendarTime);
+  });
+
+  test('enum', () => {
+    const node = { metaData: { type: 'enum' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.List);
+  });
+
+  test('file', () => {
+    const node = { metaData: { type: 'file' } } as KnownVariables;
+    expect(nodeIcon(node)).toEqual(IvyIcons.Note);
   });
 });

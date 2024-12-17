@@ -9,7 +9,7 @@
 export type Severity = ("INFO" | "WARNING" | "ERROR")
 
 export interface Variables {
-  projectVarNode: ProjectVarNode;
+  knownVariables: KnownVariables;
   validationResult: ValidationResult[];
   variablesActionArgs: VariablesActionArgs;
   variablesData: VariablesData;
@@ -18,13 +18,16 @@ export interface Variables {
   void: Void;
   [k: string]: unknown;
 }
-export interface ProjectVarNode {
-  children: ProjectVarNode[];
+export interface KnownVariables {
+  children: KnownVariables[];
   description: string;
-  key: string;
+  metaData: MetaData;
   name: string;
-  type: string;
+  namespace: string;
   value: string;
+}
+export interface MetaData {
+  type: string;
 }
 export interface ValidationResult {
   message: string;

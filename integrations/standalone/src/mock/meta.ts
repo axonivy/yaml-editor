@@ -1,43 +1,68 @@
-import type { ProjectVarNode } from '@axonivy/variable-editor-protocol';
+import type { KnownVariables, MetaData } from '@axonivy/variable-editor-protocol';
 
-export const knownVariables: ProjectVarNode = {
-  key: '',
+export const knownVariables: KnownVariables = {
+  namespace: '',
   name: '',
   value: '',
-  type: 'folder',
+  metaData: { type: 'folder' },
   description: '',
   children: [
     {
-      key: 'Amazon',
+      namespace: '',
       name: 'Amazon',
       value: '',
-      type: 'folder',
+      metaData: { type: 'folder' },
       description: '',
       children: [
         {
-          key: 'Amazon.Comprehend',
+          namespace: 'Amazon',
           name: 'Comprehend',
           value: '',
-          type: 'folder',
+          metaData: { type: 'folder' },
           description: 'Amazon comprehend connector settings',
           children: [
             {
-              key: 'Amazon.Comprehend.SecretKey',
+              namespace: 'Amazon.Comprehend',
               name: 'SecretKey',
               value: '<YOUR_SECRET_KEY>',
-              type: 'password',
+              metaData: { type: 'password' },
               description: 'Secret key to access amazon comprehend',
               children: []
             },
             {
-              key: 'Amazon.Comprehend.AccessKey',
+              namespace: 'Amazon.Comprehend',
               name: 'AccessKey',
               value: '<YOUR_ACCESS_KEY>',
-              type: 'string',
+              metaData: { type: 'string' },
               description: 'Access key to access amazon comprehend',
               children: []
             }
           ]
+        }
+      ]
+    },
+    {
+      namespace: '',
+      name: 'Meta',
+      value: '',
+      metaData: { type: 'folder' },
+      description: '',
+      children: [
+        {
+          namespace: 'Meta',
+          name: 'Enum',
+          value: 'two',
+          metaData: { type: 'enum', values: ['one', 'two', 'three'] } as MetaData,
+          description: '',
+          children: []
+        },
+        {
+          namespace: 'Meta',
+          name: 'File',
+          value: '',
+          metaData: { type: 'file', extension: 'json' } as MetaData,
+          description: '',
+          children: []
         }
       ]
     }
