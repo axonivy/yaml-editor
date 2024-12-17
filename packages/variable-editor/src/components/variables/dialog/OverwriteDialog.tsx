@@ -54,7 +54,7 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
 
 const addVariable = (variables: Array<Variable>, node: KnownVariables): AddNodeReturnType<Variable> => {
   let metadata: Metadata = { type: '' };
-  const nodeMetaData = node.metaData as Metadata;
+  const nodeMetaData = node.metaData;
   if (isMetadata(nodeMetaData)) {
     metadata = nodeMetaData;
   }

@@ -29,8 +29,8 @@ export const isMetadataType = (metadataType: string): metadataType is MetadataTy
   return metadataType === '' || metadataOptions.some(option => option.value === metadataType);
 };
 
-export const isMetadata = (metadata?: Metadata): metadata is Metadata => {
-  return metadata !== undefined && isMetadataType(metadata.type);
+export const isMetadata = (metadata: unknown): metadata is Metadata => {
+  return typeof metadata === 'object' && metadata !== null && 'type' in metadata && isMetadataType((metadata as Metadata).type);
 };
 
 export const isEnumMetadata = (metadata?: Metadata): metadata is EnumMetadata => {

@@ -7,9 +7,7 @@ import {
   isMetadataType,
   metadataOptions,
   toEnumMetadataUpdate,
-  toFileMetadataUpdate,
-  type Metadata,
-  type MetadataType
+  toFileMetadataUpdate
 } from './metadata';
 
 test('metadataOptions', () => {
@@ -81,16 +79,20 @@ describe('isMetadata', () => {
   });
 
   describe('false', () => {
-    test('other', () => {
-      expect(isMetadata({ type: 'other' as MetadataType })).toBeFalsy();
+    test('not a meta data type', () => {
+      expect(isMetadata({ type: 'other' })).toBeFalsy();
+    });
+
+    test('null', () => {
+      expect(isMetadata(null)).toBeFalsy();
     });
 
     test('undefined', () => {
-      expect(isMetadata()).toBeFalsy();
+      expect(isMetadata(undefined)).toBeFalsy();
     });
 
     test('type is undefined', () => {
-      expect(isMetadata({} as Metadata)).toBeFalsy();
+      expect(isMetadata({})).toBeFalsy();
     });
   });
 });
