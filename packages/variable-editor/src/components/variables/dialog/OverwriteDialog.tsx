@@ -65,7 +65,7 @@ const addVariable = (variables: Array<Variable>, node: KnownVariables): AddNodeR
         value: node.value,
         children: [],
         description: node.description,
-        metadata: metadata
+        metadata
       };
     }
     return createVariable(name);
