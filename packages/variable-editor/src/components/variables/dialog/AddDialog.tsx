@@ -14,21 +14,24 @@ import {
   selectRow
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import { EMPTY_KNOWN_VARIABLES } from '@axonivy/variable-editor-protocol';
 import { type Table } from '@tanstack/react-table';
 import { useMemo, useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
+import { useMeta } from '../../../context/useMeta';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
 import { validateName, validateNamespace } from '../data/validation-utils';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
+import { addKnownVariable, findKnownVariable } from './known-variables';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
 };
 
 export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
-  const { variables, setVariables, setSelectedVariable } = useAppContext();
+  const { context, variables, setVariables, setSelectedVariable } = useAppContext();
 
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
@@ -44,13 +47,23 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
 
   const namespaceOptions = () => keysOfAllNonLeafRows(table).map(key => ({ value: key }));
 
-  const addVariable = () =>
+  const knownVariables = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
+
+  const addVariable = () => {
+    const namespaceKey = namespace ? namespace.split('.') : [];
+    const overwrittenVariable = findKnownVariable(knownVariables, ...namespaceKey, name);
     setVariables(old => {
-      const addNodeReturnValue = addNode(name, namespace, old, createVariable);
+      let addNodeReturnValue;
+      if (overwrittenVariable) {
+        addNodeReturnValue = addKnownVariable(old, overwrittenVariable);
+      } else {
+        addNodeReturnValue = addNode(name, namespace, old, createVariable);
+      }
       selectRow(table, toRowId(addNodeReturnValue.newNodePath));
       setSelectedVariable(addNodeReturnValue.newNodePath);
       return addNodeReturnValue.newData;
     });
+  };
 
   const allInputsValid = () => !nameValidationMessage && !namespaceValidationMessage;
 

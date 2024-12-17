@@ -5,11 +5,9 @@ import { type Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { toRowId } from '../../../utils/tree/tree';
-import { addNode } from '../../../utils/tree/tree-data';
-import type { AddNodeReturnType } from '../../../utils/tree/types';
-import { isMetadata, type Metadata } from '../data/metadata';
-import { createVariable, type Variable } from '../data/variable';
+import { type Variable } from '../data/variable';
 import { VariableBrowser } from './VariableBrowser';
+import { addKnownVariable } from './known-variables';
 
 type OverwriteProps = {
   table: Table<Variable>;
@@ -23,7 +21,7 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
       return;
     }
     setVariables(old => {
-      const addNodeReturnValue = addVariable(old, node);
+      const addNodeReturnValue = addKnownVariable(old, node);
       selectRow(table, toRowId(addNodeReturnValue.newNodePath));
       setSelectedVariable(addNodeReturnValue.newNodePath);
       return addNodeReturnValue.newData;
@@ -50,29 +48,4 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-const addVariable = (variables: Array<Variable>, node: KnownVariables): AddNodeReturnType<Variable> => {
-  let metadata: Metadata = { type: '' };
-  const nodeMetaData = node.metaData;
-  if (isMetadata(nodeMetaData)) {
-    metadata = nodeMetaData;
-  }
-  let returnValue = addNode(node.name, node.namespace, variables, name => {
-    if (name === node.name) {
-      return {
-        name,
-        value: node.value,
-        children: [],
-        description: node.description,
-        metadata
-      };
-    }
-    return createVariable(name);
-  });
-  const newNodePath = returnValue.newNodePath;
-  for (const child of node.children) {
-    returnValue = addVariable(returnValue.newData, child);
-  }
-  return { newData: returnValue.newData, newNodePath };
 };
