@@ -1,6 +1,6 @@
 import { EMPTY_KNOWN_VARIABLES, type KnownVariables, type MetaData } from '@axonivy/variable-editor-protocol';
 import type { Variable } from '../data/variable';
-import { addKnownVariable, findKnownVariable, toNodes } from './known-variables';
+import { addKnownVariable, findVariable, toNodes } from './known-variables';
 
 const knownVariables: KnownVariables = {
   namespace: '',
@@ -79,24 +79,25 @@ test('toNodes', () => {
   expect(node.children[3]).toMatchObject({ value: 'File', icon: 'note', info: '' });
 });
 
-describe('findKnownVariable', () => {
+describe('findVariable', () => {
   test('known variables is empty', () => {
     const knownVariables = { children: [] as Array<KnownVariables> } as KnownVariables;
-    expect(findKnownVariable(knownVariables, 'some', 'key')).toBeUndefined();
+    expect(findVariable(knownVariables, 'some', 'key')).toBeUndefined();
   });
 
   test('find folder', () => {
-    expect(findKnownVariable(knownVariables, 'Amazon', 'Comprehend')).toEqual(knownVariables.children[0].children[0]);
+    expect(findVariable(knownVariables, 'Amazon', 'Comprehend')).toEqual({ node: knownVariables.children[0].children[0], path: [0, 0] });
   });
 
   test('find leaf', () => {
-    expect(findKnownVariable(knownVariables, 'Amazon', 'Comprehend', 'AccessKey')).toEqual(
-      knownVariables.children[0].children[0].children[1]
-    );
+    expect(findVariable(knownVariables, 'Amazon', 'Comprehend', 'AccessKey')).toEqual({
+      node: knownVariables.children[0].children[0].children[1],
+      path: [0, 0, 1]
+    });
   });
 
   test('variable does not exist', () => {
-    expect(findKnownVariable(knownVariables, 'notFound')).toBeUndefined();
+    expect(findVariable(knownVariables, 'notFound')).toBeUndefined();
   });
 });
 
@@ -221,6 +222,60 @@ describe('addKnownVariable', () => {
                 value: '<YOUR_SECRET_KEY>',
                 description: 'Secret key to access amazon comprehend',
                 metadata: { type: 'password' },
+                children: []
+              }
+            ]
+          }
+        ]
+      }
+    ]);
+  });
+
+  test('do not add existing variable', () => {
+    const variables = [{ name: 'Amazon', children: [] as Array<Variable> }] as Array<Variable>;
+    const originalVariables = structuredClone(variables);
+    const addNodeReturnValue = addKnownVariable(variables, knownVariables.children[0]);
+    const newData = addNodeReturnValue.newData;
+    const newNodePath = addNodeReturnValue.newNodePath;
+    expect(variables).toEqual(originalVariables);
+    expect(newData).not.toBe(variables);
+    expect(newNodePath).toEqual([0]);
+    expect(newData).toEqual([
+      {
+        name: 'Amazon',
+        children: [
+          {
+            name: 'Comprehend',
+            value: '',
+            description: 'Amazon comprehend connector settings',
+            metadata: { type: '' },
+            children: [
+              {
+                name: 'SecretKey',
+                value: '<YOUR_SECRET_KEY>',
+                description: 'Secret key to access amazon comprehend',
+                metadata: { type: 'password' },
+                children: []
+              },
+              {
+                name: 'AccessKey',
+                value: '<YOUR_ACCESS_KEY>',
+                description: 'Access key to access amazon comprehend',
+                metadata: { type: '' },
+                children: []
+              },
+              {
+                name: 'Enum',
+                value: 'two',
+                description: '',
+                metadata: { type: 'enum', values: ['one', 'two', 'three'] },
+                children: []
+              },
+              {
+                name: 'File',
+                value: '',
+                description: '',
+                metadata: { type: 'file', extension: 'json' },
                 children: []
               }
             ]

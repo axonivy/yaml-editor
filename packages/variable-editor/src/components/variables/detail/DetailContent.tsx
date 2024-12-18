@@ -5,7 +5,7 @@ import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
 import { getNode, getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
-import { findKnownVariable } from '../dialog/known-variables';
+import { findVariable } from '../dialog/known-variables';
 import './DetailContent.css';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
@@ -17,7 +17,7 @@ export const useOverwrites = () => {
     return false;
   }
   const key = getNodesOnPath(variables, selectedVariable).map(node => (node ? node.name : ''));
-  return findKnownVariable(knownVariables, ...key) !== undefined;
+  return findVariable(knownVariables, ...key) !== undefined;
 };
 
 export const VariablesDetailContent = () => {

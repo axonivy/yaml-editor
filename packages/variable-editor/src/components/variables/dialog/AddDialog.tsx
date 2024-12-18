@@ -26,7 +26,7 @@ import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { validateName, validateNamespace } from '../data/validation-utils';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
-import { addKnownVariable, findKnownVariable } from './known-variables';
+import { addKnownVariable, findVariable } from './known-variables';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
@@ -80,9 +80,9 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
       return;
     }
     const namespaceKey = namespace ? namespace.split('.') : [];
-    const foundKnownVariable = findKnownVariable(knownVariables, ...namespaceKey, name);
+    const foundKnownVariable = findVariable(knownVariables, ...namespaceKey, name);
     if (foundKnownVariable) {
-      setKnownVariable(foundKnownVariable);
+      setKnownVariable(foundKnownVariable.node);
       event.preventDefault();
       return;
     }
