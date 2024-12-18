@@ -11,16 +11,18 @@ import {
   DialogTrigger,
   Flex,
   Input,
+  Message,
   selectRow
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
-import { EMPTY_KNOWN_VARIABLES } from '@axonivy/variable-editor-protocol';
+import { EMPTY_KNOWN_VARIABLES, type KnownVariables } from '@axonivy/variable-editor-protocol';
 import { type Table } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
 import { addNode } from '../../../utils/tree/tree-data';
+import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { validateName, validateNamespace } from '../data/validation-utils';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
@@ -37,8 +39,12 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
   const [namespace, setNamespace] = useState('');
 
   const nameValidationMessage = useMemo(() => validateName(name, subRowNamesOfRow(namespace, table)), [name, namespace, table]);
-
   const namespaceValidationMessage = useMemo(() => validateNamespace(namespace, variables), [namespace, variables]);
+
+  const [knownVariable, setKnownVariable] = useState<KnownVariables>();
+  useEffect(() => setKnownVariable(undefined), [name, namespace]);
+
+  const knownVariables = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
 
   const initializeVariableDialog = () => {
     setName(newNodeName(table, 'NewVariable'));
@@ -47,22 +53,40 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
 
   const namespaceOptions = () => keysOfAllNonLeafRows(table).map(key => ({ value: key }));
 
-  const knownVariables = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
+  const updateSelection = (addNodeReturnValue: AddNodeReturnType<Variable>) => {
+    selectRow(table, toRowId(addNodeReturnValue.newNodePath));
+    setSelectedVariable(addNodeReturnValue.newNodePath);
+  };
 
-  const addVariable = () => {
-    const namespaceKey = namespace ? namespace.split('.') : [];
-    const overwrittenVariable = findKnownVariable(knownVariables, ...namespaceKey, name);
+  const addKnown = (knownVariable: KnownVariables) => {
     setVariables(old => {
-      let addNodeReturnValue;
-      if (overwrittenVariable) {
-        addNodeReturnValue = addKnownVariable(old, overwrittenVariable);
-      } else {
-        addNodeReturnValue = addNode(name, namespace, old, createVariable);
-      }
-      selectRow(table, toRowId(addNodeReturnValue.newNodePath));
-      setSelectedVariable(addNodeReturnValue.newNodePath);
+      const addNodeReturnValue = addKnownVariable(old, knownVariable);
+      updateSelection(addNodeReturnValue);
       return addNodeReturnValue.newData;
     });
+  };
+
+  const addVar = () => {
+    setVariables(old => {
+      const addNodeReturnValue = addNode(name, namespace, old, createVariable);
+      updateSelection(addNodeReturnValue);
+      return addNodeReturnValue.newData;
+    });
+  };
+
+  const addVariable = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (knownVariable) {
+      addKnown(knownVariable);
+      return;
+    }
+    const namespaceKey = namespace ? namespace.split('.') : [];
+    const foundKnownVariable = findKnownVariable(knownVariables, ...namespaceKey, name);
+    if (foundKnownVariable) {
+      setKnownVariable(foundKnownVariable);
+      event.preventDefault();
+      return;
+    }
+    addVar();
   };
 
   const allInputsValid = () => !nameValidationMessage && !namespaceValidationMessage;
@@ -106,18 +130,24 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
           </BasicField>
         </Flex>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              variant='primary'
-              size='large'
-              type='submit'
-              aria-label='Create variable'
-              disabled={!allInputsValid()}
-              onClick={addVariable}
-            >
-              Create Variable
-            </Button>
-          </DialogClose>
+          <Flex>
+            {knownVariable && (
+              <Message variant='info' message='This Variable is already present in a required project. Do you want to import it?' />
+            )}
+            <DialogClose asChild>
+              <Button
+                variant='primary'
+                size='large'
+                type='submit'
+                aria-label='Create variable'
+                disabled={!allInputsValid()}
+                onClick={addVariable}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {`${knownVariable ? 'Import' : 'Create'} Variable`}
+              </Button>
+            </DialogClose>
+          </Flex>
         </DialogFooter>
       </DialogContent>
     </Dialog>
