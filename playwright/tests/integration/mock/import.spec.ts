@@ -2,9 +2,14 @@ import { expect, test } from '@playwright/test';
 import { describe } from 'node:test';
 import { VariableEditor } from '../../pageobjects/VariableEditor';
 
+let editor: VariableEditor;
+
+test.beforeEach(async ({ page }) => {
+  editor = await VariableEditor.openMock(page);
+});
+
 describe('importAndOverwrite', async () => {
-  test('password', async ({ page }) => {
-    const editor = await VariableEditor.openMock(page);
+  test('password', async () => {
     await editor.tree.expectRowCount(11);
 
     const overwrite = editor.overwrite;
@@ -22,8 +27,7 @@ describe('importAndOverwrite', async () => {
     await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   });
 
-  test('enum has values', async ({ page }) => {
-    const editor = await VariableEditor.openMock(page);
+  test('enum has values', async () => {
     await editor.overwrite.open();
     await editor.overwrite.variables.row(2).expand();
     await editor.overwrite.variables.row(3).click();
@@ -31,8 +35,7 @@ describe('importAndOverwrite', async () => {
     await editor.details.listOfPossibleValues.expectValues('one', 'two', 'three');
   });
 
-  test('file has extension', async ({ page }) => {
-    const editor = await VariableEditor.openMock(page);
+  test('file has extension', async () => {
     await editor.overwrite.open();
     await editor.overwrite.variables.row(2).expand();
     await editor.overwrite.variables.row(4).click();
@@ -41,8 +44,7 @@ describe('importAndOverwrite', async () => {
   });
 });
 
-test('importAndOverwriteWholeSubTree', async ({ page }) => {
-  const editor = await VariableEditor.openMock(page);
+test('importAndOverwriteWholeSubTree', async () => {
   const tree = editor.tree;
   await tree.expectRowCount(11);
 
@@ -67,8 +69,7 @@ test('importAndOverwriteWholeSubTree', async ({ page }) => {
 });
 
 describe('disabledMetadataOfOverwrittenVariable', async () => {
-  test('enum', async ({ page }) => {
-    const editor = await VariableEditor.openMock(page);
+  test('enum', async () => {
     await editor.overwrite.open();
     await editor.overwrite.variables.row(2).click();
     await editor.overwrite.importBtn.click();
@@ -77,8 +78,7 @@ describe('disabledMetadataOfOverwrittenVariable', async () => {
     await editor.details.listOfPossibleValues.expectToBeDisabled();
   });
 
-  test('file', async ({ page }) => {
-    const editor = await VariableEditor.openMock(page);
+  test('file', async () => {
     await editor.overwrite.open();
     await editor.overwrite.variables.row(2).click();
     await editor.overwrite.importBtn.click();
@@ -86,4 +86,27 @@ describe('disabledMetadataOfOverwrittenVariable', async () => {
     await expect(editor.details.metaData.locator).toBeDisabled();
     await expect(editor.details.fileNameExtension.locator).toBeDisabled();
   });
+});
+
+test('import variable when manually adding a known variable', async () => {
+  await editor.add.open.click();
+  await editor.add.name.fill('Comprehend');
+  await editor.add.namespace.fill('Amazon');
+
+  await expect(editor.add.importMessage).toBeHidden();
+
+  await editor.add.create.click();
+
+  await expect(editor.add.importMessage).toBeVisible();
+
+  await editor.add.create.click();
+
+  await editor.details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
+  await editor.tree.expectRowCount(15);
+  await editor.tree.row(11).click();
+  await editor.details.expectFolderValues('Amazon', '');
+  await editor.tree.row(13).click();
+  await editor.details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+  await editor.tree.row(14).click();
+  await editor.details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
 });

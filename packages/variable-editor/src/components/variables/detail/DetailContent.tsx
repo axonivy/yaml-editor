@@ -1,28 +1,23 @@
 import { BasicField, BasicInput, Flex, PanelMessage, ReadonlyProvider, Textarea, useReadonly } from '@axonivy/ui-components';
-import { EMPTY_KNOWN_VARIABLES, type KnownVariables } from '@axonivy/variable-editor-protocol';
+import { EMPTY_KNOWN_VARIABLES } from '@axonivy/variable-editor-protocol';
 import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
 import { getNode, getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
+import { findKnownVariable } from '../dialog/known-variables';
 import './DetailContent.css';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
 
 export const useOverwrites = () => {
   const { context, variables, selectedVariable } = useAppContext();
-  let currentNode: KnownVariables | undefined = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
-  if (currentNode === undefined || currentNode.children.length === 0) {
+  const knownVariables = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
+  if (knownVariables.children.length === 0) {
     return false;
   }
-  const variableNodes = getNodesOnPath(variables, selectedVariable);
-  for (const variableNode of variableNodes) {
-    currentNode = currentNode.children.find(child => child.name === variableNode?.name);
-    if (!currentNode) {
-      return false;
-    }
-  }
-  return true;
+  const key = getNodesOnPath(variables, selectedVariable).map(node => (node ? node.name : ''));
+  return findKnownVariable(knownVariables, ...key) !== undefined;
 };
 
 export const VariablesDetailContent = () => {

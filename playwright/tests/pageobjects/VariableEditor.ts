@@ -2,10 +2,10 @@ import { expect, type Locator, type Page } from '@playwright/test';
 import { AddVariableDialog } from './AddVariableDialog';
 import { Button } from './Button';
 import { Details } from './Details';
+import { OverwriteDialog } from './OverwriteDialog';
 import { Settings } from './Settings';
 import { Table } from './Table';
 import { TextArea } from './TextArea';
-import { OverwriteDialog } from './OverwriteDialog';
 
 export class VariableEditor {
   readonly page: Page;
@@ -69,13 +69,13 @@ export class VariableEditor {
   }
 
   async addVariable(name?: string, namespace?: string) {
-    await this.add.open();
+    await this.add.open.click();
     if (name) {
       await this.add.name.fill(name);
     }
     if (namespace) {
       await this.add.namespace.fill(namespace);
     }
-    await this.add.createVariable();
+    await this.add.create.click();
   }
 }
