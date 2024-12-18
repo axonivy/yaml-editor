@@ -89,7 +89,18 @@ describe('disabledMetadataOfOverwrittenVariable', async () => {
 });
 
 test('import variable when manually adding a known variable', async () => {
-  await editor.addVariable('Comprehend', 'Amazon');
+  await editor.add.open.click();
+  await editor.add.name.fill('Comprehend');
+  await editor.add.namespace.fill('Amazon');
+
+  await expect(editor.add.importMessage).toBeHidden();
+
+  await editor.add.create.click();
+
+  await expect(editor.add.importMessage).toBeVisible();
+
+  await editor.add.create.click();
+
   await editor.details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
   await editor.tree.expectRowCount(15);
   await editor.tree.row(11).click();
