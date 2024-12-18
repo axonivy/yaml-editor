@@ -1,6 +1,7 @@
 import type { BrowserNode } from '@axonivy/ui-components';
 import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 import { addNode } from '../../../utils/tree/tree-data';
+import type { AddNodeReturnType, TreeNode } from '../../../utils/tree/types';
 import { isMetadata, type Metadata } from '../data/metadata';
 import { createVariable, type Variable } from '../data/variable';
 import { nodeIcon } from '../data/variable-utils';
@@ -25,24 +26,44 @@ const toNode = (node: KnownVariables): BrowserNode => {
   };
 };
 
-export const findKnownVariable = (node: KnownVariables, ...key: Array<string>) => {
-  let currentNode: KnownVariables | undefined = node;
+export const findVariable = <TNode extends TreeNode<TNode>>(node: TNode, ...key: Array<string>) => {
+  const path = [];
+  let currentNode: TNode | undefined = node;
   for (const part of key) {
-    currentNode = currentNode.children.find(child => child.name === part);
-    if (!currentNode) {
-      return;
+    const index: number = currentNode.children.findIndex(child => child.name === part);
+    if (index === -1) {
+      return undefined;
     }
+    path.push(index);
+    currentNode = currentNode.children[index];
   }
-  return currentNode;
+  return { node: currentNode, path };
 };
 
-export const addKnownVariable = (variables: Array<Variable>, node: KnownVariables) => {
+export const addKnownVariable = (variables: Array<Variable>, node: KnownVariables): AddNodeReturnType<Variable> => {
+  const namespaceKey = node.namespace ? node.namespace.split('.') : [];
+  const foundVariable = findVariable({ name: '', value: '', children: variables }, ...namespaceKey, node.name);
+  let returnValue;
+  if (!foundVariable) {
+    returnValue = addKnown(variables, node);
+  } else {
+    returnValue = { newData: variables, newNodePath: foundVariable.path };
+  }
+
+  const newNodePath = returnValue.newNodePath;
+  for (const child of node.children) {
+    returnValue = addKnownVariable(returnValue.newData, child);
+  }
+  return { newData: returnValue.newData, newNodePath };
+};
+
+const addKnown = (variables: Array<Variable>, node: KnownVariables) => {
   let metadata: Metadata = { type: '' };
   const nodeMetaData = node.metaData;
   if (isMetadata(nodeMetaData)) {
     metadata = nodeMetaData;
   }
-  let returnValue = addNode(node.name, node.namespace, variables, name => {
+  return addNode(node.name, node.namespace, variables, name => {
     if (name === node.name) {
       return {
         name,
@@ -54,9 +75,4 @@ export const addKnownVariable = (variables: Array<Variable>, node: KnownVariable
     }
     return createVariable(name);
   });
-  const newNodePath = returnValue.newNodePath;
-  for (const child of node.children) {
-    returnValue = addKnownVariable(returnValue.newData, child);
-  }
-  return { newData: returnValue.newData, newNodePath };
 };
