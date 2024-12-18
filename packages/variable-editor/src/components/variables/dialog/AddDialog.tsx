@@ -128,26 +128,27 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
               options={namespaceOptions()}
             />
           </BasicField>
+          {knownVariable && (
+            <Message
+              variant='warning'
+              message='This Variable is already present in a required project. Do you want to import it?'
+              aria-label='Import message'
+            />
+          )}
         </Flex>
         <DialogFooter>
-          <Flex>
-            {knownVariable && (
-              <Message variant='info' message='This Variable is already present in a required project. Do you want to import it?' />
-            )}
-            <DialogClose asChild>
-              <Button
-                variant='primary'
-                size='large'
-                type='submit'
-                aria-label='Create variable'
-                disabled={!allInputsValid()}
-                onClick={addVariable}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                {`${knownVariable ? 'Import' : 'Create'} Variable`}
-              </Button>
-            </DialogClose>
-          </Flex>
+          <DialogClose asChild>
+            <Button
+              variant='primary'
+              size='large'
+              type='submit'
+              aria-label='Create variable'
+              disabled={!allInputsValid()}
+              onClick={addVariable}
+            >
+              {`${knownVariable ? 'Import' : 'Create'} Variable`}
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

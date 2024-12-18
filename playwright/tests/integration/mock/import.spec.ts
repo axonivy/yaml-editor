@@ -93,11 +93,11 @@ test('import variable when manually adding a known variable', async () => {
   await editor.add.name.fill('Comprehend');
   await editor.add.namespace.fill('Amazon');
 
-  await expect(editor.add.footerMessage).toBeHidden();
+  await expect(editor.add.importMessage).toBeHidden();
 
   await editor.add.create.click();
 
-  await expect(editor.add.footerMessage).toBeVisible();
+  await expect(editor.add.importMessage).toBeVisible();
 
   await editor.add.create.click();
 

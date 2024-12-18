@@ -10,7 +10,7 @@ export class AddVariableDialog {
   readonly nameMessage: FieldMessage;
   readonly namespace: Combobox;
   readonly namespaceMessage: FieldMessage;
-  readonly footerMessage: Locator;
+  readonly importMessage: Locator;
   readonly create: Button;
 
   constructor(page: Page, parent: Locator) {
@@ -19,7 +19,7 @@ export class AddVariableDialog {
     this.nameMessage = new FieldMessage(parent, { label: 'Name' });
     this.namespace = new Combobox(page, parent);
     this.namespaceMessage = new FieldMessage(parent, { label: 'Namespace' });
-    this.footerMessage = parent.locator('.ui-dialog-footer').locator('.ui-message');
+    this.importMessage = parent.getByLabel('Import message');
     this.create = new Button(parent, { name: 'Create variable' });
   }
 
