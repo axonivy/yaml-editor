@@ -93,8 +93,8 @@ test('addVariableDialogDefaultValues', async () => {
   await editor.add.expectValues('NewVariable', 'microsoft-connector.useUserPassFlow', 'microsoft-connector', 'microsoft-connector.useUserPassFlow');
 });
 
-test.describe('addVariableDialogValidation', async () => {
-  test.describe('name', async () => {
+test.describe('addVariableDialogValidation', () => {
+  test.describe('name', () => {
     test('onNameChange', async () => {
       const add = editor.add;
       await add.open.click();

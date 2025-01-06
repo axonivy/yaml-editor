@@ -20,6 +20,6 @@ export class OverwriteDialog {
   }
 
   async expectClosed() {
-    await expect(this.dialog).not.toBeVisible();
+    await expect(this.dialog).toBeHidden();
   }
 }

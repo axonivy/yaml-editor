@@ -49,4 +49,5 @@ export const customRenderHook = <Result, Props>(
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class EmptyClient implements Partial<Client> {}

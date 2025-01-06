@@ -3,8 +3,8 @@
   "private": true,
   "version": "13.1.0-next",
   "dependencies": {
-    "@axonivy/ui-components": "~13.1.0-next.413",
-    "@axonivy/ui-icons": "~13.1.0-next.413",
+    "@axonivy/ui-components": "~13.1.0-next.417",
+    "@axonivy/ui-icons": "~13.1.0-next.417",
     "@axonivy/variable-editor": "*",
     "@axonivy/variable-editor-protocol": "*",
     "react": "^18.3.1",
@@ -23,12 +23,7 @@
     "package": "vite build",
     "type": "tsc --noEmit",
     "dev": "vite",
-    "serve": "vite preview",
-    "lint": "eslint --ext .ts,.tsx ./src",
-    "lint:fix": "eslint --fix --ext .ts,.tsx ./src",
-    "webtest:mock": "npx playwright test -c ./tests/mock",
-    "webtest:engine": "npx playwright test -c ./tests/integration",
-    "webtest:screenshot": "npx playwright test -c ./tests/screenshots"
+    "serve": "vite preview"
   },
   "type": "module"
 }
