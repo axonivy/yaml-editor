@@ -21,7 +21,7 @@ export interface Variables {
 export interface KnownVariables {
   children: KnownVariables[];
   description: string;
-  metaData: MetaData;
+  metaData: MetaData | FileMetaData | EnumMetaData;
   name: string;
   namespace: string;
   value: string;
@@ -29,13 +29,21 @@ export interface KnownVariables {
 export interface MetaData {
   type: string;
 }
+export interface FileMetaData {
+  extension: string;
+  type: 'file';
+}
+export interface EnumMetaData {
+  type: 'enum';
+  values: string[];
+}
 export interface ValidationResult {
   message: string;
   path: string;
   severity: Severity;
 }
 export interface VariablesActionArgs {
-  actionId: "openUrl";
+  actionId: 'openUrl';
   context: VariablesEditorDataContext;
   payload: string;
 }
