@@ -1,4 +1,4 @@
-import type { KnownVariables, MetaData } from '@axonivy/variable-editor-protocol';
+import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 
 export const knownVariables: KnownVariables = {
   namespace: '',
@@ -52,7 +52,7 @@ export const knownVariables: KnownVariables = {
           namespace: 'Meta',
           name: 'Enum',
           value: 'two',
-          metaData: { type: 'enum', values: ['one', 'two', 'three'] } as MetaData,
+          metaData: { type: 'enum', values: ['one', 'two', 'three'] },
           description: '',
           children: []
         },
@@ -60,7 +60,7 @@ export const knownVariables: KnownVariables = {
           namespace: 'Meta',
           name: 'File',
           value: '',
-          metaData: { type: 'file', extension: 'json' } as MetaData,
+          metaData: { type: 'file', extension: 'json' },
           description: '',
           children: []
         }

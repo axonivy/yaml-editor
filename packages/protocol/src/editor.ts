@@ -21,13 +21,21 @@ export interface Variables {
 export interface KnownVariables {
   children: KnownVariables[];
   description: string;
-  metaData: MetaData;
+  metaData: MetaData | FileMetaData | EnumMetaData;
   name: string;
   namespace: string;
   value: string;
 }
 export interface MetaData {
   type: string;
+}
+export interface FileMetaData {
+  extension: string;
+  type: "file";
+}
+export interface EnumMetaData {
+  type: "enum";
+  values: string[];
 }
 export interface VariablesActionArgs {
   actionId: "openUrl";
