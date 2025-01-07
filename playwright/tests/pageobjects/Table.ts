@@ -27,6 +27,10 @@ export class Table {
     return this.row(row).column(column);
   }
 
+  async focus() {
+    await this.locator.locator('table').focus();
+  }
+
   async expectEmpty() {
     await this.expectRowCount(0);
   }
@@ -37,6 +41,17 @@ export class Table {
 
   async expectRowCount(rows: number) {
     await expect(this.rows).toHaveCount(rows);
+  }
+
+  async expectToBeSelected(...indexes: Array<number>) {
+    for (let i = 0; i < indexes.length; i++) {
+      await this.row(indexes[i]).expectSelected();
+    }
+  }
+  async expectToHaveNothingSelected() {
+    for (let i = 0; i < (await this.rows.count()); i++) {
+      await this.row(i).expectNotSelected();
+    }
   }
 
   async rowCount() {
