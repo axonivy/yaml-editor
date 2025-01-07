@@ -57,7 +57,7 @@ const adjustSelectionAfterDeletionOfRow = <TNode extends TreeNode<TNode>>(data: 
   return selectedRowPath;
 };
 
-export const toTreePath = (rowId: string) => {
+export const toTreePath = (rowId: string | undefined) => {
   if (!rowId) {
     return [];
   }
