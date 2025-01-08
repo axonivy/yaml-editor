@@ -10,11 +10,11 @@ export type Severity = ("INFO" | "WARNING" | "ERROR")
 
 export interface Variables {
   knownVariables: KnownVariables;
-  validationResult: ValidationResult[];
   variablesActionArgs: VariablesActionArgs;
   variablesData: VariablesData;
   variablesEditorDataContext: VariablesEditorDataContext;
   variablesSaveDataArgs: VariablesSaveDataArgs;
+  variablesValidationResult: VariablesValidationResult[];
   void: Void;
   [k: string]: unknown;
 }
@@ -28,11 +28,6 @@ export interface KnownVariables {
 }
 export interface MetaData {
   type: string;
-}
-export interface ValidationResult {
-  message: string;
-  path: string;
-  severity: Severity;
 }
 export interface VariablesActionArgs {
   actionId: "openUrl";
@@ -52,5 +47,11 @@ export interface VariablesData {
 export interface VariablesSaveDataArgs {
   context: VariablesEditorDataContext;
   data: string;
+}
+export interface VariablesValidationResult {
+  message: string;
+  path: string;
+  property: string;
+  severity: Severity;
 }
 export interface Void {}

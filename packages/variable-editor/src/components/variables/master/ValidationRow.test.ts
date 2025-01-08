@@ -1,21 +1,9 @@
-import type { MessageData } from '@axonivy/ui-components';
+import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { rowClass } from './ValidationRow';
 
-describe('rowClass', () => {
-  test('error', () => {
-    const messages: Array<MessageData> = [
-      { message: 'error', variant: 'warning' },
-      { message: 'error', variant: 'error' }
-    ];
-    expect(rowClass(messages)).toEqual('row-error');
-  });
-
-  test('warning', () => {
-    const messages: Array<MessageData> = [{ message: 'error', variant: 'warning' }];
-    expect(rowClass(messages)).toEqual('row-warning');
-  });
-
-  test('none', () => {
-    expect(rowClass([{ message: 'hi', variant: 'info' }])).toEqual('');
-  });
+test('rowClass', () => {
+  expect(rowClass([])).toEqual('');
+  expect(rowClass([{ severity: 'INFO' }] as ValidationMessages)).toEqual('');
+  expect(rowClass([{ severity: 'INFO' }, { severity: 'WARNING' }] as ValidationMessages)).toEqual('row-warning');
+  expect(rowClass([{ severity: 'INFO' }, { severity: 'WARNING' }, { severity: 'ERROR' }] as ValidationMessages)).toEqual('row-error');
 });

@@ -1,17 +1,20 @@
 import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { Message } from './Message';
 
 export class TextArea {
   private readonly locator: Locator;
+  readonly message: Message;
   readonly showPassword: Locator;
 
-  constructor(parentLocator: Locator, options?: { label?: string; nth?: number }) {
+  constructor(parent: Locator, options?: { label?: string; nth?: number }) {
     if (options?.label) {
-      this.locator = parentLocator.getByLabel(options.label, { exact: true });
+      this.locator = parent.getByLabel(options.label, { exact: true });
     } else {
-      this.locator = parentLocator.getByRole('textbox').nth(options?.nth ?? 0);
+      this.locator = parent.getByRole('textbox').nth(options?.nth ?? 0);
     }
-    this.showPassword = parentLocator.getByLabel('Show password');
+    this.message = new Message(this.locator.locator('..'));
+    this.showPassword = parent.getByLabel('Show password');
   }
 
   async fill(value: string) {
