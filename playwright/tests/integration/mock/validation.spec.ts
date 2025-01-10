@@ -29,12 +29,14 @@ test('detail', async () => {
   await editor.addVariable('invalidVariable1', 'invalidKey');
 
   await editor.tree.row(11).click();
-  await editor.details.name.message.expectToBeWarning('Invalid key');
+  const nameMessage = await editor.details.name.message();
+  await nameMessage.expectToBeWarning('Invalid key');
 
   await editor.tree.row(12).click();
-  await editor.details.name.message.expectToBeInfo('Invalid variable 0 key');
-  await editor.details.value.message.expectToBeError('Invalid variable 0 value error');
+  await nameMessage.expectToBeInfo('Invalid variable 0 key');
+  const valueMessage = await editor.details.value.message();
+  await valueMessage.expectToBeError('Invalid variable 0 value error');
 
   await editor.tree.row(13).click();
-  await editor.details.value.message.expectToBeInfo('Invalid variable 1 value');
+  await valueMessage.expectToBeInfo('Invalid variable 1 value');
 });

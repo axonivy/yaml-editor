@@ -3,17 +3,17 @@ import { expect } from '@playwright/test';
 import { Message } from './Message';
 
 export class TextArea {
+  readonly parent: Locator;
   private readonly locator: Locator;
-  readonly message: Message;
   readonly showPassword: Locator;
 
   constructor(parent: Locator, options?: { label?: string; nth?: number }) {
+    this.parent = parent;
     if (options?.label) {
       this.locator = parent.getByLabel(options.label, { exact: true });
     } else {
       this.locator = parent.getByRole('textbox').nth(options?.nth ?? 0);
     }
-    this.message = new Message(this.locator.locator('..'));
     this.showPassword = parent.getByLabel('Show password');
   }
 
@@ -51,5 +51,13 @@ export class TextArea {
 
   async expectDoesNotExists() {
     await expect(this.locator).toHaveCount(0);
+  }
+
+  async message() {
+    const describedBy = await this.locator.getAttribute('aria-describedby');
+    if (!describedBy) {
+      throw new Error('aria-describedby attribute is missing');
+    }
+    return new Message(this.parent, describedBy);
   }
 }

@@ -98,35 +98,38 @@ test.describe('addVariableDialogValidation', async () => {
     test('onNameChange', async () => {
       const add = editor.add;
       await add.open.click();
-      await add.name.message.expectToBeHidden();
+      const nameMessage = await add.name.message();
+      await nameMessage.expectToBeHidden();
       await expect(add.create.locator).toBeEnabled();
       await add.name.fill('');
-      await add.name.message.expectToBeError('Name cannot be empty.');
+      await nameMessage.expectToBeError('Name cannot be empty.');
       await expect(add.create.locator).toBeDisabled();
       await add.name.fill('microsoft-connector');
-      await add.name.message.expectToBeError('Name is already present in this Namespace.');
+      await nameMessage.expectToBeError('Name is already present in this Namespace.');
       await expect(add.create.locator).toBeDisabled();
     });
 
     test('onNamespaceChange', async () => {
       const add = editor.add;
       await add.open.click();
+      const nameMessage = await add.name.message();
       await add.name.fill('appId');
-      await add.name.message.expectToBeHidden();
+      await nameMessage.expectToBeHidden();
       await expect(add.create.locator).toBeEnabled();
       await add.namespace.choose('microsoft-connector');
-      await add.name.message.expectToBeError('Name is already present in this Namespace.');
+      await nameMessage.expectToBeError('Name is already present in this Namespace.');
       await expect(add.create.locator).toBeDisabled();
     });
 
     test('onNamespaceInput', async () => {
       const add = editor.add;
       await add.open.click();
+      const nameMessage = await add.name.message();
       await add.name.fill('appId');
-      await add.name.message.expectToBeHidden();
+      await nameMessage.expectToBeHidden();
       await expect(add.create.locator).toBeEnabled();
       await add.namespace.fill('microsoft-connector');
-      await add.name.message.expectToBeError('Name is already present in this Namespace.');
+      await nameMessage.expectToBeError('Name is already present in this Namespace.');
       await expect(add.create.locator).toBeDisabled();
     });
   });
@@ -134,10 +137,11 @@ test.describe('addVariableDialogValidation', async () => {
   test('namespace', async () => {
     const add = editor.add;
     await add.open.click();
-    await add.namespace.message.expectToBeInfo("Folder structure of variable (e.g. 'Connector.Key')");
+    const namespaceMessage = await add.namespace.message();
+    await namespaceMessage.expectToBeInfo("Folder structure of variable (e.g. 'Connector.Key')");
     await expect(add.create.locator).toBeEnabled();
     await add.namespace.fill('microsoft-connector.appId.New.Namespace');
-    await add.namespace.message.expectToBeError("Namespace 'microsoft-connector.appId' is not a folder, you cannot add a child to it.");
+    await namespaceMessage.expectToBeError("Namespace 'microsoft-connector.appId' is not a folder, you cannot add a child to it.");
     await expect(add.create.locator).toBeDisabled();
   });
 });

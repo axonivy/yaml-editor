@@ -3,8 +3,12 @@ import { expect, type Locator } from '@playwright/test';
 export class Message {
   readonly locator: Locator;
 
-  constructor(parent: Locator) {
-    this.locator = parent.locator('.ui-message');
+  constructor(parent: Locator, id?: string) {
+    if (id) {
+      this.locator = parent.locator(`[id="${id}"]`);
+    } else {
+      this.locator = parent.locator('.ui-message');
+    }
   }
 
   async expectToBeHidden() {
