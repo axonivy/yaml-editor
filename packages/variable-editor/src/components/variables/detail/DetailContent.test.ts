@@ -1,8 +1,8 @@
-import type { Client, MetaRequestTypes, KnownVariables } from '@axonivy/variable-editor-protocol';
+import type { Client, KnownVariables, MetaRequestTypes, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { waitFor } from '@testing-library/react';
 import { customRenderHook } from '../data/test-utils/test-utils';
 import type { Variable } from '../data/variable';
-import { useOverwrites } from './DetailContent';
+import { messageDataOfProperty, useOverwrites } from './DetailContent';
 
 describe('useOverwrites', () => {
   test('variable that does not exist in required project returns false', () => {
@@ -50,3 +50,18 @@ class ClientMock implements Partial<Client> {
     } as KnownVariables);
   }
 }
+
+test('messageDataOfProperty', () => {
+  expect(messageDataOfProperty(validations, 'property0')).toEqual({ message: 'message0', variant: 'info' });
+  expect(messageDataOfProperty(validations, 'property1')).toEqual({ message: 'message2', variant: 'warning' });
+  expect(messageDataOfProperty(validations, 'property2')).toEqual({ message: 'message3', variant: 'error' });
+  expect(messageDataOfProperty(validations, 'property3')).toBeUndefined();
+});
+
+const validations = [
+  { message: 'message0', property: 'property0', severity: 'INFO' },
+  { message: 'message1', property: 'property1', severity: 'INFO' },
+  { message: 'message2', property: 'property1', severity: 'WARNING' },
+  { message: 'message3', property: 'property2', severity: 'ERROR' },
+  { message: 'message4', property: 'property2', severity: 'INFO' }
+] as ValidationMessages;

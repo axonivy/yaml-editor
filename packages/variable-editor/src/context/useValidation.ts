@@ -1,17 +1,12 @@
-import type { Severity, ValidationResult } from '@axonivy/variable-editor-protocol';
+import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
+import { getNodesOnPath } from '../utils/tree/tree-data';
+import type { TreePath } from '../utils/tree/types';
 import { useAppContext } from './AppContext';
-import type { MessageData } from '@axonivy/ui-components';
 
-export function useValidations(path: string): Array<MessageData> {
-  const { validations } = useAppContext();
-  return validations.filter(val => val.path === `Variables.${path}`).map<MessageData>(toMessageData);
-}
-
-function toMessageData(validation: ValidationResult): MessageData;
-function toMessageData(validation?: ValidationResult): MessageData | undefined;
-function toMessageData(validation?: ValidationResult): MessageData | undefined {
-  if (validation) {
-    return { message: validation.message, variant: validation.severity.toLocaleLowerCase() as Lowercase<Severity> };
-  }
-  return undefined;
+export function useValidations(path: TreePath): ValidationMessages {
+  const { variables, validations } = useAppContext();
+  const key = getNodesOnPath(variables, path)
+    .map(variable => variable?.name)
+    .join('.');
+  return validations.filter(val => val.path === key);
 }

@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 import type {
   KnownVariables,
-  ValidationResult,
   VariablesActionArgs,
   VariablesData,
   VariablesEditorDataContext,
-  VariablesSaveDataArgs
+  VariablesSaveDataArgs,
+  VariablesValidationResult
 } from './editor';
 
 export type EditorProps = { context: VariablesEditorDataContext; directSave?: boolean };
 export type SaveArgs = VariablesSaveDataArgs & { directSave?: boolean };
 
-export type ValidationMessages = Array<ValidationResult>;
+export type ValidationMessages = Array<VariablesValidationResult>;
 
 export interface MetaRequestTypes {
   'meta/knownVariables': [VariablesEditorDataContext, KnownVariables];

@@ -1,4 +1,4 @@
-import { BasicField, BasicSelect, BasicInput, PasswordInput, Message } from '@axonivy/ui-components';
+import { BasicField, BasicInput, BasicSelect, Message, PasswordInput, type MessageData } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 import { isEnumMetadata } from '../data/metadata';
 import type { Variable, VariableUpdates } from '../data/variable';
@@ -6,9 +6,10 @@ import type { Variable, VariableUpdates } from '../data/variable';
 type ValueProps = {
   variable: Variable;
   onChange: (updates: VariableUpdates) => void;
+  message?: MessageData;
 };
 
-export const Value = ({ variable, onChange }: ValueProps) => {
+export const Value = ({ variable, onChange, message }: ValueProps) => {
   const enumSelectItems = useMemo(() => {
     const metadata = variable.metadata;
     if (!isEnumMetadata(metadata)) {
@@ -52,5 +53,9 @@ export const Value = ({ variable, onChange }: ValueProps) => {
     }
   };
 
-  return <BasicField label='Value'>{input()}</BasicField>;
+  return (
+    <BasicField label='Value' message={message}>
+      {input()}
+    </BasicField>
+  );
 };

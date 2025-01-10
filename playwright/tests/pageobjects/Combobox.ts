@@ -1,20 +1,23 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { Button } from './Button';
+import { Message } from './Message';
 
 export class Combobox {
+  readonly parent: Locator;
   private readonly locator: Locator;
   private readonly options: Locator;
   private readonly toggleMenu: Button;
 
-  constructor(readonly page: Page, parentLocator: Locator, options?: { label?: string; nth?: number }) {
+  constructor(readonly page: Page, parent: Locator, options?: { label?: string; nth?: number }) {
+    this.parent = parent;
     if (options?.label) {
-      this.locator = parentLocator.getByRole('combobox', { name: options.label }).first();
+      this.locator = parent.getByRole('combobox', { name: options.label, exact: true });
     } else {
-      this.locator = parentLocator.getByRole('combobox').nth(options?.nth ?? 0);
+      this.locator = parent.getByRole('combobox').nth(options?.nth ?? 0);
     }
-    this.options = parentLocator.getByRole('option');
-    this.toggleMenu = new Button(parentLocator, { name: 'toggle menu' });
+    this.options = parent.getByRole('option');
+    this.toggleMenu = new Button(parent, { name: 'toggle menu' });
   }
 
   async fill(value: string) {
@@ -38,5 +41,13 @@ export class Combobox {
       await expect(this.options.nth(i)).toHaveText(options[i]);
     }
     await this.toggleMenu.click();
+  }
+
+  async message() {
+    const describedBy = await this.locator.getAttribute('aria-describedby');
+    if (!describedBy) {
+      throw new Error('aria-describedby attribute is missing');
+    }
+    return new Message(this.parent, describedBy);
   }
 }

@@ -6,7 +6,7 @@ import type {
   VariablesActionArgs,
   VariablesData
 } from '@axonivy/variable-editor-protocol';
-import { variables } from './data';
+import { validations, variables } from './data';
 import { knownVariables } from './meta';
 
 export class VariablesClientMock implements Client {
@@ -18,11 +18,11 @@ export class VariablesClientMock implements Client {
 
   saveData(saveData: VariablesData): Promise<ValidationMessages> {
     this.variablesData.data = saveData.data;
-    return Promise.resolve([]);
+    return Promise.resolve(validations);
   }
 
   validate(): Promise<ValidationMessages> {
-    return Promise.resolve([]);
+    return Promise.resolve(validations);
   }
 
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta): Promise<MetaRequestTypes[TMeta][1]> {

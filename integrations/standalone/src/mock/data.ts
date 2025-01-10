@@ -1,4 +1,4 @@
-import type { VariablesData } from '@axonivy/variable-editor-protocol';
+import type { ValidationMessages, VariablesData } from '@axonivy/variable-editor-protocol';
 
 export const variables: VariablesData = {
   context: { app: '', pmv: '', file: '' },
@@ -38,3 +38,36 @@ export const variables: VariablesData = {
   `,
   helpUrl: 'https://dev.axonivy.com'
 };
+
+export const validations: ValidationMessages = [
+  {
+    message: 'Invalid key',
+    path: 'invalidKey',
+    property: 'key',
+    severity: 'WARNING'
+  },
+  {
+    message: 'Invalid variable 0 key',
+    path: 'invalidKey.invalidVariable0',
+    property: 'key',
+    severity: 'INFO'
+  },
+  {
+    message: 'Invalid variable 0 value warning',
+    path: 'invalidKey.invalidVariable0',
+    property: 'value',
+    severity: 'WARNING'
+  },
+  {
+    message: 'Invalid variable 0 value error',
+    path: 'invalidKey.invalidVariable0',
+    property: 'value',
+    severity: 'ERROR'
+  },
+  {
+    message: 'Invalid variable 1 value',
+    path: 'invalidKey.invalidVariable1',
+    property: 'value',
+    severity: 'INFO'
+  }
+];

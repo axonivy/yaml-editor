@@ -1,5 +1,5 @@
-import { setupVariable } from './test-utils/setup';
-import { validateName, validateNamespace } from './validation-utils';
+import { setupVariable } from '../data/test-utils/setup';
+import { validateName, validateNamespace } from './AddDialog';
 
 const variables = [
   setupVariable('NameNode0', []),

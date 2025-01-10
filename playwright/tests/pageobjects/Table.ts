@@ -1,12 +1,13 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 import { Button } from './Button';
+import { Message } from './Message';
 
 export class Table {
   private readonly rows: Locator;
   private readonly header: Locator;
   private readonly locator: Locator;
-  private readonly validations: Locator;
+  readonly messages: Locator;
 
   constructor(readonly page: Page, parentLocator: Locator, readonly columns: ColumnType[], label?: string) {
     if (label === undefined) {
@@ -15,7 +16,7 @@ export class Table {
       this.locator = parentLocator.getByLabel(label);
     }
     this.rows = this.locator.locator('tbody tr:not(.ui-message-row)');
-    this.validations = this.locator.locator('tbody tr.ui-message-row');
+    this.messages = this.locator.locator('tbody tr.ui-message-row');
     this.header = this.locator.locator('thead tr');
   }
 
@@ -43,12 +44,8 @@ export class Table {
     return await this.rows.count();
   }
 
-  validation(index: number) {
-    return new Validation(this.validations.nth(index));
-  }
-
-  async expectValidationCount(count: number) {
-    await expect(this.validations).toHaveCount(count);
+  message(nth: number) {
+    return new Message(this.messages.nth(nth));
   }
 }
 
@@ -114,6 +111,19 @@ export class Row {
   async expectExpanded() {
     await this.column(0).expectExpanded();
   }
+
+  async expectToHaveNoValidation() {
+    await expect(this.locator).not.toHaveClass(/row-error/);
+    await expect(this.locator).not.toHaveClass(/row-warning/);
+  }
+
+  async expectToHaveError() {
+    await expect(this.locator).toHaveClass(/row-error/);
+  }
+
+  async expectToHaveWarning() {
+    await expect(this.locator).toHaveClass(/row-warning/);
+  }
 }
 
 export class Cell {
@@ -178,16 +188,5 @@ export class Cell {
 
   async expand() {
     this.expandBtn.click();
-  }
-}
-
-export class Validation {
-  locator: Locator;
-  constructor(locator: Locator) {
-    this.locator = locator;
-  }
-
-  async expectText(text: string) {
-    await expect(this.locator).toHaveText(text);
   }
 }

@@ -1,24 +1,29 @@
 import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { customRenderHook } from '../components/variables/data/test-utils/test-utils';
+import type { Variable } from '../components/variables/data/variable';
+import type { TreePath } from '../utils/tree/types';
 import { useValidations } from './useValidation';
 
-const validations: ValidationMessages = [
-  { message: 'message0', path: 'Variables.myVar', severity: 'INFO' },
-  { message: 'message3', path: 'Variables.myVar', severity: 'ERROR' },
-  { message: 'message1', path: 'Variables.msgraph.test', severity: 'INFO' },
-  { message: 'message2', path: 'Variables.msgraph.secret', severity: 'WARNING' },
-  { message: 'message4', path: '', severity: 'INFO' }
-];
+test('useValidations', () => {
+  expect(renderValidations([]).result.current).toEqual([]);
+  expect(renderValidations([0]).result.current).toEqual([validations[0]]);
+  expect(renderValidations([0, 0]).result.current).toEqual([validations[1], validations[2], validations[3]]);
+  expect(renderValidations([0, 0, 0]).result.current).toEqual([]);
+  expect(renderValidations([0, 0, 1]).result.current).toEqual([validations[4]]);
+});
 
-const renderValidations = (path: string) => {
-  return customRenderHook(() => useValidations(path), { wrapperProps: { appContext: { validations } } });
+const renderValidations = (path: TreePath) => {
+  return customRenderHook(() => useValidations(path), { wrapperProps: { appContext: { variables, validations } } });
 };
 
-test('useValidations', () => {
-  expect(renderValidations('').result.current).toEqual([]);
-  expect(renderValidations('myVar').result.current).toEqual([
-    { message: 'message0', variant: 'info' },
-    { message: 'message3', variant: 'error' }
-  ]);
-  expect(renderValidations('msgraph.test').result.current).toEqual([{ message: 'message1', variant: 'info' }]);
-});
+const variables = [
+  { name: 'Amazon', children: [{ name: 'Comprehend', children: [{ name: 'SecretKey' }, { name: 'AccessKey' }] }] }
+] as Array<Variable>;
+
+const validations = [
+  { message: 'message0', path: 'Amazon', severity: 'INFO' },
+  { message: 'message1', path: 'Amazon.Comprehend', severity: 'INFO' },
+  { message: 'message2', path: 'Amazon.Comprehend', severity: 'WARNING' },
+  { message: 'message3', path: 'Amazon.Comprehend', severity: 'ERROR' },
+  { message: 'message4', path: 'Amazon.Comprehend.AccessKey', severity: 'INFO' }
+] as ValidationMessages;
