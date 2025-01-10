@@ -4,18 +4,18 @@ import { Button } from './Button';
 import { Message } from './Message';
 
 export class Combobox {
+  readonly parent: Locator;
   private readonly locator: Locator;
-  readonly message: Message;
   private readonly options: Locator;
   private readonly toggleMenu: Button;
 
   constructor(readonly page: Page, parent: Locator, options?: { label?: string; nth?: number }) {
+    this.parent = parent;
     if (options?.label) {
       this.locator = parent.getByRole('combobox', { name: options.label, exact: true });
     } else {
       this.locator = parent.getByRole('combobox').nth(options?.nth ?? 0);
     }
-    this.message = new Message(this.locator.locator('../../..'));
     this.options = parent.getByRole('option');
     this.toggleMenu = new Button(parent, { name: 'toggle menu' });
   }
@@ -41,5 +41,13 @@ export class Combobox {
       await expect(this.options.nth(i)).toHaveText(options[i]);
     }
     await this.toggleMenu.click();
+  }
+
+  async message() {
+    const describedBy = await this.locator.getAttribute('aria-describedby');
+    if (!describedBy) {
+      throw new Error('aria-describedby attribute is missing');
+    }
+    return new Message(this.parent, describedBy);
   }
 }
