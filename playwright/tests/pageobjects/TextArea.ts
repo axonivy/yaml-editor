@@ -1,17 +1,20 @@
 import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
+import { Message } from './Message';
 
 export class TextArea {
+  readonly parent: Locator;
   private readonly locator: Locator;
   readonly showPassword: Locator;
 
-  constructor(parentLocator: Locator, options?: { label?: string; nth?: number }) {
+  constructor(parent: Locator, options?: { label?: string; nth?: number }) {
+    this.parent = parent;
     if (options?.label) {
-      this.locator = parentLocator.getByLabel(options.label, { exact: true });
+      this.locator = parent.getByLabel(options.label, { exact: true });
     } else {
-      this.locator = parentLocator.getByRole('textbox').nth(options?.nth ?? 0);
+      this.locator = parent.getByRole('textbox').nth(options?.nth ?? 0);
     }
-    this.showPassword = parentLocator.getByLabel('Show password');
+    this.showPassword = parent.getByLabel('Show password');
   }
 
   async fill(value: string) {
@@ -48,5 +51,13 @@ export class TextArea {
 
   async expectDoesNotExists() {
     await expect(this.locator).toHaveCount(0);
+  }
+
+  async message() {
+    const describedBy = await this.locator.getAttribute('aria-describedby');
+    if (!describedBy) {
+      throw new Error('aria-describedby attribute is missing');
+    }
+    return new Message(this.parent, describedBy);
   }
 }
