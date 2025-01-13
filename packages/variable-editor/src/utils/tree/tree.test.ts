@@ -9,6 +9,7 @@ import {
   newNodeName,
   subRowNamesOfRow,
   toRowId,
+  toTreePath,
   treeGlobalFilter
 } from './tree';
 
@@ -143,6 +144,12 @@ describe('getPathOfRow', () => {
   test('missing', () => {
     expect(getPathOfRow(undefined)).toEqual([]);
   });
+});
+
+test('toTreePath', () => {
+  expect(toTreePath('')).toEqual([]);
+  expect(toTreePath('42')).toEqual([42]);
+  expect(toTreePath('4.2.0')).toEqual([4, 2, 0]);
 });
 
 describe('toRowId', () => {

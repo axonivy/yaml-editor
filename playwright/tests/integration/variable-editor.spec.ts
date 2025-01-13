@@ -24,15 +24,16 @@ test('title', async () => {
 test('validation', async () => {
   const tree = editor.tree;
   await tree.expectRowCount(4);
-  await tree.expectValidationCount(0);
 
   await editor.addVariable();
-  const details = editor.details;
-  await details.name.fill('hello.world');
+  const row = editor.tree.row(4);
+  await row.expectToHaveNoValidation();
 
-  await tree.expectRowCount(5);
-  await tree.expectValidationCount(1);
-  await tree.validation(0).expectText('Not ivy.var field compliant: Invalid character . at position 6 in hello.world.');
+  await editor.details.name.fill('hello.world');
+  await row.expectToHaveWarning();
+
+  await editor.details.name.fill('hello');
+  await row.expectToHaveNoValidation();
 });
 
 test('load data', async () => {
