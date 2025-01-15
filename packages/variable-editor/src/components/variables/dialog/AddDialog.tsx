@@ -3,16 +3,20 @@ import {
   Button,
   Combobox,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
   Flex,
+  hotkeyText,
   Input,
   Message,
   selectRow,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
@@ -21,12 +25,14 @@ import { type Table } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
-import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, subRowNamesOfRow, toRowId } from '../../../utils/tree/tree';
+import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, toRowId } from '../../../utils/tree/tree';
 import { addNode, hasChildren } from '../../../utils/tree/tree-data';
 import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
 import { addKnownVariable, findVariable } from './known-variables';
+import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
@@ -35,10 +41,17 @@ type AddVariableDialogProps = {
 export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
   const { context, variables, setVariables, setSelectedVariable } = useAppContext();
 
+  const [open, setOpen] = useState(false);
+  const onOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (open) {
+      initializeVariableDialog();
+    }
+  };
   const [name, setName] = useState('');
   const [namespace, setNamespace] = useState('');
 
-  const nameValidationMessage = useMemo(() => validateName(name, subRowNamesOfRow(namespace, table)), [name, namespace, table]);
+  const nameValidationMessage = useMemo(() => validateName(name, namespace, variables), [name, namespace, variables]);
   const namespaceValidationMessage = useMemo(() => validateNamespace(namespace, variables), [namespace, variables]);
 
   const [knownVariable, setKnownVariable] = useState<KnownVariables>();
@@ -74,9 +87,10 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
     });
   };
 
-  const addVariable = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const addVariable = (event: React.MouseEvent<HTMLButtonElement> | KeyboardEvent) => {
     if (knownVariable) {
       addKnown(knownVariable);
+      setOpen(false);
       return;
     }
     const namespaceKey = namespace ? namespace.split('.') : [];
@@ -87,32 +101,47 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
       return;
     }
     addVar();
+    if (!event.ctrlKey && !event.metaKey) {
+      setOpen(false);
+    }
   };
+
+  const { addVar: shortcut } = useHotkeyTexts();
+  useHotkeys(HOTKEYS.ADD_VAR, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
+  const enter = useHotkeys(
+    ['Enter', 'mod+Enter'],
+    e => {
+      if (!allInputsValid()) {
+        return;
+      }
+      addVariable(e);
+    },
+    { scopes: ['global'], enabled: open, enableOnFormTags: true }
+  );
 
   const allInputsValid = () => !nameValidationMessage && !namespaceValidationMessage;
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          className='add-variable-dialog-trigger-button'
-          icon={IvyIcons.Plus}
-          onClick={initializeVariableDialog}
-          aria-label='Add variable'
-        />
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut} />
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span>{shortcut}</span>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>New Variable</DialogTitle>
         </DialogHeader>
-        <Flex direction='column' gap={3}>
+        <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
           <BasicField label='Name' message={nameValidationMessage} aria-label='Name'>
-            <Input
-              value={name}
-              onChange={event => {
-                setName(event.target.value);
-              }}
-            />
+            <Input value={name} onChange={event => setName(event.target.value)} />
           </BasicField>
           <BasicField
             label='Namespace'
@@ -122,9 +151,7 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
             <Combobox
               value={namespace}
               onChange={setNamespace}
-              onInput={event => {
-                setNamespace(event.currentTarget.value);
-              }}
+              onInput={event => setNamespace(event.currentTarget.value)}
               options={namespaceOptions()}
             />
           </BasicField>
@@ -137,53 +164,71 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
           )}
         </Flex>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button
-              variant='primary'
-              size='large'
-              type='submit'
-              aria-label='Create variable'
-              disabled={!allInputsValid()}
-              onClick={addVariable}
-            >
-              {`${knownVariable ? 'Import' : 'Create'} Variable`}
-            </Button>
-          </DialogClose>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant='primary' size='large' aria-label='Create Variable' disabled={!allInputsValid()} onClick={addVariable}>
+                  {`${knownVariable ? 'Import' : 'Create'} Variable`}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span>Hold {hotkeyText('mod')} to add an additional variable</span>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
 
-export const validateName = (name: string, takenNames: Array<string>): MessageData | undefined => {
+export const validateName = (name: string, namespace: string, variables: Array<Variable>): MessageData | undefined => {
   if (name.trim() === '') {
     return toErrorMessage('Name cannot be empty.');
   }
-  if (takenNames.includes(name)) {
-    return toErrorMessage('Name is already present in this Namespace.');
-  }
   if (name.includes('.')) {
     return toErrorMessage("Character '.' is not allowed.");
+  }
+  let takenNames: Array<string> = [];
+  try {
+    takenNames = variablesOfNamespace(namespace, variables).map(variable => variable.name);
+  } catch {
+    // handled by validateNamespace
+  }
+  if (takenNames.includes(name)) {
+    return toErrorMessage('Name is already present in this Namespace.');
   }
   return;
 };
 
 export const validateNamespace = (namespace: string, variables: Array<Variable>): MessageData | undefined => {
-  const keyParts = namespace.split('.');
-  let currentVariables = variables;
-  for (const [index, keyPart] of keyParts.entries()) {
-    const nextVariable = currentVariables.find(variable => variable.name === keyPart);
-    if (nextVariable === undefined) {
-      return;
+  try {
+    variablesOfNamespace(namespace, variables);
+  } catch (e) {
+    if (e instanceof Error) {
+      return toErrorMessage(e.message);
     }
-    if (!hasChildren(nextVariable)) {
-      return toErrorMessage("Namespace '" + keyParts.slice(0, index + 1).join('.') + "' is not a folder, you cannot add a child to it.");
-    }
-    currentVariables = nextVariable.children;
   }
   return;
 };
 
-const toErrorMessage = (message: string): MessageData => {
-  return { message: message, variant: 'error' };
+const variablesOfNamespace = (namespace: string, variables: Array<Variable>): Array<Variable> => {
+  const keyParts = namespace.split('.');
+  let currentVariables = variables;
+  for (const [index, keyPart] of keyParts.entries()) {
+    if (keyPart === '') {
+      return currentVariables;
+    }
+    const nextVariable = currentVariables.find(variable => variable.name === keyPart);
+    if (nextVariable === undefined) {
+      return [];
+    }
+    if (!hasChildren(nextVariable)) {
+      throw new Error("Namespace '" + keyParts.slice(0, index + 1).join('.') + "' is not a folder, you cannot add a child to it.");
+    }
+    currentVariables = nextVariable.children;
+  }
+  return currentVariables;
 };
+
+const toErrorMessage = (message: string): MessageData => ({ message: message, variant: 'error' });

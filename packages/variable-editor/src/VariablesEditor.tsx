@@ -25,6 +25,8 @@ import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
 import { useAction } from './context/useAction';
+import { HOTKEYS, useHotkeyTexts } from './utils/hotkeys';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -83,6 +85,8 @@ function VariableEditor(props: EditorProps) {
   });
 
   const openUrl = useAction('openUrl');
+  const { openHelp: helpText } = useHotkeyTexts();
+  useHotkeys(HOTKEYS.OPEN_HELP, () => openUrl(data?.helpUrl), { scopes: ['global'] });
 
   if (isPending) {
     return (
@@ -117,7 +121,7 @@ function VariableEditor(props: EditorProps) {
       }}
     >
       <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
-        <ResizablePanel defaultSize={75} minSize={50} className='master-panel' data-testid='master-panel'>
+        <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
           <Flex className='panel-content-container' direction='column'>
             <VariablesMasterToolbar title={title} />
             <VariablesMasterContent />
@@ -127,9 +131,9 @@ function VariableEditor(props: EditorProps) {
           <>
             <ResizableHandle />
             <ResizablePanel defaultSize={25} minSize={10}>
-              <Flex direction='column' className='panel-content-container' data-testid='details-container'>
-                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} data-testid='Detail title'>
-                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} aria-label='Help' />
+              <Flex direction='column' className='panel-content-container detail-container'>
+                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='detail-header' tabIndex={-1}>
+                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} title={helpText} aria-label={helpText} />
                 </SidebarHeader>
                 <VariablesDetailContent />
               </Flex>
