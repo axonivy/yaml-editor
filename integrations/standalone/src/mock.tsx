@@ -1,10 +1,9 @@
-import { ThemeProvider } from '@axonivy/ui-components';
+import { HotkeysProvider, ThemeProvider } from '@axonivy/ui-components';
 import { ClientContextProvider, QueryProvider, VariableEditor, initQueryClient } from '@axonivy/variable-editor';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { VariablesClientMock } from './mock/variables-client-mock';
-import { HotkeysProvider } from 'react-hotkeys-hook';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 const client = new VariablesClientMock();

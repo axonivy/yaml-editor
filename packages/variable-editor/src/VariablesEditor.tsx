@@ -6,7 +6,8 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
   SidebarHeader,
-  Spinner
+  Spinner,
+  useHotkeys
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -26,7 +27,6 @@ import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
 import { useAction } from './context/useAction';
 import { HOTKEYS, useHotkeyTexts } from './utils/hotkeys';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
