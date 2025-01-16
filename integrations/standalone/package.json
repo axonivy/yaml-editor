@@ -3,8 +3,8 @@
   "private": true,
   "version": "12.0.3-next",
   "dependencies": {
-    "@axonivy/ui-components": "~12.0.3-next.425",
-    "@axonivy/ui-icons": "~12.0.3-next.425",
+    "@axonivy/ui-components": "~12.0.3-next.429",
+    "@axonivy/ui-icons": "~12.0.3-next.429",
     "@axonivy/variable-editor": "*",
     "@axonivy/variable-editor-protocol": "*",
     "react": "^18.3.1",

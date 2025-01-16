@@ -23,7 +23,7 @@ export class VariableEditor {
   constructor(page: Page) {
     this.page = page;
     this.locator = page.locator(':root');
-    this.masterPanel = this.locator.getByTestId('master-panel');
+    this.masterPanel = this.locator.locator('.master-panel');
     this.search = new TextArea(this.locator);
     this.tree = new Table(page, this.locator, ['label', 'label']);
     this.delete = new Button(this.locator, { name: 'Delete variable' });
@@ -34,17 +34,28 @@ export class VariableEditor {
     this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
   }
 
-  static async openEngine(page: Page) {
+  static async openEngine(page: Page, options?: { readonly?: boolean }) {
     const server = process.env.BASE_URL ?? 'localhost:8081';
     const app = process.env.TEST_APP ?? 'designer';
     const serverUrl = server.replace(/^https?:\/\//, '');
     const pmv = 'variables-test-project';
-    const url = `?server=${serverUrl}&app=${app}&pmv=${pmv}&file=config/variables.yaml`;
+    let url = `?server=${serverUrl}&app=${app}&pmv=${pmv}&file=config/variables.yaml`;
+    if (options) {
+      url += `${this.params(options)}`;
+    }
     return this.openUrl(page, url);
   }
 
   static async openMock(page: Page) {
     return this.openUrl(page, '/mock.html');
+  }
+
+  private static params(options: Record<string, string | boolean>) {
+    let params = '';
+    params += Object.entries(options)
+      .map(([key, value]) => `&${key}=${value}`)
+      .join('');
+    return params;
   }
 
   private static async openUrl(page: Page, url: string) {

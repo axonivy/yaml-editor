@@ -35,7 +35,7 @@ export class VariablesClientMock implements Client {
   }
 
   action(action: VariablesActionArgs): void {
-    console.log(action);
+    console.log(`Action: ${JSON.stringify(action)}`);
   }
 
   onDataChanged: Event<void>;
