@@ -4,6 +4,7 @@
 
 .master-content-container {
   height: 100%;
+  overflow: auto;
 }
 
 .master-content {
