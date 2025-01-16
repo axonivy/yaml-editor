@@ -12,11 +12,11 @@ import {
   Switch,
   Toolbar,
   ToolbarTitle,
+  useHotkeys,
   useTheme
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useAppContext } from '../../../context/AppContext';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { HOTKEYS } from '../../../utils/hotkeys';
 import { useRef } from 'react';
 

@@ -9,6 +9,7 @@ import {
   Table,
   TableBody,
   TableResizableHeader,
+  useHotkeys,
   useReadonly,
   useTableExpand,
   useTableKeyHandler,
@@ -24,7 +25,6 @@ import { AddVariableDialog } from '../dialog/AddDialog';
 import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
 import { useRef } from 'react';
 

@@ -1,11 +1,10 @@
-import { ThemeProvider, ReadonlyProvider, Flex, Spinner, toast, Toaster } from '@axonivy/ui-components';
+import { ThemeProvider, ReadonlyProvider, Flex, Spinner, toast, Toaster, HotkeysProvider } from '@axonivy/ui-components';
 import { ClientContextProvider, ClientJsonRpc, QueryProvider, VariableEditor, initQueryClient } from '@axonivy/variable-editor';
 import { webSocketConnection, type Connection } from '@axonivy/jsonrpc';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { appParam, directSaveParam, pmvParam, readonlyParam, themeParam, webSocketBaseParam } from './url-helper';
-import { HotkeysProvider } from 'react-hotkeys-hook';
 
 export async function start(): Promise<void> {
   const server = webSocketBaseParam();
