@@ -17,6 +17,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  useHotkeys,
   type MessageData
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
@@ -32,7 +33,6 @@ import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
 import { addKnownVariable, findVariable } from './known-variables';
 import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
-import { useHotkeys } from 'react-hotkeys-hook';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;

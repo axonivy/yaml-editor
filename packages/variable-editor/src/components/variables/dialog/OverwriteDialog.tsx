@@ -9,7 +9,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger
+  TooltipTrigger,
+  useHotkeys
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import type { KnownVariables } from '@axonivy/variable-editor-protocol';
@@ -20,7 +21,6 @@ import { toRowId } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { VariableBrowser } from './VariableBrowser';
 import { addKnownVariable } from './known-variables';
-import { useHotkeys } from 'react-hotkeys-hook';
 import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
 
 type OverwriteProps = {
