@@ -8,26 +8,30 @@ const variables = [
 
 describe('validateName', () => {
   test('valid', () => {
-    expect(validateName('Name', ['AnotherName'])).toBeUndefined();
+    expect(validateName('Name', '', variables)).toBeUndefined();
+    expect(validateName('Name', 'NameNode0', variables)).toBeUndefined();
+    expect(validateName('Name', 'NameNode1', variables)).toBeUndefined();
   });
 
   describe('invalid', () => {
     describe('blank', () => {
       test('empty', () => {
-        expect(validateName('', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
+        expect(validateName('', '', variables)).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
       });
 
       test('whitespace', () => {
-        expect(validateName('   ', [])).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
+        expect(validateName('   ', '', variables)).toEqual({ message: 'Name cannot be empty.', variant: 'error' });
       });
     });
 
     test('taken', () => {
-      expect(validateName('Name', ['Name'])).toEqual({ message: 'Name is already present in this Namespace.', variant: 'error' });
+      const error = { message: 'Name is already present in this Namespace.', variant: 'error' };
+      expect(validateName('NameNode0', '', variables)).toEqual(error);
+      expect(validateName('NameNode10', 'NameNode1', variables)).toEqual(error);
     });
 
     test('containsDot', () => {
-      expect(validateName('New.Name', [])).toEqual({ message: "Character '.' is not allowed.", variant: 'error' });
+      expect(validateName('New.Name', '', variables)).toEqual({ message: "Character '.' is not allowed.", variant: 'error' });
     });
   });
 });

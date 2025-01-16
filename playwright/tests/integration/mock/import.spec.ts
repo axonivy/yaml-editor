@@ -21,7 +21,7 @@ describe('importAndOverwrite', async () => {
     await variables.cell(2, 0).expectValue('SecretKeySecret key to access amazon comprehend');
     await variables.row(2).click();
     await overwrite.importBtn.click();
-    await overwrite.expectClosed();
+    await expect(overwrite.dialog).toBeHidden();
 
     const details = editor.details;
     await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
@@ -55,7 +55,7 @@ test('importAndOverwriteWholeSubTree', async () => {
   await variables.cell(1, 0).expectValue('ComprehendAmazon comprehend connector settings');
   await variables.row(1).click();
   await overwrite.importBtn.click();
-  await overwrite.expectClosed();
+  await expect(overwrite.dialog).toBeHidden();
 
   const details = editor.details;
   await details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
@@ -109,4 +109,10 @@ test('import variable when manually adding a known variable', async () => {
   await editor.details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   await editor.tree.row(14).click();
   await editor.details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
+});
+
+test('keyboard', async () => {
+  await expect(editor.overwrite.dialog).toBeHidden();
+  await editor.page.keyboard.press('i');
+  await expect(editor.overwrite.dialog).toBeVisible();
 });

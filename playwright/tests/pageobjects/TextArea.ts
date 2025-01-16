@@ -4,7 +4,7 @@ import { Message } from './Message';
 
 export class TextArea {
   readonly parent: Locator;
-  private readonly locator: Locator;
+  readonly locator: Locator;
   readonly showPassword: Locator;
 
   constructor(parent: Locator, options?: { label?: string; nth?: number }) {
