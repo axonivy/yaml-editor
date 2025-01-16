@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
 import { VariablesClientMock } from './mock/variables-client-mock';
+import { HotkeysProvider } from 'react-hotkeys-hook';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -18,7 +19,9 @@ root.render(
     <ThemeProvider defaultTheme={'light'}>
       <ClientContextProvider client={client}>
         <QueryProvider client={queryClient}>
-          <VariableEditor context={{ app: '', pmv: 'project-name', file: '' }} />
+          <HotkeysProvider initiallyActiveScopes={['global']}>
+            <VariableEditor context={{ app: '', pmv: 'project-name', file: '' }} />
+          </HotkeysProvider>
         </QueryProvider>
       </ClientContextProvider>
     </ThemeProvider>

@@ -16,6 +16,9 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useAppContext } from '../../../context/AppContext';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { HOTKEYS } from '../../../utils/hotkeys';
+import { useRef } from 'react';
 
 type VariablesMasterToolbarProps = {
   title: string;
@@ -25,8 +28,21 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
   const { detail, setDetail } = useAppContext();
   const { theme, setTheme, disabled } = useTheme();
 
+  const firstElement = useRef<HTMLDivElement>(null);
+  useHotkeys(HOTKEYS.FOCUS_TOOLBAR, () => firstElement.current?.focus(), { scopes: ['global'] });
+  useHotkeys(
+    HOTKEYS.FOCUS_INSCRIPTION,
+    () => {
+      setDetail(true);
+      document.querySelector<HTMLElement>('.detail-header')?.focus();
+    },
+    {
+      scopes: ['global']
+    }
+  );
+
   return (
-    <Toolbar className='master-toolbar'>
+    <Toolbar tabIndex={-1} ref={firstElement} className='master-toolbar'>
       <ToolbarTitle>{title}</ToolbarTitle>
       <Flex gap={1}>
         {!disabled && (

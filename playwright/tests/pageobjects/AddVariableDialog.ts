@@ -5,17 +5,19 @@ import { TextArea } from './TextArea';
 
 export class AddVariableDialog {
   readonly open: Button;
+  readonly dialog: Locator;
   readonly name: TextArea;
   readonly namespace: Combobox;
   readonly importMessage: Locator;
   readonly create: Button;
 
-  constructor(page: Page, parent: Locator) {
-    this.open = new Button(parent, { name: 'Add variable' });
-    this.name = new TextArea(parent);
-    this.namespace = new Combobox(page, parent);
-    this.importMessage = parent.getByLabel('Import message');
-    this.create = new Button(parent, { name: 'Create variable' });
+  constructor(page: Page, readonly parent: Locator) {
+    this.open = new Button(parent, { name: 'Add Variable' });
+    this.dialog = parent.getByRole('dialog');
+    this.name = new TextArea(this.dialog);
+    this.namespace = new Combobox(page, this.dialog);
+    this.importMessage = this.dialog.getByLabel('Import message');
+    this.create = new Button(this.dialog, { name: 'Create Variable' });
   }
 
   async expectValues(name: string, namespaceValue: string, ...namespaceOptions: Array<string>) {

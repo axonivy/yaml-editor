@@ -15,8 +15,8 @@ export class Details {
   readonly listOfPossibleValues: EnumValues;
 
   constructor(page: Page, parent: Locator) {
-    this.locator = parent.getByTestId('details-container');
-    this.title = this.locator.getByTestId('Detail title');
+    this.locator = parent.locator('.detail-container');
+    this.title = this.locator.locator('.detail-header');
     this.name = new TextArea(this.locator, { label: 'Name' });
     this.value = new TextArea(this.locator, { label: 'Value' });
     this.enumValue = new Select(page, this.locator, { label: 'Value' });

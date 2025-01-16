@@ -24,6 +24,9 @@ import { AddVariableDialog } from '../dialog/AddDialog';
 import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
+import { useRef } from 'react';
 
 export const VariablesMasterContent = () => {
   const { variables, setVariables, setSelectedVariable, detail, setDetail } = useAppContext();
@@ -80,6 +83,7 @@ export const VariablesMasterContent = () => {
   };
 
   const readonly = useReadonly();
+  const texts = useHotkeyTexts();
   const control = readonly ? null : (
     <Flex gap={2}>
       <AddVariableDialog table={table} />
@@ -90,14 +94,25 @@ export const VariablesMasterContent = () => {
         icon={IvyIcons.Trash}
         onClick={deleteVariable}
         disabled={table.getSelectedRowModel().flatRows.length === 0}
-        aria-label='Delete variable'
+        aria-label={texts.deleteVar}
+        title={texts.deleteVar}
       />
     </Flex>
   );
+  const ref = useHotkeys(HOTKEYS.DELETE_VAR, () => deleteVariable(), { scopes: ['global'], enabled: !readonly });
+  const firstElement = useRef<HTMLDivElement>(null);
+  useHotkeys(HOTKEYS.FOCUS_MAIN, () => firstElement.current?.focus(), { scopes: ['global'] });
 
   return (
-    <Flex direction='column' className='master-content-container' onClick={resetSelection}>
-      <BasicField className='master-content' label='List of variables' control={control} onClick={event => event.stopPropagation()}>
+    <Flex direction='column' ref={ref} className='master-content-container' onClick={resetSelection}>
+      <BasicField
+        tabIndex={-1}
+        ref={firstElement}
+        className='master-content'
+        label='List of variables'
+        control={control}
+        onClick={event => event.stopPropagation()}
+      >
         {globalFilter.filter}
         <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))}>
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
