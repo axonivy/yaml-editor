@@ -211,9 +211,9 @@ test('empty details', async () => {
 
 test('toogle details', async () => {
   await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '75.0');
-  await editor.detailsToggle.click();
+  await editor.toolbar.detailsToggle.click();
   await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '1.0');
-  await editor.detailsToggle.click();
+  await editor.toolbar.detailsToggle.click();
   await expect(editor.masterPanel).toHaveAttribute('data-panel-size', '75.0');
 });
 

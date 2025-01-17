@@ -18,7 +18,7 @@ test.afterEach(async ({ page }) => {
 });
 
 test('title', async () => {
-  await editor.expectTitle('Variables Editor');
+  await editor.toolbar.expectTitle('Variables Editor');
 });
 
 test('validation', async () => {

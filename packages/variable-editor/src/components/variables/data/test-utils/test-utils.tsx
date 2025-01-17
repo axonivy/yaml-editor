@@ -8,6 +8,7 @@ import { QueryProvider } from '../../../../query/QueryProvider';
 import { initQueryClient } from '../../../../query/query-client';
 import type { TreePath } from '../../../../utils/tree/types';
 import type { Variable } from '../variable';
+import type { useHistoryData } from '@axonivy/ui-components';
 
 type ContextHelperProps = {
   client?: Partial<Client>;
@@ -28,7 +29,8 @@ const ContextHelper = (props: ContextHelperProps & { children: ReactNode }) => {
     setSelectedVariable: () => {},
     validations: props.appContext?.validations ?? [],
     detail: true,
-    setDetail: () => {}
+    setDetail: () => {},
+    history: {} as ReturnType<typeof useHistoryData<Array<Variable>>>
   };
   return (
     <ClientContextProvider client={client}>
