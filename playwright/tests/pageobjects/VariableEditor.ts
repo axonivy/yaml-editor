@@ -6,9 +6,11 @@ import { OverwriteDialog } from './OverwriteDialog';
 import { Settings } from './Settings';
 import { Table } from './Table';
 import { TextArea } from './TextArea';
+import { Toolbar } from './Toolbar';
 
 export class VariableEditor {
   readonly page: Page;
+  readonly toolbar: Toolbar;
   readonly search: TextArea;
   readonly tree: Table;
   readonly delete: Button;
@@ -16,7 +18,6 @@ export class VariableEditor {
   readonly locator: Locator;
   readonly settings: Settings;
   readonly details: Details;
-  readonly detailsToggle: Button;
   readonly masterPanel: Locator;
   readonly overwrite: OverwriteDialog;
 
@@ -24,6 +25,7 @@ export class VariableEditor {
     this.page = page;
     this.locator = page.locator(':root');
     this.masterPanel = this.locator.locator('.master-panel');
+    this.toolbar = new Toolbar(page, this.masterPanel);
     this.search = new TextArea(this.locator);
     this.tree = new Table(page, this.locator, ['label', 'label']);
     this.delete = new Button(this.locator, { name: 'Delete variable' });
@@ -31,7 +33,6 @@ export class VariableEditor {
     this.overwrite = new OverwriteDialog(page, this.locator);
     this.settings = new Settings(this.locator);
     this.details = new Details(this.page, this.locator);
-    this.detailsToggle = new Button(this.locator, { name: 'Details toggle' });
   }
 
   static async openEngine(page: Page, options?: { readonly?: boolean }) {
@@ -62,10 +63,6 @@ export class VariableEditor {
     const editor = new VariableEditor(page);
     await page.goto(url);
     return editor;
-  }
-
-  async expectTitle(title: string) {
-    await expect(this.page).toHaveTitle(title);
   }
 
   async takeScreenshot(fileName: string) {
