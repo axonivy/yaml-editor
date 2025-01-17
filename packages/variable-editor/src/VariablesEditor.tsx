@@ -7,6 +7,7 @@ import {
   ResizablePanelGroup,
   SidebarHeader,
   Spinner,
+  useHistoryData,
   useHotkeys
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
@@ -37,6 +38,7 @@ function VariableEditor(props: EditorProps) {
     setDirectSave(props.directSave);
   }, [props]);
   const [selectedVariable, setSelectedVariable] = useState<TreePath>([]);
+  const history = useHistoryData<Array<Variable>>();
 
   const client = useClient();
   const queryClient = useQueryClient();
@@ -54,7 +56,9 @@ function VariableEditor(props: EditorProps) {
     queryKey: queryKeys.data(context),
     queryFn: async () => {
       const content = await client.data(context);
-      return { ...content, root: toVariables(content.data) };
+      const root = toVariables(content.data);
+      history.push(root.children);
+      return { ...content, root };
     },
     structuralSharing: false
   });
@@ -117,7 +121,8 @@ function VariableEditor(props: EditorProps) {
         validations,
         context,
         detail,
-        setDetail
+        setDetail,
+        history
       }}
     >
       <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
