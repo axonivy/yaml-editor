@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('title', async () => {
-  await editor.expectTitle('Variables Editor Mock');
+  await editor.toolbar.expectTitle('Variables Editor Mock');
 });
 
 test('search', async () => {
@@ -253,9 +253,34 @@ test('help', async ({ page }) => {
 
 test('focus jumps', async ({ page }) => {
   await page.keyboard.press('1');
-  await expect(editor.page.locator('.master-toolbar')).toBeFocused();
+  await expect(editor.toolbar.locator).toBeFocused();
   await page.keyboard.press('2');
   await expect(editor.page.locator('.master-content')).toBeFocused();
   await page.keyboard.press('3');
   await expect(editor.details.title).toBeFocused();
+});
+
+test('undo / redo', async ({ page }) => {
+  await expect(editor.toolbar.undo).toBeDisabled();
+  await expect(editor.toolbar.redo).toBeDisabled();
+  await editor.tree.row(5).click();
+  await editor.tree.expectRowCount(11);
+  await page.keyboard.press('Delete');
+  await editor.tree.expectRowCount(7);
+
+  await expect(editor.toolbar.undo).toBeEnabled();
+  await editor.toolbar.undo.click();
+  await editor.tree.expectRowCount(11);
+  await expect(editor.toolbar.undo).toBeDisabled();
+
+  await expect(editor.toolbar.redo).toBeEnabled();
+  await editor.toolbar.redo.click();
+  await editor.tree.expectRowCount(7);
+  await expect(editor.toolbar.redo).toBeDisabled();
+
+  await page.keyboard.press('ControlOrMeta+Z');
+  await editor.tree.expectRowCount(11);
+
+  await page.keyboard.press('ControlOrMeta+Shift+Z');
+  await editor.tree.expectRowCount(7);
 });
