@@ -23,7 +23,7 @@
     "@axonivy/variable-editor-protocol": "~13.1.0-next",
     "@tanstack/react-query": "5.64.2",
     "@tanstack/react-query-devtools": "5.64.2",
-    "yaml": "^2.3.1"
+    "yaml": "^2.7.0"
   },
   "peerDependencies": {
     "react": "^18.2 || ^19.0"
