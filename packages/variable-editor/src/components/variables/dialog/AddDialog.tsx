@@ -32,7 +32,7 @@ import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
 import { addKnownVariable, findVariable } from './known-variables';
-import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
@@ -106,8 +106,8 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
     }
   };
 
-  const { addVar: shortcut } = useHotkeyTexts();
-  useHotkeys(HOTKEYS.ADD_VAR, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
+  const { addVar: shortcut } = useKnownHotkeys();
+  useHotkeys(shortcut.hotkey, () => onOpenChange(true), { scopes: ['global'], keyup: true, enabled: !open });
   const enter = useHotkeys(
     ['Enter', 'mod+Enter'],
     e => {
@@ -127,11 +127,11 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut} />
+              <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut.label} />
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent>
-            <span>{shortcut}</span>
+            <span>{shortcut.label}</span>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
