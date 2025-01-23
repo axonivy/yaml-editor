@@ -2,6 +2,8 @@ import {
   Button,
   Field,
   Flex,
+  hotkeyRedoFix,
+  hotkeyUndoFix,
   IvyIcon,
   Label,
   Popover,
@@ -19,7 +21,7 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { useAppContext } from '../../../context/AppContext';
-import { HOTKEYS, useHotkeyTexts } from '../../../utils/hotkeys';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { useRef } from 'react';
 
 type VariablesMasterToolbarProps = {
@@ -31,9 +33,10 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
   const { theme, setTheme, disabled } = useTheme();
 
   const firstElement = useRef<HTMLDivElement>(null);
-  useHotkeys(HOTKEYS.FOCUS_TOOLBAR, () => firstElement.current?.focus(), { scopes: ['global'] });
+  const hotkeys = useKnownHotkeys();
+  useHotkeys(hotkeys.focusToolbar.hotkey, () => firstElement.current?.focus(), { scopes: ['global'] });
   useHotkeys(
-    HOTKEYS.FOCUS_INSCRIPTION,
+    hotkeys.focusInscription.hotkey,
     () => {
       setDetail(true);
       document.querySelector<HTMLElement>('.detail-header')?.focus();
@@ -44,9 +47,8 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
   );
   const undo = () => history.undo(setUnhistorisedVariables);
   const redo = () => history.redo(setUnhistorisedVariables);
-  useHotkeys(HOTKEYS.UNDO, undo, { scopes: ['global'] });
-  useHotkeys(HOTKEYS.REDO, redo, { scopes: ['global'] });
-  const texts = useHotkeyTexts();
+  useHotkeys(hotkeys.undo.hotkey, e => hotkeyUndoFix(e, undo), { scopes: ['global'] });
+  useHotkeys(hotkeys.redo.hotkey, e => hotkeyRedoFix(e, redo), { scopes: ['global'] });
 
   return (
     <Toolbar tabIndex={-1} ref={firstElement} className='master-toolbar'>
@@ -56,16 +58,16 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
           <Flex>
             <Flex gap={1}>
               <Button
-                title={texts.undo}
-                aria-label={texts.undo}
+                title={hotkeys.undo.label}
+                aria-label={hotkeys.undo.label}
                 icon={IvyIcons.Undo}
                 size='large'
                 onClick={undo}
                 disabled={!history.canUndo}
               />
               <Button
-                title={texts.redo}
-                aria-label={texts.redo}
+                title={hotkeys.redo.label}
+                aria-label={hotkeys.redo.label}
                 icon={IvyIcons.Redo}
                 size='large'
                 onClick={redo}
