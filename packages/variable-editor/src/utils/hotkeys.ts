@@ -1,27 +1,52 @@
-import { hotkeyText } from '@axonivy/ui-components';
+import { hotkeyText, isWindows } from '@axonivy/ui-components';
 import { useMemo } from 'react';
 
-export const HOTKEYS = {
-  UNDO: 'mod+Z',
-  REDO: 'mod+shift+Z',
+type KnownHotkey = { hotkey: string; label: string };
 
-  OPEN_HELP: 'F1',
+export const useKnownHotkeys = () => {
+  const undo = useMemo<KnownHotkey>(() => {
+    const hotkey = 'mod+Z';
+    return { hotkey, label: `Undo (${hotkeyText(hotkey)})` };
+  }, []);
+  const redo = useMemo<KnownHotkey>(() => {
+    const hotkey = isWindows() ? 'mod+Y' : 'mod+shift+Z';
+    return { hotkey, label: `Redo (${hotkeyText(hotkey)})` };
+  }, []);
 
-  ADD_VAR: 'A',
-  IMPORT_VAR: 'I',
-  DELETE_VAR: 'Delete',
+  const openHelp = useMemo<KnownHotkey>(() => {
+    const hotkey = 'F1';
+    return { hotkey, label: `Open Help (${hotkeyText(hotkey)})` };
+  }, []);
 
-  FOCUS_TOOLBAR: '1',
-  FOCUS_MAIN: '2',
-  FOCUS_INSCRIPTION: '3'
-} as const;
+  const addVar = useMemo<KnownHotkey>(() => {
+    const hotkey = 'A';
+    return { hotkey, label: `Add Variable (${hotkeyText(hotkey)})` };
+  }, []);
 
-export const useHotkeyTexts = () => {
-  const undo = useMemo(() => `Undo (${hotkeyText(HOTKEYS.UNDO)})`, []);
-  const redo = useMemo(() => `Redo (${hotkeyText(HOTKEYS.REDO)})`, []);
-  const openHelp = useMemo(() => `Open Help (${hotkeyText(HOTKEYS.OPEN_HELP)})`, []);
-  const addVar = useMemo(() => `Add Variable (${hotkeyText(HOTKEYS.ADD_VAR)})`, []);
-  const importVar = useMemo(() => `Import Variable (${hotkeyText(HOTKEYS.IMPORT_VAR)})`, []);
-  const deleteVar = useMemo(() => `Delete Variable (${hotkeyText(HOTKEYS.DELETE_VAR)})`, []);
-  return { undo, redo, openHelp, addVar, importVar, deleteVar };
+  const importVar = useMemo<KnownHotkey>(() => {
+    const hotkey = 'I';
+    return { hotkey, label: `Import Variable (${hotkeyText(hotkey)})` };
+  }, []);
+
+  const deleteVar = useMemo<KnownHotkey>(() => {
+    const hotkey = 'Delete';
+    return { hotkey, label: `Delete Variable (${hotkeyText(hotkey)})` };
+  }, []);
+
+  const focusToolbar = useMemo<KnownHotkey>(() => {
+    const hotkey = '1';
+    return { hotkey, label: `Focus Toolbar (${hotkeyText(hotkey)})` };
+  }, []);
+
+  const focusMain = useMemo<KnownHotkey>(() => {
+    const hotkey = '2';
+    return { hotkey, label: `Focus Main (${hotkeyText(hotkey)})` };
+  }, []);
+
+  const focusInscription = useMemo<KnownHotkey>(() => {
+    const hotkey = '3';
+    return { hotkey, label: `Focus Inscription (${hotkeyText(hotkey)})` };
+  }, []);
+
+  return { undo, redo, openHelp, addVar, importVar, deleteVar, focusToolbar, focusMain, focusInscription };
 };
