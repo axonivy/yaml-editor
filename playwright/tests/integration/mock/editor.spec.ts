@@ -260,7 +260,7 @@ test('focus jumps', async ({ page }) => {
   await expect(editor.details.title).toBeFocused();
 });
 
-test('undo / redo', async ({ page }) => {
+test('undo / redo', async ({ page, browserName }) => {
   await expect(editor.toolbar.undo).toBeDisabled();
   await expect(editor.toolbar.redo).toBeDisabled();
   await editor.tree.row(5).click();
@@ -281,6 +281,6 @@ test('undo / redo', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+Z');
   await editor.tree.expectRowCount(11);
 
-  await page.keyboard.press('ControlOrMeta+Y');
+  await page.keyboard.press(browserName === 'webkit' ? 'ControlOrMeta+Shift+Z' : 'ControlOrMeta+Y');
   await editor.tree.expectRowCount(7);
 });
