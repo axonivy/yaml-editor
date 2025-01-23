@@ -281,6 +281,6 @@ test('undo / redo', async ({ page }) => {
   await page.keyboard.press('ControlOrMeta+Z');
   await editor.tree.expectRowCount(11);
 
-  await page.keyboard.press('ControlOrMeta+Shift+Z');
+  await page.keyboard.press('ControlOrMeta+Y');
   await editor.tree.expectRowCount(7);
 });

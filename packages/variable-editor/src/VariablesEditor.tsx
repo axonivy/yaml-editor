@@ -27,7 +27,7 @@ import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
 import { useAction } from './context/useAction';
-import { HOTKEYS, useHotkeyTexts } from './utils/hotkeys';
+import { useKnownHotkeys } from './utils/hotkeys';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -89,8 +89,8 @@ function VariableEditor(props: EditorProps) {
   });
 
   const openUrl = useAction('openUrl');
-  const { openHelp: helpText } = useHotkeyTexts();
-  useHotkeys(HOTKEYS.OPEN_HELP, () => openUrl(data?.helpUrl), { scopes: ['global'] });
+  const { openHelp: helpText } = useKnownHotkeys();
+  useHotkeys(helpText.hotkey, () => openUrl(data?.helpUrl), { scopes: ['global'] });
 
   if (isPending) {
     return (
@@ -138,7 +138,7 @@ function VariableEditor(props: EditorProps) {
             <ResizablePanel defaultSize={25} minSize={10}>
               <Flex direction='column' className='panel-content-container detail-container'>
                 <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='detail-header' tabIndex={-1}>
-                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} title={helpText} aria-label={helpText} />
+                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} title={helpText.label} aria-label={helpText.label} />
                 </SidebarHeader>
                 <VariablesDetailContent />
               </Flex>
