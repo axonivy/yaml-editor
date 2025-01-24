@@ -4,6 +4,7 @@ import {
   Combobox,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -26,13 +27,13 @@ import { type Table } from '@tanstack/react-table';
 import { useEffect, useMemo, useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { keyOfFirstSelectedNonLeafRow, keysOfAllNonLeafRows, newNodeName, toRowId } from '../../../utils/tree/tree';
 import { addNode, hasChildren } from '../../../utils/tree/tree-data';
 import type { AddNodeReturnType } from '../../../utils/tree/types';
 import { createVariable, type Variable } from '../data/variable';
 import './AddDialog.css';
 import { addKnownVariable, findVariable } from './known-variables';
-import { useKnownHotkeys } from '../../../utils/hotkeys';
 
 type AddVariableDialogProps = {
   table: Table<Variable>;
@@ -137,15 +138,16 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
       </TooltipProvider>
       <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>New Variable</DialogTitle>
+          <DialogTitle>Add Variable</DialogTitle>
         </DialogHeader>
+        <DialogDescription>Choose the name and namespace of the Variable you want to add.</DialogDescription>
         <Flex direction='column' gap={3} ref={enter} tabIndex={-1}>
           <BasicField label='Name' message={nameValidationMessage} aria-label='Name'>
             <Input value={name} onChange={event => setName(event.target.value)} />
           </BasicField>
           <BasicField
             label='Namespace'
-            message={namespaceValidationMessage ?? { variant: 'info', message: `Folder structure of variable (e.g. 'Connector.Key')` }}
+            message={namespaceValidationMessage ?? { variant: 'info', message: `Folder structure of Variable (e.g. 'Connector.Key')` }}
             aria-label='Namespace'
           >
             <Combobox
@@ -172,7 +174,7 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <span>Hold {hotkeyText('mod')} to add an additional variable</span>
+                <span>Hold {hotkeyText('mod')} to add an additional Variable</span>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
