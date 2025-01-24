@@ -2,9 +2,11 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Flex,
   selectRow,
   Tooltip,
   TooltipContent,
@@ -17,11 +19,11 @@ import type { KnownVariables } from '@axonivy/variable-editor-protocol';
 import { type Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { useAppContext } from '../../../context/AppContext';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { toRowId } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { VariableBrowser } from './VariableBrowser';
 import { addKnownVariable } from './known-variables';
-import { useKnownHotkeys } from '../../../utils/hotkeys';
 
 type OverwriteProps = {
   table: Table<Variable>;
@@ -60,16 +62,19 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
         </Tooltip>
       </TooltipProvider>
       <DialogTrigger asChild></DialogTrigger>
-      <DialogContent style={{ height: '80vh', width: '500px', gridTemplateRows: 'auto 1fr auto' }}>
-        <DialogHeader>
-          <DialogTitle>Import and overwrite variable from required projects</DialogTitle>
-        </DialogHeader>
-        <VariableBrowser
-          applyFn={node => {
-            insertVariable(node);
-            setDialogState(false);
-          }}
-        />
+      <DialogContent style={{ height: '80vh', width: '500px' }}>
+        <Flex direction='column' gap={4}>
+          <DialogHeader>
+            <DialogTitle>Import Variable</DialogTitle>
+          </DialogHeader>
+          <DialogDescription>Choose the folder or Variable of a required project you want to import and overwrite.</DialogDescription>
+          <VariableBrowser
+            applyFn={node => {
+              insertVariable(node);
+              setDialogState(false);
+            }}
+          />
+        </Flex>
       </DialogContent>
     </Dialog>
   );
