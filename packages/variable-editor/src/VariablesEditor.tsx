@@ -7,10 +7,15 @@ import {
   ResizablePanelGroup,
   SidebarHeader,
   Spinner,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   useHistoryData,
   useHotkeys
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import type { EditorProps, ValidationMessages, VariablesData, VariablesEditorDataContext } from '@axonivy/variable-editor-protocol';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import type { RootVariable, Variable } from './components/variables/data/variable';
@@ -19,15 +24,14 @@ import { VariablesDetailContent } from './components/variables/detail/DetailCont
 import { VariablesMasterContent } from './components/variables/master/VariablesMasterContent';
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { AppProvider } from './context/AppContext';
+import { useAction } from './context/useAction';
 import { useClient } from './protocol/ClientContextProvider';
-import type { VariablesData, EditorProps, ValidationMessages, VariablesEditorDataContext } from '@axonivy/variable-editor-protocol';
 import { genQueryKey } from './query/query-client';
+import { useKnownHotkeys } from './utils/hotkeys';
 import type { Unary } from './utils/lambda/lambda';
 import { getNode } from './utils/tree/tree-data';
 import type { TreePath } from './utils/tree/types';
 import './VariablesEditor.css';
-import { useAction } from './context/useAction';
-import { useKnownHotkeys } from './utils/hotkeys';
 
 function VariableEditor(props: EditorProps) {
   const [detail, setDetail] = useState(true);
@@ -125,27 +129,34 @@ function VariableEditor(props: EditorProps) {
         history
       }}
     >
-      <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
-        <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
-          <Flex className='panel-content-container' direction='column'>
-            <VariablesMasterToolbar title={title} />
-            <VariablesMasterContent />
-          </Flex>
-        </ResizablePanel>
-        {detail && (
-          <>
-            <ResizableHandle />
-            <ResizablePanel defaultSize={25} minSize={10}>
-              <Flex direction='column' className='panel-content-container detail-container'>
-                <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='detail-header' tabIndex={-1}>
-                  <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} title={helpText.label} aria-label={helpText.label} />
-                </SidebarHeader>
-                <VariablesDetailContent />
-              </Flex>
-            </ResizablePanel>
-          </>
-        )}
-      </ResizablePanelGroup>
+      <TooltipProvider>
+        <ResizablePanelGroup direction='horizontal' style={{ height: `100vh` }}>
+          <ResizablePanel defaultSize={75} minSize={50} className='master-panel'>
+            <Flex className='panel-content-container' direction='column'>
+              <VariablesMasterToolbar title={title} />
+              <VariablesMasterContent />
+            </Flex>
+          </ResizablePanel>
+          {detail && (
+            <>
+              <ResizableHandle />
+              <ResizablePanel defaultSize={25} minSize={10}>
+                <Flex direction='column' className='panel-content-container detail-container'>
+                  <SidebarHeader icon={IvyIcons.PenEdit} title={detailTitle} className='detail-header' tabIndex={-1}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button icon={IvyIcons.Help} onClick={() => openUrl(data.helpUrl)} aria-label={helpText.label} />
+                      </TooltipTrigger>
+                      <TooltipContent style={{ fontSize: '0.75rem', fontWeight: 'initial' }}>{helpText.label}</TooltipContent>
+                    </Tooltip>
+                  </SidebarHeader>
+                  <VariablesDetailContent />
+                </Flex>
+              </ResizablePanel>
+            </>
+          )}
+        </ResizablePanelGroup>
+      </TooltipProvider>
     </AppProvider>
   );
 }

@@ -16,7 +16,6 @@ import {
   selectRow,
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
   useHotkeys,
   type MessageData
@@ -124,18 +123,14 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <DialogTrigger asChild>
-              <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut.label} />
-            </DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <span>{shortcut.label}</span>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut.label} />
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>{shortcut.label}</TooltipContent>
+      </Tooltip>
       <DialogContent onCloseAutoFocus={e => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Add Variable</DialogTitle>
@@ -166,18 +161,14 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
           )}
         </Flex>
         <DialogFooter>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant='primary' size='large' aria-label='Create Variable' disabled={!allInputsValid()} onClick={addVariable}>
-                  {`${knownVariable ? 'Import' : 'Create'} Variable`}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <span>Hold {hotkeyText('mod')} to add an additional Variable</span>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant='primary' size='large' aria-label='Create Variable' disabled={!allInputsValid()} onClick={addVariable}>
+                {`${knownVariable ? 'Import' : 'Create'} Variable`}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Hold {hotkeyText('mod')} to add an additional Variable</TooltipContent>
+          </Tooltip>
         </DialogFooter>
       </DialogContent>
     </Dialog>
