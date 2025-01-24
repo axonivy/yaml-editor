@@ -16,13 +16,16 @@ import {
   Toolbar,
   ToolbarContainer,
   ToolbarTitle,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
   useHotkeys,
   useTheme
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import { useRef } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
-import { useRef } from 'react';
 
 type VariablesMasterToolbarProps = {
   title: string;
@@ -57,31 +60,32 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
         <ToolbarContainer maxWidth={450}>
           <Flex>
             <Flex gap={1}>
-              <Button
-                title={hotkeys.undo.label}
-                aria-label={hotkeys.undo.label}
-                icon={IvyIcons.Undo}
-                size='large'
-                onClick={undo}
-                disabled={!history.canUndo}
-              />
-              <Button
-                title={hotkeys.redo.label}
-                aria-label={hotkeys.redo.label}
-                icon={IvyIcons.Redo}
-                size='large'
-                onClick={redo}
-                disabled={!history.canRedo}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button aria-label={hotkeys.undo.label} icon={IvyIcons.Undo} size='large' onClick={undo} disabled={!history.canUndo} />
+                </TooltipTrigger>
+                <TooltipContent>{hotkeys.undo.label}</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button aria-label={hotkeys.redo.label} icon={IvyIcons.Redo} size='large' onClick={redo} disabled={!history.canRedo} />
+                </TooltipTrigger>
+                <TooltipContent>{hotkeys.redo.label}</TooltipContent>
+              </Tooltip>
             </Flex>
             <Separator orientation='vertical' style={{ height: '26px', marginInline: 'var(--size-2)' }} />
           </Flex>
         </ToolbarContainer>
         {!disabled && (
           <Popover>
-            <PopoverTrigger asChild>
-              <Button icon={IvyIcons.Settings} size='large' title='Settings' aria-label='Settings' />
-            </PopoverTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Settings</TooltipContent>
+            </Tooltip>
             <PopoverContent sideOffset={12}>
               <ReadonlyProvider readonly={false}>
                 <Flex direction='column' gap={2}>
@@ -105,13 +109,17 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
             </PopoverContent>
           </Popover>
         )}
-        <Button
-          icon={IvyIcons.LayoutSidebarRightCollapse}
-          size='large'
-          onClick={() => setDetail(!detail)}
-          title='Details toggle'
-          aria-label='Details toggle'
-        />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              icon={IvyIcons.LayoutSidebarRightCollapse}
+              size='large'
+              onClick={() => setDetail(!detail)}
+              aria-label='Details toggle'
+            />
+          </TooltipTrigger>
+          <TooltipContent>Details toggle</TooltipContent>
+        </Tooltip>
       </Flex>
     </Toolbar>
   );
