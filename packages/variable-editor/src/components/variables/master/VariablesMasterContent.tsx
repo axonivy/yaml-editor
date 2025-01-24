@@ -17,7 +17,9 @@ import {
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
+import { useRef } from 'react';
 import { useAppContext } from '../../../context/AppContext';
+import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { deleteFirstSelectedRow, toTreePath, useTreeGlobalFilter } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { variableIcon } from '../data/variable-utils';
@@ -25,8 +27,6 @@ import { AddVariableDialog } from '../dialog/AddDialog';
 import { OverwriteDialog } from '../dialog/OverwriteDialog';
 import { ValidationRow } from './ValidationRow';
 import './VariablesMasterContent.css';
-import { useKnownHotkeys } from '../../../utils/hotkeys';
-import { useRef } from 'react';
 
 export const VariablesMasterContent = () => {
   const { variables, setVariables, setSelectedVariable, detail, setDetail } = useAppContext();
@@ -114,7 +114,7 @@ export const VariablesMasterContent = () => {
         onClick={event => event.stopPropagation()}
       >
         {globalFilter.filter}
-        <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))}>
+        <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))} style={{ overflowX: 'unset' }}>
           <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
           <TableBody>
             {table.getRowModel().rows.map(row => (
