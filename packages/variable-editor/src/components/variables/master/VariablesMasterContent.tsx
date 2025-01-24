@@ -109,7 +109,7 @@ export const VariablesMasterContent = () => {
         tabIndex={-1}
         ref={firstElement}
         className='master-content'
-        label='List of variables'
+        label='List of Variables'
         control={control}
         onClick={event => event.stopPropagation()}
       >
