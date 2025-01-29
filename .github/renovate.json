@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "baseBranches": ["master"],
+  "rangeStrategy": "in-range-only",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchBaseBranches": ["master"],
+      "matchPackageNames": ["@axonivy/*"],
+      "enabled": false
+    }
+  ]
+}
