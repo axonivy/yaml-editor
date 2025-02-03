@@ -18,6 +18,7 @@ import {
   ToolbarTitle,
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
   useHotkeys,
   useTheme
@@ -60,32 +61,38 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
         <ToolbarContainer maxWidth={450}>
           <Flex>
             <Flex gap={1}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button aria-label={hotkeys.undo.label} icon={IvyIcons.Undo} size='large' onClick={undo} disabled={!history.canUndo} />
-                </TooltipTrigger>
-                <TooltipContent>{hotkeys.undo.label}</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button aria-label={hotkeys.redo.label} icon={IvyIcons.Redo} size='large' onClick={redo} disabled={!history.canRedo} />
-                </TooltipTrigger>
-                <TooltipContent>{hotkeys.redo.label}</TooltipContent>
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button aria-label={hotkeys.undo.label} icon={IvyIcons.Undo} size='large' onClick={undo} disabled={!history.canUndo} />
+                  </TooltipTrigger>
+                  <TooltipContent>{hotkeys.undo.label}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button aria-label={hotkeys.redo.label} icon={IvyIcons.Redo} size='large' onClick={redo} disabled={!history.canRedo} />
+                  </TooltipTrigger>
+                  <TooltipContent>{hotkeys.redo.label}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Flex>
             <Separator orientation='vertical' style={{ height: '26px', marginInline: 'var(--size-2)' }} />
           </Flex>
         </ToolbarContainer>
         {!disabled && (
           <Popover>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <PopoverTrigger asChild>
-                  <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
-                </PopoverTrigger>
-              </TooltipTrigger>
-              <TooltipContent>Settings</TooltipContent>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <PopoverTrigger asChild>
+                    <Button icon={IvyIcons.Settings} size='large' aria-label='Settings' />
+                  </PopoverTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Settings</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <PopoverContent sideOffset={12}>
               <ReadonlyProvider readonly={false}>
                 <Flex direction='column' gap={2}>
@@ -109,17 +116,19 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
             </PopoverContent>
           </Popover>
         )}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              icon={IvyIcons.LayoutSidebarRightCollapse}
-              size='large'
-              onClick={() => setDetail(!detail)}
-              aria-label='Details toggle'
-            />
-          </TooltipTrigger>
-          <TooltipContent>Details toggle</TooltipContent>
-        </Tooltip>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                icon={IvyIcons.LayoutSidebarRightCollapse}
+                size='large'
+                onClick={() => setDetail(!detail)}
+                aria-label='Details toggle'
+              />
+            </TooltipTrigger>
+            <TooltipContent>Details toggle</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </Flex>
     </Toolbar>
   );

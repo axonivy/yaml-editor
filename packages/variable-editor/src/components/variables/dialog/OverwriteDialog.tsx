@@ -10,6 +10,7 @@ import {
   selectRow,
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
   useHotkeys
 } from '@axonivy/ui-components';
@@ -48,14 +49,16 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
 
   return (
     <Dialog open={dialogState} onOpenChange={setDialogState}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DialogTrigger asChild>
-            <Button icon={IvyIcons.FileImport} aria-label={shortcut.label} />
-          </DialogTrigger>
-        </TooltipTrigger>
-        <TooltipContent>{shortcut.label}</TooltipContent>
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button icon={IvyIcons.FileImport} aria-label={shortcut.label} />
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>{shortcut.label}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogTrigger asChild></DialogTrigger>
       <DialogContent style={{ height: '80vh', width: '500px' }}>
         <Flex direction='column' gap={4}>
