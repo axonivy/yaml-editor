@@ -11,6 +11,7 @@ import {
   TableResizableHeader,
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
   useHotkeys,
   useReadonly,
@@ -93,17 +94,19 @@ export const VariablesMasterContent = () => {
       <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
       <OverwriteDialog table={table} />
       <Separator decorative orientation='vertical' style={{ height: '20px', margin: 0 }} />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            icon={IvyIcons.Trash}
-            onClick={deleteVariable}
-            disabled={table.getSelectedRowModel().flatRows.length === 0}
-            aria-label={hotkeys.deleteVar.label}
-          />
-        </TooltipTrigger>
-        <TooltipContent>{hotkeys.deleteVar.label}</TooltipContent>
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              icon={IvyIcons.Trash}
+              onClick={deleteVariable}
+              disabled={table.getSelectedRowModel().flatRows.length === 0}
+              aria-label={hotkeys.deleteVar.label}
+            />
+          </TooltipTrigger>
+          <TooltipContent>{hotkeys.deleteVar.label}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </Flex>
   );
   const ref = useHotkeys(hotkeys.deleteVar.hotkey, () => deleteVariable(), { scopes: ['global'], enabled: !readonly });
