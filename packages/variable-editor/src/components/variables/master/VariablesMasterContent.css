@@ -1,10 +1,42 @@
 .master-content-container {
-  height: 100%;
   overflow: auto;
 }
 
 .master-content {
   margin: var(--size-3);
   min-height: 0;
-  height: fit-content;
+}
+
+.virtual-table-container {
+  overflow-x: hidden;
+  position: relative;
+}
+
+.virtual-table-body tr {
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.virtual-table-body td {
+  align-content: center;
+}
+
+.virtual-table-body span,
+.virtual-table-body p {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Because 'display' is set to 'block' instead of 'flex' on the parent 'p' to
+   make 'text-overflow: ellipsis' work, we need to manually style the icon in
+   the message rows */
+.virtual-table-body p i {
+  padding-right: var(--size-1);
+  vertical-align: middle;
+  line-height: inherit;
 }
