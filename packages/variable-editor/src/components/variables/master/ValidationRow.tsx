@@ -1,22 +1,36 @@
 import { MessageRow, SelectRow, TableCell } from '@axonivy/ui-components';
 import type { Severity, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { flexRender, type Row } from '@tanstack/react-table';
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual';
 import { useValidations } from '../../../context/useValidation';
 import { toTreePath } from '../../../utils/tree/tree';
 import type { Variable } from '../data/variable';
 import './ValidationRow.css';
+import { ROW_HEIGHT } from './VariablesMasterContent';
 
 type ValidationRowProps = {
   row: Row<Variable>;
+  virtualRow: VirtualItem;
+  virtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>;
 };
 
-export const ValidationRow = ({ row }: ValidationRowProps) => {
+export const ValidationRow = ({ row, virtualRow, virtualizer }: ValidationRowProps) => {
   const validations = useValidations(toTreePath(row.id));
   return (
     <>
-      <SelectRow row={row} className={rowClass(validations)}>
+      <SelectRow
+        row={row}
+        className={rowClass(validations)}
+        data-index={virtualRow.index}
+        ref={virtualizer.measureElement}
+        style={{
+          transform: `translateY(${virtualRow.start}px)`
+        }}
+      >
         {row.getVisibleCells().map(cell => (
-          <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+          <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          </TableCell>
         ))}
       </SelectRow>
       {validations
@@ -26,6 +40,9 @@ export const ValidationRow = ({ row }: ValidationRowProps) => {
             key={index}
             columnCount={2}
             message={{ message: val.message, variant: val.severity.toLocaleLowerCase() as Lowercase<Severity> }}
+            style={{
+              transform: `translateY(${virtualRow.start + ROW_HEIGHT * (index + 1)}px)`
+            }}
           />
         ))}
     </>
