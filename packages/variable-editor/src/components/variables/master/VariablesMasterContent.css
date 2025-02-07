@@ -24,6 +24,10 @@
   align-content: center;
 }
 
+.virtual-table-body tr > td:last-child {
+  flex-grow: 1;
+}
+
 .virtual-table-body span,
 .virtual-table-body p {
   display: block;
