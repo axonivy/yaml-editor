@@ -13,20 +13,19 @@ import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
 import { useValidations } from '../../../context/useValidation';
-import { getNode, getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
+import { getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
 import { findVariable } from '../dialog/known-variables';
 import './DetailContent.css';
 import { Metadata } from './Metadata';
 import { Value } from './Value';
 
-export const useOverwrites = () => {
-  const { context, variables, selectedVariable } = useAppContext();
+export const useOverwrites = (key: Array<string>) => {
+  const { context } = useAppContext();
   const knownVariables = useMeta('meta/knownVariables', context, EMPTY_KNOWN_VARIABLES).data;
   if (knownVariables.children.length === 0) {
     return false;
   }
-  const key = getNodesOnPath(variables, selectedVariable).map(node => (node ? node.name : ''));
   return findVariable(knownVariables, ...key) !== undefined;
 };
 
@@ -52,8 +51,11 @@ export const VariablesDetailContent = () => {
   const { variables, setVariables, selectedVariable } = useAppContext();
   const readonly = useReadonly();
 
-  const variable = useMemo(() => getNode(variables, selectedVariable), [variables, selectedVariable]);
-  const overwrites = useOverwrites();
+  const nodesToVariable = useMemo(() => getNodesOnPath(variables, selectedVariable), [variables, selectedVariable]);
+  const variable = nodesToVariable.at(-1);
+
+  const key = nodesToVariable.map(node => (node ? node.name : ''));
+  const overwrites = useOverwrites(key);
 
   const validations = useValidations(selectedVariable);
 
@@ -67,6 +69,9 @@ export const VariablesDetailContent = () => {
 
   return (
     <Flex direction='column' gap={4} className='detail-content'>
+      <BasicField label='Namespace'>
+        <BasicInput value={key.slice(0, -1).join('.')} disabled />
+      </BasicField>
       <BasicField label='Name' message={messageDataOfProperty(validations, 'key')}>
         <BasicInput value={variable.name} onChange={event => handleVariableAttributeChange([{ key: 'name', value: event.target.value }])} />
       </BasicField>

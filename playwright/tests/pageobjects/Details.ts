@@ -6,6 +6,7 @@ import { EnumValues } from './EnumValues';
 export class Details {
   readonly locator: Locator;
   readonly title: Locator;
+  readonly namespace: TextArea;
   readonly name: TextArea;
   readonly value: TextArea;
   readonly enumValue: Select;
@@ -18,6 +19,7 @@ export class Details {
     this.locator = parent.locator('.detail-container');
     this.title = this.locator.locator('.detail-header');
     this.name = new TextArea(this.locator, { label: 'Name' });
+    this.namespace = new TextArea(this.locator, { label: 'Namespace' });
     this.value = new TextArea(this.locator, { label: 'Value' });
     this.enumValue = new Select(page, this.locator, { label: 'Value' });
     this.description = new TextArea(this.locator, { label: 'Description' });
@@ -48,7 +50,8 @@ export class Details {
     await this.value.fill(value);
   }
 
-  async expectValues(name: string, value: string, description: string, metaData: string) {
+  async expectValues(namespace: string, name: string, value: string, description: string, metaData: string) {
+    await this.namespace.expectValue(namespace);
     await this.name.expectValue(name);
     if (metaData === 'Enum') {
       await this.enumValue.expectValue(value);
@@ -74,7 +77,8 @@ export class Details {
     }
   }
 
-  async expectFolderValues(name: string, description: string) {
+  async expectFolderValues(namespace: string, name: string, description: string) {
+    await this.namespace.expectValue(namespace);
     await this.name.expectValue(name);
     await this.description.expectValue(description);
     await this.value.expectDoesNotExists();
