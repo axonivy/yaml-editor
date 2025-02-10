@@ -43,16 +43,16 @@ test('load data', async () => {
   await tree.expectRowCount(4);
 
   await tree.row(0).click();
-  await details.expectFolderValues('microsoft', '');
+  await details.expectFolderValues('', 'microsoft', '');
 
   await tree.row(1).click();
-  await details.expectFolderValues('connector', '');
+  await details.expectFolderValues('microsoft', 'connector', '');
 
   await tree.row(2).click();
-  await details.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
+  await details.expectValues('microsoft.connector', 'appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
 
   await tree.row(3).click();
-  await details.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
+  await details.expectValues('microsoft.connector', 'secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
 });
 
 test('save data', async () => {
@@ -72,11 +72,11 @@ test('save data', async () => {
   const details2 = editor2.details;
 
   await tree2.row(2).click();
-  await details2.expectValues('appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', 'Default');
+  await details2.expectValues('microsoft.connector', 'appIdChanged', 'MyAppIdChanged', 'Your Azure Application (client) ID changed', 'Default');
   await details2.fill('appId', 'MyAppId', 'Your Azure Application (client) ID', '');
 
   await tree2.row(3).click();
-  await details2.expectValues('secretKeyChanged', 'MySecretKeyChanged', 'Secret key from your applications "certificates & secrets changed"', 'Password');
+  await details2.expectValues('microsoft.connector', 'secretKeyChanged', 'MySecretKeyChanged', 'Secret key from your applications "certificates & secrets changed"', 'Password');
   await details2.fill('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
 
   const editor3 = await VariableEditor.openEngine(editor.page);
@@ -84,8 +84,8 @@ test('save data', async () => {
   const details3 = editor3.details;
 
   await tree3.row(2).click();
-  await details3.expectValues('appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
+  await details3.expectValues('microsoft.connector', 'appId', 'MyAppId', 'Your Azure Application (client) ID', 'Default');
 
   await tree3.row(3).click();
-  await details3.expectValues('secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
+  await details3.expectValues('microsoft.connector', 'secretKey', 'MySecretKey', 'Secret key from your applications "certificates & secrets"', 'Password');
 });
