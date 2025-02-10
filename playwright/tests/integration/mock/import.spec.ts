@@ -24,7 +24,7 @@ describe('importAndOverwrite', () => {
     await expect(overwrite.dialog).toBeHidden();
 
     const details = editor.details;
-    await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+    await details.expectValues('Amazon.Comprehend', 'SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   });
 
   test('enum has values', async () => {
@@ -58,14 +58,14 @@ test('importAndOverwriteWholeSubTree', async () => {
   await expect(overwrite.dialog).toBeHidden();
 
   const details = editor.details;
-  await details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
+  await details.expectFolderValues('Amazon', 'Comprehend', 'Amazon comprehend connector settings');
   await tree.expectRowCount(15);
   await tree.row(11).click();
-  await details.expectFolderValues('Amazon', '');
+  await details.expectFolderValues('', 'Amazon', '');
   await tree.row(13).click();
-  await details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+  await details.expectValues('Amazon.Comprehend', 'SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   await tree.row(14).click();
-  await details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
+  await details.expectValues('Amazon.Comprehend', 'AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
 });
 
 describe('disabledMetadataOfOverwrittenVariable', () => {
@@ -101,14 +101,14 @@ test('import variable when manually adding a known variable', async () => {
 
   await editor.add.create.click();
 
-  await editor.details.expectFolderValues('Comprehend', 'Amazon comprehend connector settings');
+  await editor.details.expectFolderValues('Amazon', 'Comprehend', 'Amazon comprehend connector settings');
   await editor.tree.expectRowCount(15);
   await editor.tree.row(11).click();
-  await editor.details.expectFolderValues('Amazon', '');
+  await editor.details.expectFolderValues('', 'Amazon', '');
   await editor.tree.row(13).click();
-  await editor.details.expectValues('SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
+  await editor.details.expectValues('Amazon.Comprehend', 'SecretKey', '<YOUR_SECRET_KEY>', 'Secret key to access amazon comprehend', 'Password');
   await editor.tree.row(14).click();
-  await editor.details.expectValues('AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
+  await editor.details.expectValues('Amazon.Comprehend', 'AccessKey', '<YOUR_ACCESS_KEY>', 'Access key to access amazon comprehend', 'Default');
 });
 
 test('keyboard', async () => {
