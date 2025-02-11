@@ -24,7 +24,7 @@ export class VariableEditor {
   constructor(page: Page) {
     this.page = page;
     this.locator = page.locator(':root');
-    this.masterPanel = this.locator.locator('.master-panel');
+    this.masterPanel = this.locator.locator('.variables-editor-main-panel');
     this.toolbar = new Toolbar(page, this.masterPanel);
     this.search = new TextArea(this.locator);
     this.tree = new Table(page, this.locator, ['label', 'label']);

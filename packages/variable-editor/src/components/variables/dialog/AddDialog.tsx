@@ -128,7 +128,7 @@ export const AddVariableDialog = ({ table }: AddVariableDialogProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button className='add-variable-dialog-trigger-button' icon={IvyIcons.Plus} aria-label={shortcut.label} />
+              <Button className='variables-editor-add-button' icon={IvyIcons.Plus} aria-label={shortcut.label} />
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent>{shortcut.label}</TooltipContent>

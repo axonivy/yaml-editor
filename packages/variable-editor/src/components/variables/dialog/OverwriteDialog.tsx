@@ -24,6 +24,7 @@ import { toRowId } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { VariableBrowser } from './VariableBrowser';
 import { addKnownVariable } from './known-variables';
+import './OverwriteDialog.css';
 
 type OverwriteProps = {
   table: Table<Variable>;
@@ -60,7 +61,7 @@ export const OverwriteDialog = ({ table }: OverwriteProps) => {
         </Tooltip>
       </TooltipProvider>
       <DialogTrigger asChild></DialogTrigger>
-      <DialogContent style={{ height: '80vh', width: '500px' }}>
+      <DialogContent className='variables-editor-overwrite-dialog-content'>
         <Flex direction='column' gap={4}>
           <DialogHeader>
             <DialogTitle>Import Variable</DialogTitle>
