@@ -51,10 +51,10 @@ export const ValidationRow = ({ row, virtualRow, virtualizer }: ValidationRowPro
 
 export const rowClass = (messages: ValidationMessages) => {
   if (messages.find(message => message.severity === 'ERROR')) {
-    return 'row-error';
+    return 'variables-editor-row-error';
   }
   if (messages.find(message => message.severity === 'WARNING')) {
-    return 'row-warning';
+    return 'variables-editor-row-warning';
   }
   return '';
 };

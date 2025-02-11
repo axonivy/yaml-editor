@@ -1,18 +1,22 @@
-.master-content-container {
+.variables-editor-main-content {
   overflow: auto;
 }
 
-.master-content {
+.variables-editor-table-field {
   margin: var(--size-3);
   min-height: 0;
 }
 
-.virtual-table-container {
+.variables-editor-table-container {
   overflow-x: hidden;
   position: relative;
 }
 
-.virtual-table-body tr {
+.variables-editor-table {
+  display: grid;
+}
+
+.variables-editor-table-body tr {
   display: flex;
   position: absolute;
   width: 100%;
@@ -20,16 +24,16 @@
   box-sizing: border-box;
 }
 
-.virtual-table-body td {
+.variables-editor-table-body td {
   align-content: center;
 }
 
-.virtual-table-body tr > td:last-child {
+.variables-editor-table-body tr > td:last-child {
   flex-grow: 1;
 }
 
-.virtual-table-body span,
-.virtual-table-body p {
+.variables-editor-table-body span,
+.variables-editor-table-body p {
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -39,7 +43,7 @@
 /* Because 'display' is set to 'block' instead of 'flex' on the parent 'p' to
    make 'text-overflow: ellipsis' work, we need to manually style the icon in
    the message rows */
-.virtual-table-body p i {
+.variables-editor-table-body p i {
   padding-right: var(--size-1);
   vertical-align: middle;
   line-height: inherit;

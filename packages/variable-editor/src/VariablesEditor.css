@@ -3,10 +3,15 @@
 @import '@axonivy/ui-icons/src-gen/ivy-icons.css' layer(icons);
 @import '@axonivy/ui-components/lib/components.css';
 
-.master-panel {
+.variables-editor-main-panel {
   background-color: var(--N75);
 }
 
-.panel-content-container {
+.variables-editor-panel-content {
   height: 100%;
+}
+
+.variables-editor-help-tooltip-content {
+  font-size: 0.75rem;
+  font-weight: initial;
 }
