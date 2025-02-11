@@ -24,6 +24,7 @@ import { toRowId } from '../../../utils/tree/tree';
 import { type Variable } from '../data/variable';
 import { VariableBrowser } from './VariableBrowser';
 import { addKnownVariable } from './known-variables';
+import './OverwriteDialog.css';
 
 type OverwriteProps = {
   table: Table<Variable>;
