@@ -1,7 +1,3 @@
-.add-variable-dialog-trigger-button {
+.variables-editor-add-button {
   margin-left: auto;
-}
-
-.ui-combobox-menu:empty {
-  display: none;
 }

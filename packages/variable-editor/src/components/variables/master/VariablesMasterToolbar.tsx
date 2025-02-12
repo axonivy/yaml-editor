@@ -43,7 +43,7 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
     hotkeys.focusInscription.hotkey,
     () => {
       setDetail(true);
-      document.querySelector<HTMLElement>('.detail-header')?.focus();
+      document.querySelector<HTMLElement>('.variables-editor-detail-header')?.focus();
     },
     {
       scopes: ['global']
@@ -55,7 +55,7 @@ export const VariablesMasterToolbar = ({ title }: VariablesMasterToolbarProps) =
   useHotkeys(hotkeys.redo.hotkey, e => hotkeyRedoFix(e, redo), { scopes: ['global'] });
 
   return (
-    <Toolbar tabIndex={-1} ref={firstElement} className='master-toolbar'>
+    <Toolbar tabIndex={-1} ref={firstElement} className='variables-editor-main-toolbar'>
       <ToolbarTitle>{title}</ToolbarTitle>
       <Flex gap={1}>
         <ToolbarContainer maxWidth={450}>

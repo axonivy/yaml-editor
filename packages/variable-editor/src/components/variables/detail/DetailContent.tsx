@@ -68,7 +68,7 @@ export const VariablesDetailContent = () => {
   const handleVariableAttributeChange = (updates: VariableUpdates) => setVariables(old => updateNode(old, selectedVariable, updates));
 
   return (
-    <Flex direction='column' gap={4} className='detail-content'>
+    <Flex direction='column' gap={4} className='variables-editor-detail-content'>
       <BasicField label='Namespace'>
         <BasicInput value={key.slice(0, -1).join('.')} disabled />
       </BasicField>
