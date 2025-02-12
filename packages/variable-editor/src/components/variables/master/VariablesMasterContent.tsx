@@ -145,20 +145,20 @@ export const VariablesMasterContent = () => {
   useHotkeys(hotkeys.focusMain.hotkey, () => firstElement.current?.focus(), { scopes: ['global'] });
 
   return (
-    <Flex direction='column' ref={ref} className='master-content-container' onClick={resetSelection}>
+    <Flex direction='column' ref={ref} className='variables-editor-main-content' onClick={resetSelection}>
       <BasicField
         tabIndex={-1}
         ref={firstElement}
-        className='master-content'
+        className='variables-editor-table-field'
         label='List of Variables'
         control={control}
         onClick={event => event.stopPropagation()}
       >
         {globalFilter.filter}
-        <div ref={tableContainer} className='virtual-table-container'>
-          <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))} style={{ display: 'grid' }}>
+        <div ref={tableContainer} className='variables-editor-table-container'>
+          <Table onKeyDown={e => handleKeyDown(e, () => setDetail(!detail))} className='variables-editor-table'>
             <TableResizableHeader headerGroups={table.getHeaderGroups()} onClick={resetSelection} />
-            <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='virtual-table-body'>
+            <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='variables-editor-table-body'>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];
                 return <ValidationRow key={row.id} row={row} virtualRow={virtualRow} virtualizer={virtualizer} />;
