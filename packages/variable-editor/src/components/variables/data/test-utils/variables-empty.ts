@@ -13,6 +13,7 @@ export const rootVariableEmpty: RootVariable = {
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: []
 };
 
@@ -24,6 +25,7 @@ export const rootVariableParsedFromContentWithCommentOnly: RootVariable = {
   description: ' some comment',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: []
 };
 
@@ -37,12 +39,14 @@ export const rootVariableWithEmptyValue: RootVariable = {
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'EmptyValue',
       value: '',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     }
   ]

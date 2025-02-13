@@ -118,18 +118,21 @@ describe('addKnownVariable', () => {
         value: '',
         description: '',
         metadata: { type: '' },
+        validations: [],
         children: [
           {
             name: 'Comprehend',
             value: '',
             description: '',
             metadata: { type: '' },
+            validations: [],
             children: [
               {
                 name: 'SecretKey',
                 value: '<YOUR_SECRET_KEY>',
                 description: 'Secret key to access amazon comprehend',
                 metadata: { type: 'password' },
+                validations: [],
                 children: []
               }
             ]
@@ -155,18 +158,21 @@ describe('addKnownVariable', () => {
         value: '',
         description: '',
         metadata: { type: '' },
+        validations: [],
         children: [
           {
             name: 'Comprehend',
             value: '',
             description: 'Amazon comprehend connector settings',
             metadata: { type: '' },
+            validations: [],
             children: [
               {
                 name: 'SecretKey',
                 value: '<YOUR_SECRET_KEY>',
                 description: 'Secret key to access amazon comprehend',
                 metadata: { type: 'password' },
+                validations: [],
                 children: []
               },
               {
@@ -174,6 +180,7 @@ describe('addKnownVariable', () => {
                 value: '<YOUR_ACCESS_KEY>',
                 description: 'Access key to access amazon comprehend',
                 metadata: { type: '' },
+                validations: [],
                 children: []
               },
               {
@@ -181,6 +188,7 @@ describe('addKnownVariable', () => {
                 value: 'two',
                 description: '',
                 metadata: { type: 'enum', values: ['one', 'two', 'three'] },
+                validations: [],
                 children: []
               },
               {
@@ -188,6 +196,7 @@ describe('addKnownVariable', () => {
                 value: '',
                 description: '',
                 metadata: { type: 'file', extension: 'json' },
+                validations: [],
                 children: []
               }
             ]
@@ -222,6 +231,7 @@ describe('addKnownVariable', () => {
                 value: '<YOUR_SECRET_KEY>',
                 description: 'Secret key to access amazon comprehend',
                 metadata: { type: 'password' },
+                validations: [],
                 children: []
               }
             ]
@@ -249,12 +259,14 @@ describe('addKnownVariable', () => {
             value: '',
             description: 'Amazon comprehend connector settings',
             metadata: { type: '' },
+            validations: [],
             children: [
               {
                 name: 'SecretKey',
                 value: '<YOUR_SECRET_KEY>',
                 description: 'Secret key to access amazon comprehend',
                 metadata: { type: 'password' },
+                validations: [],
                 children: []
               },
               {
@@ -262,6 +274,7 @@ describe('addKnownVariable', () => {
                 value: '<YOUR_ACCESS_KEY>',
                 description: 'Access key to access amazon comprehend',
                 metadata: { type: '' },
+                validations: [],
                 children: []
               },
               {
@@ -269,6 +282,7 @@ describe('addKnownVariable', () => {
                 value: 'two',
                 description: '',
                 metadata: { type: 'enum', values: ['one', 'two', 'three'] },
+                validations: [],
                 children: []
               },
               {
@@ -276,6 +290,7 @@ describe('addKnownVariable', () => {
                 value: '',
                 description: '',
                 metadata: { type: 'file', extension: 'json' },
+                validations: [],
                 children: []
               }
             ]

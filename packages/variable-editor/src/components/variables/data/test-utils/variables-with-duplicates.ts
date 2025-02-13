@@ -12,12 +12,14 @@ export const rootVariableWithDuplicates: RootVariable = {
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'duplicateKey',
       value: 'duplicateValueOne',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -25,6 +27,7 @@ export const rootVariableWithDuplicates: RootVariable = {
       value: 'duplicateValueTwo',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -32,12 +35,14 @@ export const rootVariableWithDuplicates: RootVariable = {
       value: '',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: [
         {
           name: 'deepDuplicateKeyOne',
           value: 'deepDuplicateValueOneOne',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -45,6 +50,7 @@ export const rootVariableWithDuplicates: RootVariable = {
           value: 'deepDuplicateValueOneTwo',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         }
       ]
@@ -54,12 +60,14 @@ export const rootVariableWithDuplicates: RootVariable = {
       value: '',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: [
         {
           name: 'deepDuplicateKeyTwo',
           value: 'deepDuplicateValueTwoOne',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -67,6 +75,7 @@ export const rootVariableWithDuplicates: RootVariable = {
           value: 'deepDuplicateValueTwoTwo',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         }
       ]

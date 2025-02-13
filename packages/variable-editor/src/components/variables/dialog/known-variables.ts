@@ -57,7 +57,7 @@ export const addKnownVariable = (variables: Array<Variable>, node: KnownVariable
   return { newData: returnValue.newData, newNodePath };
 };
 
-const addKnown = (variables: Array<Variable>, node: KnownVariables) => {
+const addKnown = (variables: Array<Variable>, node: KnownVariables): AddNodeReturnType<Variable> => {
   let metadata: Metadata = { type: '' };
   const nodeMetaData = node.metaData;
   if (isMetadata(nodeMetaData)) {
@@ -70,7 +70,8 @@ const addKnown = (variables: Array<Variable>, node: KnownVariables) => {
         value: node.value,
         children: [],
         description: node.description,
-        metadata
+        metadata,
+        validations: []
       };
     }
     return createVariable(name);

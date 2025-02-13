@@ -12,7 +12,6 @@ import { EMPTY_KNOWN_VARIABLES, type ValidationMessages } from '@axonivy/variabl
 import { useMemo } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useMeta } from '../../../context/useMeta';
-import { useValidations } from '../../../context/useValidation';
 import { getNodesOnPath, updateNode, hasChildren as variableHasChildren } from '../../../utils/tree/tree-data';
 import { type VariableUpdates } from '../data/variable';
 import { findVariable } from '../dialog/known-variables';
@@ -57,8 +56,6 @@ export const VariablesDetailContent = () => {
   const key = nodesToVariable.map(node => (node ? node.name : ''));
   const overwrites = useOverwrites(key);
 
-  const validations = useValidations(selectedVariable);
-
   if (!variable) {
     return <PanelMessage message='Select a variable to edit its properties.' />;
   }
@@ -72,11 +69,15 @@ export const VariablesDetailContent = () => {
       <BasicField label='Namespace'>
         <BasicInput value={key.slice(0, -1).join('.')} disabled />
       </BasicField>
-      <BasicField label='Name' message={messageDataOfProperty(validations, 'key')}>
+      <BasicField label='Name' message={messageDataOfProperty(variable.validations, 'key')}>
         <BasicInput value={variable.name} onChange={event => handleVariableAttributeChange([{ key: 'name', value: event.target.value }])} />
       </BasicField>
       {!hasChildren && (
-        <Value variable={variable} onChange={handleVariableAttributeChange} message={messageDataOfProperty(validations, 'value')} />
+        <Value
+          variable={variable}
+          onChange={handleVariableAttributeChange}
+          message={messageDataOfProperty(variable.validations, 'value')}
+        />
       )}
       <BasicField label='Description'>
         <Textarea

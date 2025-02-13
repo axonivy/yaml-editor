@@ -2,8 +2,6 @@ import { MessageRow, SelectRow, TableCell } from '@axonivy/ui-components';
 import type { Severity, ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { flexRender, type Row } from '@tanstack/react-table';
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual';
-import { useValidations } from '../../../context/useValidation';
-import { toTreePath } from '../../../utils/tree/tree';
 import type { Variable } from '../data/variable';
 import './ValidationRow.css';
 import { ROW_HEIGHT } from './VariablesMasterContent';
@@ -15,12 +13,11 @@ type ValidationRowProps = {
 };
 
 export const ValidationRow = ({ row, virtualRow, virtualizer }: ValidationRowProps) => {
-  const validations = useValidations(toTreePath(row.id));
   return (
     <>
       <SelectRow
         row={row}
-        className={rowClass(validations)}
+        className={rowClass(row.original.validations)}
         data-index={virtualRow.index}
         ref={virtualizer.measureElement}
         style={{
@@ -33,7 +30,7 @@ export const ValidationRow = ({ row, virtualRow, virtualizer }: ValidationRowPro
           </TableCell>
         ))}
       </SelectRow>
-      {validations
+      {row.original.validations
         .filter(val => val.severity !== 'INFO')
         .map((val, index) => (
           <MessageRow

@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  groupBy,
   PanelMessage,
   ResizableHandle,
   ResizablePanel,
@@ -115,6 +116,8 @@ function VariableEditor(props: EditorProps) {
     detailTitle += ' - ' + variable.name;
   }
 
+  addValidations(data.root.children, validations);
+
   return (
     <AppProvider
       value={{
@@ -122,7 +125,6 @@ function VariableEditor(props: EditorProps) {
         setVariables: mutation.mutate,
         selectedVariable,
         setSelectedVariable,
-        validations,
         context,
         detail,
         setDetail,
@@ -162,3 +164,27 @@ function VariableEditor(props: EditorProps) {
 }
 
 export default VariableEditor;
+
+export const addValidations = (variables: Array<Variable>, validations: ValidationMessages) => {
+  if (validations.length === 0) {
+    return;
+  }
+  const groupedValidations = groupBy(validations, val => val.path);
+  variables.forEach(variable => {
+    const key = variable.name;
+    variable.validations = groupedValidations[key] ?? [];
+    addValidationsRecursive(variable.children, groupedValidations, key);
+  });
+};
+
+const addValidationsRecursive = (
+  variables: Array<Variable>,
+  groupedValidations: Record<string, ValidationMessages>,
+  currentKey: string
+) => {
+  variables.forEach(variable => {
+    const key = currentKey + '.' + variable.name;
+    variable.validations = groupedValidations[key] ?? [];
+    addValidationsRecursive(variable.children, groupedValidations, key);
+  });
+};

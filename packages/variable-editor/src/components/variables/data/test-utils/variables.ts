@@ -32,12 +32,14 @@ export const rootVariable: RootVariable = {
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'string',
       value: 'value',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -45,6 +47,7 @@ export const rootVariable: RootVariable = {
       value: '42',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -52,6 +55,7 @@ export const rootVariable: RootVariable = {
       value: 'true',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -59,12 +63,14 @@ export const rootVariable: RootVariable = {
       value: '',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: [
         {
           name: 'mappingString',
           value: 'mappingValue',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -72,6 +78,7 @@ export const rootVariable: RootVariable = {
           value: '43',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -79,6 +86,7 @@ export const rootVariable: RootVariable = {
           value: 'false',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -86,12 +94,14 @@ export const rootVariable: RootVariable = {
           value: '',
           description: '',
           metadata: { type: '' },
+          validations: [],
           children: [
             {
               name: 'deepKeyOne',
               value: 'deepValueOne',
               description: '',
               metadata: { type: '' },
+              validations: [],
               children: []
             },
             {
@@ -99,6 +109,7 @@ export const rootVariable: RootVariable = {
               value: 'deepValueTwo',
               description: '',
               metadata: { type: '' },
+              validations: [],
               children: []
             }
           ]

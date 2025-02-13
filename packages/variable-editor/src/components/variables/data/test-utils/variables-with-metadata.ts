@@ -18,12 +18,14 @@ export const rootVariableWithMetadata: RootVariable = {
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'passwordKey',
       value: 'passwordValue',
       description: '',
       metadata: { type: 'password' },
+      validations: [],
       children: []
     },
     {
@@ -31,6 +33,7 @@ export const rootVariableWithMetadata: RootVariable = {
       value: '08:00',
       description: '',
       metadata: { type: 'daytime' },
+      validations: [],
       children: []
     },
     {
@@ -38,6 +41,7 @@ export const rootVariableWithMetadata: RootVariable = {
       value: 'value1',
       description: '',
       metadata: { type: 'enum', values: ['value0', 'value1', 'value2'] } as EnumMetadata,
+      validations: [],
       children: []
     },
     {
@@ -45,6 +49,7 @@ export const rootVariableWithMetadata: RootVariable = {
       value: 'fileValue',
       description: '',
       metadata: { type: 'file', extension: 'json' } as FileMetadata,
+      validations: [],
       children: []
     }
   ]
@@ -65,12 +70,14 @@ export const rootVariableParsedFromContentWithWeirdMetadataFormat: RootVariable 
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'passwordKey',
       value: 'passwordValue',
       description: '',
       metadata: { type: 'password' },
+      validations: [],
       children: []
     },
     {
@@ -78,6 +85,7 @@ export const rootVariableParsedFromContentWithWeirdMetadataFormat: RootVariable 
       value: 'valueOne1',
       description: '',
       metadata: { type: 'enum', values: ['valueOne0', 'valueOne1', 'valueOne2'] } as EnumMetadata,
+      validations: [],
       children: []
     },
     {
@@ -85,6 +93,7 @@ export const rootVariableParsedFromContentWithWeirdMetadataFormat: RootVariable 
       value: 'valueTwo1',
       description: '',
       metadata: { type: 'enum', values: ['valueTwo0', 'valueTwo1', 'valueTwo2'] } as EnumMetadata,
+      validations: [],
       children: []
     }
   ]
@@ -101,12 +110,14 @@ export const rootVariableParsedFromContentWithWrongMetadataFormat: RootVariable 
   description: '',
   commentAfter: '',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'passwordKey',
       value: 'passwordValue',
       description: '',
       metadata: { type: '' },
+      validations: [],
       children: []
     }
   ]

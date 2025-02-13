@@ -32,12 +32,14 @@ export const rootVariableWithComments: RootVariable = {
   description: ' start of file comment',
   commentAfter: ' end of file comment',
   metadata: { type: '' },
+  validations: [],
   children: [
     {
       name: 'keyOne',
       value: 'valueOne',
       description: 'single-line description',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -45,6 +47,7 @@ export const rootVariableWithComments: RootVariable = {
       value: 'valueTwo',
       description: 'multi-line\ndescription',
       metadata: { type: '' },
+      validations: [],
       children: []
     },
     {
@@ -52,12 +55,14 @@ export const rootVariableWithComments: RootVariable = {
       value: '',
       description: 'mapping description',
       metadata: { type: '' },
+      validations: [],
       children: [
         {
           name: 'mappingKeyOne',
           value: 'mappingValueOne',
           description: 'first mapping value description',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -65,6 +70,7 @@ export const rootVariableWithComments: RootVariable = {
           value: 'mappingValueTwo',
           description: 'second mapping value description',
           metadata: { type: '' },
+          validations: [],
           children: []
         },
         {
@@ -72,12 +78,14 @@ export const rootVariableWithComments: RootVariable = {
           value: '',
           description: 'multi-line\nmapping description',
           metadata: { type: '' },
+          validations: [],
           children: [
             {
               name: 'deepKeyOne',
               value: 'deepValueOne',
               description: 'first mapping value\nmulti-line description',
               metadata: { type: '' },
+              validations: [],
               children: []
             },
             {
@@ -85,6 +93,7 @@ export const rootVariableWithComments: RootVariable = {
               value: 'deepValueTwo',
               description: 'second mapping value\nmulti-line\ndescription',
               metadata: { type: '' },
+              validations: [],
               children: []
             }
           ]

@@ -22,6 +22,7 @@ export const toVariables = (content: string) => {
     description: '',
     commentAfter: '',
     metadata: { type: '' },
+    validations: [],
     children: []
   };
 
@@ -84,6 +85,7 @@ const parseNode = (node: Pair) => {
     value: '',
     description: '',
     metadata: { type: '' },
+    validations: [],
     children: []
   };
 
