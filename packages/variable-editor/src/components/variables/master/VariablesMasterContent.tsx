@@ -4,6 +4,7 @@ import {
   ExpandableCell,
   ExpandableHeader,
   Flex,
+  groupBy,
   selectRow,
   Separator,
   Table,
@@ -20,9 +21,10 @@ import {
   useTableSelect
 } from '@axonivy/ui-components';
 import { IvyIcons } from '@axonivy/ui-icons';
+import type { ValidationMessages } from '@axonivy/variable-editor-protocol';
 import { getCoreRowModel, useReactTable, type ColumnDef } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useAppContext } from '../../../context/AppContext';
 import { useKnownHotkeys } from '../../../utils/hotkeys';
 import { deleteFirstSelectedRow, toTreePath, useTreeGlobalFilter } from '../../../utils/tree/tree';
@@ -36,7 +38,8 @@ import './VariablesMasterContent.css';
 export const ROW_HEIGHT = 36 as const;
 
 export const VariablesMasterContent = () => {
-  const { variables, setVariables, setSelectedVariable, detail, setDetail } = useAppContext();
+  const { variables: originalVariables, setVariables, setSelectedVariable, detail, setDetail, validations } = useAppContext();
+  const variables = useMemo(() => variablesWithValidations(originalVariables, validations), [originalVariables, validations]);
 
   const selection = useTableSelect<Variable>({
     onSelect: selectedRows => {
@@ -85,22 +88,13 @@ export const VariablesMasterContent = () => {
 
   const rows = table.getRowModel().rows;
   const tableContainer = useRef<HTMLDivElement>(null);
-  const measureElement = (element: HTMLTableRowElement) => {
-    let height = ROW_HEIGHT;
-    let nextElement = element.nextElementSibling;
-    while (nextElement?.classList.contains('ui-message-row')) {
-      height += ROW_HEIGHT;
-      nextElement = nextElement.nextElementSibling;
-    }
-    return height;
-  };
   const virtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => ROW_HEIGHT,
-    measureElement,
+    estimateSize: index => rowHeight(rows[index].original.validations),
     getScrollElement: () => tableContainer.current,
     overscan: 20
   });
+  useEffect(() => virtualizer.measure(), [virtualizer, validations]);
 
   const { handleKeyDown } = useTableKeyHandler({
     table,
@@ -161,7 +155,7 @@ export const VariablesMasterContent = () => {
             <TableBody style={{ height: `${virtualizer.getTotalSize()}px` }} className='variables-editor-table-body'>
               {virtualizer.getVirtualItems().map(virtualRow => {
                 const row = rows[virtualRow.index];
-                return <ValidationRow key={row.id} row={row} virtualRow={virtualRow} virtualizer={virtualizer} />;
+                return <ValidationRow key={row.id} row={row} virtualRow={virtualRow} />;
               })}
             </TableBody>
           </Table>
@@ -169,4 +163,34 @@ export const VariablesMasterContent = () => {
       </BasicField>
     </Flex>
   );
+};
+
+export const variablesWithValidations = (originalVariables: Array<Variable>, validations: ValidationMessages) => {
+  if (validations.length === 0) {
+    return originalVariables;
+  }
+  const variables = structuredClone(originalVariables);
+  const groupedValidations = groupBy(validations, val => val.path);
+  variables.forEach(variable => {
+    const key = variable.name;
+    variable.validations = groupedValidations[key] ?? [];
+    addValidations(variable.children, groupedValidations, key);
+  });
+  return variables;
+};
+
+const addValidations = (variables: Array<Variable>, groupedValidations: Record<string, ValidationMessages>, currentKey: string) => {
+  variables.forEach(variable => {
+    const key = currentKey + '.' + variable.name;
+    variable.validations = groupedValidations[key] ?? [];
+    addValidations(variable.children, groupedValidations, key);
+  });
+};
+
+export const rowHeight = (validations?: ValidationMessages) => {
+  const height = 36;
+  if (!validations) {
+    return height;
+  }
+  return height * (validations.length + 1);
 };
