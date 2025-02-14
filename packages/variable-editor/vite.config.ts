@@ -24,8 +24,7 @@ export default defineConfig({
         'react',
         'react-error-boundary',
         'react/jsx-runtime',
-        'react-dom',
-        'yaml'
+        'react-dom'
       ]
     }
   }
