@@ -1,5 +1,5 @@
 import { useAppContext } from './AppContext';
-import { useClient } from '../protocol/ClientContextProvider';
+import { useClient } from '@axonivy/variable-editor-protocol/src/client/ClientContextProvider';
 import type { VariablesActionArgs } from '@axonivy/variable-editor-protocol';
 
 export function useAction(actionId: VariablesActionArgs['actionId']) {

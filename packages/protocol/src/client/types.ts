@@ -1,31 +1,36 @@
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 import type {
+  ConfigEditorActionArgs,
   KnownVariables,
   VariablesActionArgs,
   VariablesData,
   VariablesEditorDataContext,
   VariablesSaveDataArgs,
   VariablesValidationResult
-} from './editor';
+} from '../editor';
+
+export type EditorDataContext = VariablesEditorDataContext;
+export type EditorData = VariablesData;
+export type ValidationResult = VariablesValidationResult;
+
+export interface MetaRequestTypes {
+  'variables/meta/knownVariables': [VariablesEditorDataContext, KnownVariables];
+}
+
+export interface RequestTypes extends MetaRequestTypes {
+  'variables/data': [VariablesEditorDataContext, VariablesData];
+  'variables/saveData': [SaveArgs, ValidationMessages];
+  'variables/validate': [VariablesEditorDataContext, ValidationMessages];
+}
+
+export interface NotificationTypes {
+  action: ConfigEditorActionArgs;
+}
 
 export type EditorProps = { context: VariablesEditorDataContext; directSave?: boolean };
 export type SaveArgs = VariablesSaveDataArgs & { directSave?: boolean };
 
 export type ValidationMessages = Array<VariablesValidationResult>;
-
-export interface MetaRequestTypes {
-  'meta/knownVariables': [VariablesEditorDataContext, KnownVariables];
-}
-
-export interface RequestTypes extends MetaRequestTypes {
-  data: [VariablesEditorDataContext, VariablesData];
-  saveData: [SaveArgs, ValidationMessages];
-  validate: [VariablesEditorDataContext, ValidationMessages];
-}
-
-export interface NotificationTypes {
-  action: VariablesActionArgs;
-}
 
 export interface OnNotificationTypes {
   dataChanged: void;
@@ -46,7 +51,6 @@ export interface Client {
   validate(validate: VariablesEditorDataContext): Promise<ValidationMessages>;
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]>;
   action(action: VariablesActionArgs): void;
-  onDataChanged: Event<void>;
 }
 
 export interface ClientContext {

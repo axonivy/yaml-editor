@@ -5,6 +5,6 @@
     "outDir": "lib",
     "types": ["vitest/globals"]
   },
-  "include": ["src"],
+  "include": ["src", "../protocol/src/client/ClientContextProvider.tsx"],
   "references": [{ "path": "../../packages/protocol/tsconfig.json" }]
 }

@@ -1,50 +1,25 @@
 import {
   BaseRpcClient,
-  Emitter,
   createMessageConnection,
   urlBuilder,
   type Connection,
   type Disposable,
   type MessageConnection
 } from '@axonivy/jsonrpc';
-import type {
-  Client,
-  VariablesData,
-  VariablesEditorDataContext,
-  MetaRequestTypes,
-  NotificationTypes,
-  RequestTypes,
-  ValidationMessages,
-  VariablesActionArgs,
-  OnNotificationTypes
-} from '@axonivy/variable-editor-protocol';
+import type { MetaRequestTypes, NotificationTypes, OnNotificationTypes, RequestTypes } from '@axonivy/variable-editor-protocol';
+import type { ConfigEditorActionArgs } from '../editor';
+import type { Client, EditorData, EditorDataContext, ValidationResult } from './types';
 
-export class ClientJsonRpc extends BaseRpcClient implements Client {
-  protected onDataChangedEmitter = new Emitter<void>();
-  onDataChanged = this.onDataChangedEmitter.event;
-  protected override setupConnection(): void {
-    super.setupConnection();
-    this.toDispose.push(this.onDataChangedEmitter);
-    this.onNotification('dataChanged', data => this.onDataChangedEmitter.fire(data));
-  }
-
-  data(context: VariablesEditorDataContext): Promise<VariablesData> {
-    return this.sendRequest('variables/data', context);
-  }
-
-  saveData(saveData: VariablesData): Promise<ValidationMessages> {
-    return this.sendRequest('variables/saveData', saveData);
-  }
-
-  validate(context: VariablesEditorDataContext): Promise<ValidationMessages> {
-    return this.sendRequest('variables/validate', context);
-  }
+export abstract class ClientJsonRpc extends BaseRpcClient implements Client {
+  abstract data(context: EditorDataContext): Promise<EditorData>;
+  abstract saveData(saveData: EditorData): Promise<Array<ValidationResult>>;
+  abstract validate(context: EditorDataContext): Promise<Array<ValidationResult>>;
 
   meta<TMeta extends keyof MetaRequestTypes>(path: TMeta, args: MetaRequestTypes[TMeta][0]): Promise<MetaRequestTypes[TMeta][1]> {
     return this.sendRequest(path, args);
   }
 
-  action(action: VariablesActionArgs): void {
+  action(action: ConfigEditorActionArgs): void {
     this.sendNotification('action', action);
   }
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { genQueryKey } from '../query/query-client';
 import type { MetaRequestTypes } from '@axonivy/variable-editor-protocol';
-import { useClient } from '../protocol/ClientContextProvider';
+import { useClient } from '@axonivy/variable-editor-protocol/src/client/ClientContextProvider';
 
 type NonUndefinedGuard<T> = T extends undefined ? never : T;
 

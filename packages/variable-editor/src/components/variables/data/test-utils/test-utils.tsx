@@ -3,7 +3,7 @@ import type { RenderHookOptions } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { AppProvider } from '../../../../context/AppContext';
-import { ClientContextProvider } from '../../../../protocol/ClientContextProvider';
+import { ClientContextProvider } from '@axonivy/variable-editor-protocol/src/client/ClientContextProvider';
 import { QueryProvider } from '../../../../query/QueryProvider';
 import { initQueryClient } from '../../../../query/query-client';
 import type { TreePath } from '../../../../utils/tree/types';

@@ -25,7 +25,7 @@ import { VariablesMasterContent } from './components/variables/master/VariablesM
 import { VariablesMasterToolbar } from './components/variables/master/VariablesMasterToolbar';
 import { AppProvider } from './context/AppContext';
 import { useAction } from './context/useAction';
-import { useClient } from './protocol/ClientContextProvider';
+import { useClient } from '@axonivy/variable-editor-protocol/src/client/ClientContextProvider';
 import { genQueryKey } from './query/query-client';
 import { useKnownHotkeys } from './utils/hotkeys';
 import type { Unary } from './utils/lambda/lambda';
